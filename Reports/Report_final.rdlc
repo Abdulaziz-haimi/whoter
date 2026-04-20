@@ -1,0 +1,2476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition"
+        xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+	<AutoRefresh>0</AutoRefresh>
+
+	<DataSources>
+		<DataSource Name="DummyDataSource">
+			<ConnectionProperties>
+				<DataProvider>System.Data.DataSet</DataProvider>
+				<ConnectString />
+			</ConnectionProperties>
+			<rd:DataSourceID>f0d6a7ce-8f8e-4ee1-9c3e-9c9d9f3b0b11</rd:DataSourceID>
+		</DataSource>
+	</DataSources>
+
+	<DataSets>
+		<DataSet Name="dsReport">
+			<Fields>
+				<Field Name="Dt1">
+					<DataField>Dt1</DataField>
+					<rd:TypeName>System.DateTime</rd:TypeName>
+				</Field>
+
+				<Field Name="Col1">
+					<DataField>Col1</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col2">
+					<DataField>Col2</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col3">
+					<DataField>Col3</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col4">
+					<DataField>Col4</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col5">
+					<DataField>Col5</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col6">
+					<DataField>Col6</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col7">
+					<DataField>Col7</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col8">
+					<DataField>Col8</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col9">
+					<DataField>Col9</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Col10">
+					<DataField>Col10</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+
+				<Field Name="Num1">
+					<DataField>Num1</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="Num2">
+					<DataField>Num2</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="Num3">
+					<DataField>Num3</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="Num4">
+					<DataField>Num4</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="Num5">
+					<DataField>Num5</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+
+				<Field Name="RowId">
+					<DataField>RowId</DataField>
+					<rd:TypeName>System.Int32</rd:TypeName>
+				</Field>
+				<Field Name="RefId1">
+					<DataField>RefId1</DataField>
+					<rd:TypeName>System.Int32</rd:TypeName>
+				</Field>
+				<Field Name="RefId2">
+					<DataField>RefId2</DataField>
+					<rd:TypeName>System.Int32</rd:TypeName>
+				</Field>
+			</Fields>
+
+			<Query>
+				<DataSourceName>DummyDataSource</DataSourceName>
+				<CommandText />
+			</Query>
+		</DataSet>
+	</DataSets>
+
+	<ReportParameters>
+		<ReportParameter Name="pTitle">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<Prompt>pTitle</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pSubTitle">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<Prompt>pSubTitle</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pFrom">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<Prompt>pFrom</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pTo">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<Prompt>pTo</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pUser">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<Prompt>pUser</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pLogoPath">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<Prompt>pLogoPath</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pFooterNote">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<Prompt>pFooterNote</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowTotals">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowTotals</Prompt>
+		</ReportParameter>
+
+
+		<ReportParameter Name="pShowCol1">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol1</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol1">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col1</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol1</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol2">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol2</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol2">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col2</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol2</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol3">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol3</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol3">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col3</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol3</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol4">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol4</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol4">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col4</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol4</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol5">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol5</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol5">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col5</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol5</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol6">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol6</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol6">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col6</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol6</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol7">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol7</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol7">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col7</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol7</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol8">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol8</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol8">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col8</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol8</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol9">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol9</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol9">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col9</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol9</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowCol10">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowCol10</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapCol10">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Col10</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapCol10</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowNum1">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowNum1</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapNum1">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Num1</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapNum1</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowNum2">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowNum2</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapNum2">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Num2</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapNum2</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowNum3">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowNum3</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapNum3">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Num3</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapNum3</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowNum4">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowNum4</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapNum4">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Num4</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapNum4</Prompt>
+		</ReportParameter>
+
+		<ReportParameter Name="pShowNum5">
+			<DataType>Boolean</DataType>
+			<DefaultValue>
+				<Values>
+					<Value>true</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pShowNum5</Prompt>
+		</ReportParameter>
+		<ReportParameter Name="pCapNum5">
+			<DataType>String</DataType>
+			<AllowBlank>true</AllowBlank>
+			<DefaultValue>
+				<Values>
+					<Value>Num5</Value>
+				</Values>
+			</DefaultValue>
+			<Prompt>pCapNum5</Prompt>
+		</ReportParameter>
+	</ReportParameters>
+
+	<Body>
+		<ReportItems>
+
+			<Image Name="imgLogo">
+				<Source>External</Source>
+				<Value>=Parameters!pLogoPath.Value</Value>
+				<Sizing>FitProportional</Sizing>
+				<Top>0.2cm</Top>
+				<Left>16.6cm</Left>
+				<Height>1.6cm</Height>
+				<Width>3.0cm</Width>
+				<Style />
+			</Image>
+
+			<Textbox Name="txtTitle">
+				<CanGrow>true</CanGrow>
+				<KeepTogether>true</KeepTogether>
+				<Paragraphs>
+					<Paragraph>
+						<TextRuns>
+							<TextRun>
+								<Value>=Parameters!pTitle.Value</Value>
+								<Style>
+									<FontFamily>Tahoma</FontFamily>
+									<FontSize>16pt</FontSize>
+									<FontWeight>Bold</FontWeight>
+								</Style>
+							</TextRun>
+						</TextRuns>
+						<Style>
+							<TextAlign>Center</TextAlign>
+						</Style>
+					</Paragraph>
+				</Paragraphs>
+				<Top>0.2cm</Top>
+				<Left>0.2cm</Left>
+				<Height>0.9cm</Height>
+				<Width>19.4cm</Width>
+				<Style />
+			</Textbox>
+
+			<Textbox Name="txtSubTitle">
+				<CanGrow>true</CanGrow>
+				<KeepTogether>true</KeepTogether>
+				<Paragraphs>
+					<Paragraph>
+						<TextRuns>
+							<TextRun>
+								<Value>=Parameters!pSubTitle.Value</Value>
+								<Style>
+									<FontFamily>Tahoma</FontFamily>
+									<FontSize>11pt</FontSize>
+								</Style>
+							</TextRun>
+						</TextRuns>
+						<Style>
+							<TextAlign>Center</TextAlign>
+						</Style>
+					</Paragraph>
+				</Paragraphs>
+				<Top>1.15cm</Top>
+				<Left>0.2cm</Left>
+				<Height>0.7cm</Height>
+				<Width>19.4cm</Width>
+				<Style />
+			</Textbox>
+
+			<Textbox Name="txtInfo">
+				<CanGrow>true</CanGrow>
+				<KeepTogether>true</KeepTogether>
+				<Paragraphs>
+					<Paragraph>
+						<TextRuns>
+							<TextRun>
+								<Value>= "الفترة: من " &amp; Parameters!pFrom.Value &amp; " إلى " &amp; Parameters!pTo.Value &amp; "    |    " &amp; "طُبع بواسطة: " &amp; Parameters!pUser.Value &amp; "    |    " &amp; Format(Now(),"yyyy-MM-dd HH:mm")</Value>
+								<Style>
+									<FontFamily>Tahoma</FontFamily>
+									<FontSize>9.5pt</FontSize>
+								</Style>
+							</TextRun>
+						</TextRuns>
+						<Style>
+							<TextAlign>Right</TextAlign>
+						</Style>
+					</Paragraph>
+				</Paragraphs>
+				<Top>1.9cm</Top>
+				<Left>0.2cm</Left>
+				<Height>0.6cm</Height>
+				<Width>19.4cm</Width>
+				<Style />
+			</Textbox>
+
+			<Tablix Name="tblMain">
+				<TablixBody>
+					<TablixColumns>
+						<TablixColumn>
+							<Width>1.6cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>3.8cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.0cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.1cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.1cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.1cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.1cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>1.1cm</Width>
+						</TablixColumn>
+					</TablixColumns>
+
+					<TablixRows>
+						<TablixRow>
+							<Height>0.75cm</Height>
+							<TablixCells>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol1">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol1.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol1.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol2">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol2.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol2.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol3">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol3.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol3.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol4">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol4.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol4.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol5">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol5.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol5.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol6">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol6.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol6.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol7">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol7.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol7.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol8">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol8.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol8.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol9">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol9.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol9.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrCol10">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapCol10.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol10.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrNum1">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapNum1.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum1.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrNum2">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapNum2.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum2.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrNum3">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapNum3.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum3.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrNum4">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapNum4.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum4.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="hdrNum5">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Parameters!pCapNum5.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Center</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum5.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+							</TablixCells>
+						</TablixRow>
+
+						<TablixRow>
+							<Height>0.7cm</Height>
+							<TablixCells>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol1">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col1.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol1.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol2">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col2.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol2.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol3">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col3.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol3.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol4">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col4.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol4.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol5">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col5.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol5.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol6">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col6.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol6.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol7">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col7.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol7.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol8">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col8.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol8.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol9">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col9.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol9.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlCol10">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Col10.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol10.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlNum1">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Num1.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum1.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlNum2">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Num2.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum2.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlNum3">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Num3.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum3.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlNum4">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Num4.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum4.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="dtlNum5">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Num5.Value</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9pt</FontSize>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum5.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+							</TablixCells>
+						</TablixRow>
+
+						<TablixRow>
+							<Height>0.75cm</Height>
+							<TablixCells>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totLbl">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>="الإجمالي"</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol1.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol2">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol2.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol3">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol3.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol4">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol4.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol5">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol5.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol6">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol6.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol7">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol7.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol8">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol8.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol9">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol9.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totCol10">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=""</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowCol10.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totNum1">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!Num1.Value)</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum1.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totNum2">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!Num2.Value)</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum2.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totNum3">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!Num3.Value)</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum3.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totNum4">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!Num4.Value)</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum4.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="totNum5">
+											<CanGrow>true</CanGrow>
+											<KeepTogether>true</KeepTogether>
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!Num5.Value)</Value>
+															<Style>
+																<FontFamily>Tahoma</FontFamily>
+																<FontSize>9.5pt</FontSize>
+																<FontWeight>Bold</FontWeight>
+															</Style>
+														</TextRun>
+													</TextRuns>
+													<Style>
+														<TextAlign>Right</TextAlign>
+													</Style>
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<Format>N2</Format>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+												<PaddingLeft>2pt</PaddingLeft>
+												<PaddingRight>2pt</PaddingRight>
+												<PaddingTop>2pt</PaddingTop>
+												<PaddingBottom>2pt</PaddingBottom>
+											</Style>
+
+											<Visibility>
+												<Hidden>=(NOT Parameters!pShowTotals.Value) OR (NOT Parameters!pShowNum5.Value)</Hidden>
+											</Visibility>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+							</TablixCells>
+						</TablixRow>
+					</TablixRows>
+				</TablixBody>
+
+				<TablixColumnHierarchy>
+					<TablixMembers>
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+					</TablixMembers>
+				</TablixColumnHierarchy>
+
+				<TablixRowHierarchy>
+					<TablixMembers>
+						<TablixMember />
+						<TablixMember>
+							<Group Name="DetailGroup" />
+						</TablixMember>
+						<TablixMember />
+					</TablixMembers>
+				</TablixRowHierarchy>
+
+				<DataSetName>dsReport</DataSetName>
+				<Top>2.7cm</Top>
+				<Left>0.2cm</Left>
+				<Height>2.2cm</Height>
+				<Width>19.4cm</Width>
+				<Style />
+			</Tablix>
+
+			<Textbox Name="txtFooterNote">
+				<CanGrow>true</CanGrow>
+				<KeepTogether>true</KeepTogether>
+				<Paragraphs>
+					<Paragraph>
+						<TextRuns>
+							<TextRun>
+								<Value>=Parameters!pFooterNote.Value</Value>
+								<Style>
+									<FontFamily>Tahoma</FontFamily>
+									<FontSize>9pt</FontSize>
+									<FontStyle>Italic</FontStyle>
+								</Style>
+							</TextRun>
+						</TextRuns>
+						<Style>
+							<TextAlign>Right</TextAlign>
+						</Style>
+					</Paragraph>
+				</Paragraphs>
+				<Top>25.7cm</Top>
+				<Left>0.2cm</Left>
+				<Height>1.0cm</Height>
+				<Width>19.4cm</Width>
+				<Style />
+			</Textbox>
+
+		</ReportItems>
+
+		<Height>27.2cm</Height>
+		<Style />
+	</Body>
+
+	<Width>19.8cm</Width>
+
+	<Page>
+		<PageHeight>29.7cm</PageHeight>
+		<PageWidth>21cm</PageWidth>
+		<LeftMargin>1cm</LeftMargin>
+		<RightMargin>1cm</RightMargin>
+		<TopMargin>1cm</TopMargin>
+		<BottomMargin>1cm</BottomMargin>
+		<Style />
+	</Page>
+
+	<Language>ar-YE</Language>
+	<rd:ReportUnitType>Cm</rd:ReportUnitType>
+	<rd:ReportID>7c0e0a6f-6c02-47f1-8b5f-5e6d28d0d5b2</rd:ReportID>
+</Report>

@@ -1,0 +1,670 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\FastReport.OpenSource.2023.3.9\build\FastReport.OpenSource.props" Condition="Exists('packages\FastReport.OpenSource.2023.3.9\build\FastReport.OpenSource.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E9F0BACE-5C4C-4A64-AB67-150281C14D3D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>water3</RootNamespace>
+    <AssemblyName>water3</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Abdulaziz\Downloads\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>appstore.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>1256B3AE5AF05DCC526B81E45785E548728659AF</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>water3_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility" />
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>packages\ClosedXML.0.105.0\lib\netstandard2.0\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1d5f7376574c51ec, processorArchitecture=MSIL">
+      <HintPath>packages\ClosedXML.Parser.2.0.0\lib\netstandard2.0\ClosedXML.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>packages\DocumentFormat.OpenXml.3.1.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>packages\DocumentFormat.OpenXml.Framework.3.1.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=8.4.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.8.4.1\lib\net462\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=8.4.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.Interfaces.8.4.0\lib\net462\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport, Version=2023.3.9.0, Culture=neutral, PublicKeyToken=5ceb240df42bf6e8, processorArchitecture=MSIL">
+      <HintPath>packages\FastReport.OpenSource.2023.3.9\lib\net462\FastReport.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Compat, Version=2023.3.0.0, Culture=neutral, PublicKeyToken=406e1f4c3c8ef97e, processorArchitecture=MSIL">
+      <HintPath>packages\FastReport.Compat.2023.3.0\lib\net40\FastReport.Compat.dll</HintPath>
+    </Reference>
+    <Reference Include="FontAwesome.Sharp, Version=6.3.0.0, Culture=neutral, PublicKeyToken=d16d1e4e568ec10f, processorArchitecture=MSIL">
+      <HintPath>packages\FontAwesome.Sharp.6.3.0\lib\net472\FontAwesome.Sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Guna.UI2, Version=2.0.4.7, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">
+      <HintPath>packages\Guna.UI2.WinForms.2.0.4.7\lib\net472\Guna.UI2.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.4, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13.4\lib\net461\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.pdfa, Version=5.5.13.4, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\itextsharp.pdfa.5.5.13.4\lib\net461\itextsharp.pdfa.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Reporting.WinForms.v11.1.0.0.0\lib\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Reporting.WinForms.v11.1.0.0.0\lib\Microsoft.ReportViewer.ProcessingObjectModel.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Reporting.WinForms.v11.1.0.0.0\lib\Microsoft.ReportViewer.WinForms.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Reporting.WinForms.v11.1.0.0.0\lib\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
+      <HintPath>packages\RBush.Signed.4.0.0\lib\net47\RBush.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Drawing.Common.10.0.0-preview.5.25277.114\lib\net462\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Geometry, Version=0.9.3.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Bezier.0.9.3.5\lib\netstandard2.0\System.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Geometry.Text, Version=0.3.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Font.0.3.0.3\lib\netstandard2.0\System.Geometry.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Xml.8.0.2\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ControlStyler.cs" />
+    <Compile Include="Controls\GridCardControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\GridCardControl.Designer.cs">
+      <DependentUpon>GridCardControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchFilterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchFilterControl.Designer.cs">
+      <DependentUpon>SearchFilterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SubscriberEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SubscriberEditorControl.Designer.cs">
+      <DependentUpon>SubscriberEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AccountStatementForm .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AccountStatementForm .Designer.cs">
+      <DependentUpon>AccountStatementForm .cs</DependentUpon>
+    </Compile>
+    <Compile Include="BillingConstantEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BillingConstantEditForm.Designer.cs">
+      <DependentUpon>BillingConstantEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BillingConstantsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BillingConstantsForm.Designer.cs">
+      <DependentUpon>BillingConstantsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CollectorsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CollectorsForm.Designer.cs">
+      <DependentUpon>CollectorsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CollectorsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CollectorsReportForm.Designer.cs">
+      <DependentUpon>CollectorsReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DashboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DashboardForm.Designer.cs">
+      <DependentUpon>DashboardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Db.cs" />
+    <Compile Include="DB\DbSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DB\DbSettingsForm.Designer.cs">
+      <DependentUpon>DbSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Document.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GeneralJournalReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GeneralJournalReportForm.Designer.cs">
+      <DependentUpon>GeneralJournalReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HtmlReportRenderer.cs" />
+    <Compile Include="Forms\InvoicePrintPreviewForm.UI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PaymentsForm.Popup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PaymentsForm.UI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ReadingEntryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ReadingEntryForm.Designer.cs">
+      <DependentUpon>ReadingEntryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ReadingF.Popup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ReadingF.UI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Subscriber.cs" />
+    <Compile Include="FrmApproveBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmApproveBatch.Designer.cs">
+      <DependentUpon>FrmApproveBatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmMobileReceiptDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMobileReceiptDetails.Designer.cs">
+      <DependentUpon>FrmMobileReceiptDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmMobileReceiptsQueue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMobileReceiptsQueue.Designer.cs">
+      <DependentUpon>FrmMobileReceiptsQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmMobileSyncDashboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMobileSyncDashboard.Designer.cs">
+      <DependentUpon>FrmMobileSyncDashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSyncBatchDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSyncBatchDetails.Designer.cs">
+      <DependentUpon>FrmSyncBatchDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSyncBatches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSyncBatches.Designer.cs">
+      <DependentUpon>FrmSyncBatches.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MobileSync\LocalReceiptRepository.cs" />
+    <Compile Include="MobileSync\LocalSqliteSchema.cs" />
+    <Compile Include="MobileSync\LocalSyncRepository.cs" />
+    <Compile Include="MobileSync\MobileSyncBootstrap.cs" />
+    <Compile Include="MobileSync\MobileSyncExportDtos.cs" />
+    <Compile Include="MobileSync\MobileSyncService.cs" />
+    <Compile Include="Prompt.cs" />
+    <Compile Include="Prompt.Designer.cs">
+      <DependentUpon>Prompt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StatCardControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StatCardControl.Designer.cs">
+      <DependentUpon>StatCardControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubscriberForm.UI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubscriberForm.UI.Designer.cs">
+      <DependentUpon>SubscriberForm.UI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InvoiceForm.Designer.cs">
+      <DependentUpon>InvoiceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InvoicePrintPreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InvoicePrintPreviewForm.Designer.cs">
+      <DependentUpon>InvoicePrintPreviewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MessagesManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MessagesManagementForm.Designer.cs">
+      <DependentUpon>MessagesManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MessageTemplatesForm.cs" />
+    <Compile Include="Models\AddReadingRequest.cs" />
+    <Compile Include="Models\CollectorItem.cs" />
+    <Compile Include="Models\ComboBoxItem.cs" />
+    <Compile Include="Models\ComboItem.cs" />
+    <Compile Include="Models\InvoiceFilters.cs" />
+    <Compile Include="Models\InvoicePreviewData.cs" />
+    <Compile Include="Models\MessageTemplate.cs" />
+    <Compile Include="Models\MeterInvoiceInfo.cs" />
+    <Compile Include="Models\MeterReadingInfo.cs" />
+    <Compile Include="Models\ReadingImportRow.cs" />
+    <Compile Include="Models\ReportOptions.cs" />
+    <Compile Include="Models\SmsLogItem.cs" />
+    <Compile Include="Models\SmsQueueItem.cs" />
+    <Compile Include="Models\SmsTemplateType.cs" />
+    <Compile Include="Models\SubscriberMeterSuggestion.cs" />
+    <Compile Include="Models\SubscriberSearchItem.cs" />
+    <Compile Include="Models\TariffInfo.cs" />
+    <Compile Include="ModernColorTable.cs" />
+    <Compile Include="Forms\PaymentsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PaymentsForm.Designer.cs">
+      <DependentUpon>PaymentsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Forms\ReadingF.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ReadingF.Designer.cs">
+      <DependentUpon>ReadingF.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RegistrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegistrationForm.Designer.cs">
+      <DependentUpon>RegistrationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportOptionsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReportOptionsPanel.Designer.cs">
+      <DependentUpon>ReportOptionsPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Render\GeneralJournalReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\Render\GeneralJournalReportForm.Designer.cs">
+      <DependentUpon>GeneralJournalReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Render\SubscriberStatementReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\Render\SubscriberStatementReportForm.Designer.cs">
+      <DependentUpon>SubscriberStatementReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReportDataMapper.cs" />
+    <Compile Include="Reports\ReportDb.cs" />
+    <Compile Include="Reports\ReportPresetOptions.cs" />
+    <Compile Include="Reports\ReportRunner.cs" />
+    <Compile Include="Repositories\CollectorsRepository.cs" />
+    <Compile Include="Repositories\InvoiceRepository.cs" />
+    <Compile Include="Repositories\MessageTemplatesRepository.cs" />
+    <Compile Include="Repositories\PaymentsRepository.cs" />
+    <Compile Include="Repositories\ReadingsRepository.cs" />
+    <Compile Include="Repositories\SmsLogsRepository.cs" />
+    <Compile Include="Repositories\SubscriberMeterRepository.cs" />
+    <Compile Include="Repositories\SubscribersRepository.cs" />
+    <Compile Include="Repositories\TariffRepository.cs" />
+    <Compile Include="Services\AccountStatementService.cs" />
+    <Compile Include="Services\AndroidSmsGatewayClient.cs" />
+    <Compile Include="Services\DashboardService.cs" />
+    <Compile Include="Services\InvoicePrintPreviewService.cs" />
+    <Compile Include="Services\MessageTemplatePreviewService.cs" />
+    <Compile Include="Services\PaymentsService.cs" />
+    <Compile Include="Services\ReadingImportService.cs" />
+    <Compile Include="Services\ReadingService.cs" />
+    <Compile Include="Services\SmsBridgeAdb.cs" />
+    <Compile Include="Services\SmsGatewaySettings.cs" />
+    <Compile Include="Services\SmsQueueService.cs" />
+    <Compile Include="Services\TariffService.cs" />
+    <Compile Include="SettingEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingEditForm.Designer.cs">
+      <DependentUpon>SettingEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SmsLogsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SmsLogsForm.Designer.cs">
+      <DependentUpon>SmsLogsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SmsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SmsReportForm.Designer.cs">
+      <DependentUpon>SmsReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubscriberForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubscriberForm.Designer.cs">
+      <DependentUpon>SubscriberForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubscribersBillingReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubscribersBillingReportForm.Designer.cs">
+      <DependentUpon>SubscribersBillingReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TemplateEditForm.Designer.cs">
+      <DependentUpon>TemplateEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TemplatePreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TemplatePreviewForm.Designer.cs">
+      <DependentUpon>TemplatePreviewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Theming\AppTheme.cs" />
+    <Compile Include="UnpaidInvoicesReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UnpaidInvoicesReportForm.Designer.cs">
+      <DependentUpon>UnpaidInvoicesReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\MoneyParser.cs" />
+    <Compile Include="Utils\NumberParser.cs" />
+    <Compile Include="Utils\SmsTemplateEngine.cs" />
+    <Compile Include="Utils\SmsTemplateVariableInfo.cs" />
+    <Compile Include="Utils\TemplateEngine.cs" />
+    <Compile Include="WaterBillingDBDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WaterBillingDBDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CurrentUser.cs" />
+    <EmbeddedResource Include="Controls\SearchFilterControl.resx">
+      <DependentUpon>SearchFilterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SubscriberEditorControl.resx">
+      <DependentUpon>SubscriberEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DB\DbSettingsForm.resx">
+      <DependentUpon>DbSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AccountStatementForm .resx">
+      <DependentUpon>AccountStatementForm .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CollectorsForm.resx">
+      <DependentUpon>CollectorsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CollectorsReportForm.resx">
+      <DependentUpon>CollectorsReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DashboardForm.resx">
+      <DependentUpon>DashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.ar.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GeneralJournalReportForm.resx">
+      <DependentUpon>GeneralJournalReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ReadingEntryForm.resx">
+      <DependentUpon>ReadingEntryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvoiceForm.resx">
+      <DependentUpon>InvoiceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InvoicePrintPreviewForm.resx">
+      <DependentUpon>InvoicePrintPreviewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PaymentsForm.resx">
+      <DependentUpon>PaymentsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Content Include="Reports\Invoice_Water_2008_compatible.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Forms\ReadingF.resx">
+      <DependentUpon>ReadingF.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegistrationForm.resx">
+      <DependentUpon>RegistrationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Render\SubscriberStatementReportForm.resx">
+      <DependentUpon>SubscriberStatementReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Reports\Report_final.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="SettingEditForm.resx">
+      <DependentUpon>SettingEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubscriberForm.resx">
+      <DependentUpon>SubscriberForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubscribersBillingReportForm.resx">
+      <DependentUpon>SubscribersBillingReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TemplateEditForm.resx">
+      <DependentUpon>TemplateEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnpaidInvoicesReport.rdlc" />
+    <EmbeddedResource Include="UnpaidInvoicesReportForm.resx">
+      <DependentUpon>UnpaidInvoicesReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
+    <None Include="EmployeeReport.frx" />
+    <None Include="FalconSidebarWinForms.csproj" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="water3_TemporaryKey.pfx" />
+    <None Include="WaterBillingDBDataSet.xsc">
+      <DependentUpon>WaterBillingDBDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="WaterBillingDBDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>WaterBillingDBDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="WaterBillingDBDataSet.xss">
+      <DependentUpon>WaterBillingDBDataSet.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appstore.ico" />
+    <Content Include="invoice1.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Reports\Templates\general_journal.html" />
+    <Content Include="Reports\Templates\report_base.html" />
+    <Content Include="report_base.Designer.html" />
+    <Content Include="report_base.html">
+      <SubType>Form</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\FastReport.OpenSource.2023.3.9\build\FastReport.OpenSource.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\FastReport.OpenSource.2023.3.9\build\FastReport.OpenSource.props'))" />
+  </Target>
+</Project>

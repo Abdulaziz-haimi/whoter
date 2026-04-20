@@ -1,0 +1,19 @@
+﻿<table class="table table-bordered table-sm text-center">
+    <thead class="table-primary">
+        <tr>
+            <th>التاريخ</th>
+            <th>الحساب</th>
+            <th>البيان</th>
+            <th>مدين</th>
+            <th>دائن</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ROWS}}
+    </tbody>
+</table>
+
+<div class="row mt-3 fw-bold">
+    <div class="col">إجمالي المدين: {{TOTAL_DEBIT}}</div>
+    <div class="col">إجمالي الدائن: {{TOTAL_CREDIT}}</div>
+</div>

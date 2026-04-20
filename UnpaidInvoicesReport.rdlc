@@ -1,0 +1,1013 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition"
+        xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+	<DataSources>
+		<DataSource Name="UnpaidInvoicesDS">
+			<ConnectionProperties>
+				<DataProvider>System.Data.DataSet</DataProvider>
+				<ConnectString>/* Local Connection */</ConnectString>
+			</ConnectionProperties>
+			<rd:DataSourceID>f0bdf9d3-377d-4a59-8a13-2fc02b9b302c</rd:DataSourceID>
+		</DataSource>
+	</DataSources>
+	<DataSets>
+		<DataSet Name="UnpaidInvoicesDS">
+			<Fields>
+				<Field Name="InvoiceID">
+					<DataField>InvoiceID</DataField>
+					<rd:TypeName>System.Int32</rd:TypeName>
+				</Field>
+				<Field Name="SubscriberName">
+					<DataField>SubscriberName</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="MeterNumber">
+					<DataField>MeterNumber</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="Address">
+					<DataField>Address</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="PhoneNumber">
+					<DataField>PhoneNumber</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+				<Field Name="InvoiceDate">
+					<DataField>InvoiceDate</DataField>
+					<rd:TypeName>System.DateTime</rd:TypeName>
+				</Field>
+				<Field Name="Consumption">
+					<DataField>Consumption</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="UnitPrice">
+					<DataField>UnitPrice</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="ServiceFees">
+					<DataField>ServiceFees</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="Arrears">
+					<DataField>Arrears</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="TotalAmount">
+					<DataField>TotalAmount</DataField>
+					<rd:TypeName>System.Decimal</rd:TypeName>
+				</Field>
+				<Field Name="Status">
+					<DataField>Status</DataField>
+					<rd:TypeName>System.String</rd:TypeName>
+				</Field>
+			</Fields>
+			<Query>
+				<DataSourceName>UnpaidInvoicesDS</DataSourceName>
+				<CommandText />
+			</Query>
+		</DataSet>
+	</DataSets>
+	<Body>
+		<ReportItems>
+			<!-- Header Title -->
+			<Textbox Name="ReportHeader">
+				<CanGrow>true</CanGrow>
+				<Paragraphs>
+					<Paragraph>
+						<TextRuns>
+							<TextRun>
+								<Value>مشروع المدينة للمياه النقية</Value>
+								<Style>
+									<FontSize>18pt</FontSize>
+									<FontWeight>Bold</FontWeight>
+									<Color>DodgerBlue</Color>
+									<FontFamily>Tahoma</FontFamily>
+								</Style>
+							</TextRun>
+						</TextRuns>
+					</Paragraph>
+				</Paragraphs>
+				<Style>
+					<TextAlign>Center</TextAlign>
+				</Style>
+				<Top>0.2cm</Top>
+				<Left>1cm</Left>
+				<Width>25cm</Width>
+				<Height>1cm</Height>
+			</Textbox>
+			<!-- Report Subtitle -->
+			<Textbox Name="ReportSubtitle">
+				<CanGrow>true</CanGrow>
+				<Paragraphs>
+					<Paragraph>
+						<TextRuns>
+							<TextRun>
+								<Value>تقرير الفواتير غير المدفوعة/المتأخرة</Value>
+								<Style>
+									<FontSize>13pt</FontSize>
+									<FontWeight>Bold</FontWeight>
+									<FontFamily>Tahoma</FontFamily>
+									<Color>Black</Color>
+								</Style>
+							</TextRun>
+						</TextRuns>
+					</Paragraph>
+				</Paragraphs>
+				<Style>
+					<TextAlign>Center</TextAlign>
+				</Style>
+				<Top>1.2cm</Top>
+				<Left>1cm</Left>
+				<Width>25cm</Width>
+				<Height>0.7cm</Height>
+			</Textbox>
+			<!-- The Table (Tablix) -->
+			<Tablix Name="Tablix1">
+				<TablixBody>
+					<TablixColumns>
+						<TablixColumn>
+							<Width>2.5cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>3.2cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.4cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>3.2cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>3.2cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.5cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.2cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.2cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.2cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.5cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.7cm</Width>
+						</TablixColumn>
+						<TablixColumn>
+							<Width>2.3cm</Width>
+						</TablixColumn>
+					</TablixColumns>
+					<TablixRows>
+						<!-- Table Header Row -->
+						<TablixRow>
+							<Height>0.8cm</Height>
+							<TablixCells>
+								<!-- جميع الخلايا تحتوي بيانات -->
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="th_Status">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>الحالة</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_SubscriberName">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>اسم المشترك</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_MeterNumber">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>رقم العداد</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_Address">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>العنوان</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_PhoneNumber">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>رقم الهاتف</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_InvoiceDate">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>تاريخ الفاتورة</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_Consumption">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>الاستهلاك</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_UnitPrice">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>سعر الوحدة</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_ServiceFees">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>رسوم الخدمة</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_Arrears">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>المتأخرات</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_TotalAmount">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>الإجمالي</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Header_Status">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>الحالة</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<BackgroundColor>LightSteelBlue</BackgroundColor>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+												<Border>
+													<Style>Solid</Style>
+												</Border>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+							</TablixCells>
+						</TablixRow>
+						<!-- Data Row -->
+						<TablixRow>
+							<Height>0.7cm</Height>
+							<TablixCells>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_InvoiceID">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!InvoiceID.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_SubscriberName">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!SubscriberName.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_MeterNumber">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!MeterNumber.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_Address">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Address.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_PhoneNumber">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!PhoneNumber.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_InvoiceDate">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Format(Fields!InvoiceDate.Value, "yyyy-MM-dd")</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_Consumption">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Consumption.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_UnitPrice">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!UnitPrice.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_ServiceFees">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!ServiceFees.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_Arrears">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Arrears.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_TotalAmount">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!TotalAmount.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Cell_Status">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Fields!Status.Value</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+							</TablixCells>
+						</TablixRow>
+						<!-- Totals Row -->
+						<TablixRow>
+							<Height>0.7cm</Height>
+							<TablixCells>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="FooterLabel">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>الإجماليات:</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<FontWeight>Bold</FontWeight>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="FooterCount">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Count(Fields!InvoiceID.Value)</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<FontWeight>Bold</FontWeight>
+												<Color>DodgerBlue</Color>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<!-- جميع الخلايا الفارغة أصبحت تحتوي Textbox باسم فريد -->
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Footer_EmptyCell1">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value></Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Footer_EmptyCell2">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value></Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Footer_EmptyCell3">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value></Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Footer_EmptyCell4">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value></Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="FooterTotalConsumption">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!Consumption.Value)</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<FontWeight>Bold</FontWeight>
+												<Color>DarkRed</Color>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Footer_EmptyCell5">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value></Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Footer_EmptyCell6">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value></Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="FooterTotalArrears">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!Arrears.Value)</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<FontWeight>Bold</FontWeight>
+												<Color>DarkRed</Color>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="FooterTotalAmount">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value>=Sum(Fields!TotalAmount.Value)</Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+											<Style>
+												<FontWeight>Bold</FontWeight>
+												<Color>DarkRed</Color>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+								<TablixCell>
+									<CellContents>
+										<Textbox Name="Footer_EmptyCell7">
+											<Paragraphs>
+												<Paragraph>
+													<TextRuns>
+														<TextRun>
+															<Value></Value>
+															<Style />
+														</TextRun>
+													</TextRuns>
+													<Style />
+												</Paragraph>
+											</Paragraphs>
+										</Textbox>
+									</CellContents>
+								</TablixCell>
+							</TablixCells>
+						</TablixRow>
+					</TablixRows>
+				</TablixBody>
+				<TablixColumnHierarchy>
+					<TablixMembers>
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+					</TablixMembers>
+				</TablixColumnHierarchy>
+				<TablixRowHierarchy>
+					<TablixMembers>
+						<TablixMember />
+						<TablixMember />
+						<TablixMember />
+					</TablixMembers>
+				</TablixRowHierarchy>
+				<DataSetName>UnpaidInvoicesDS</DataSetName>
+			</Tablix>
+			<!-- Footer -->
+			<Textbox Name="ReportFooter">
+				<CanGrow>true</CanGrow>
+				<Paragraphs>
+					<Paragraph>
+						<TextRuns>
+							<TextRun>
+								<Value>تم توليد التقرير آلياً - جميع الحقوق محفوظة لمشروع المدينة للمياه النقية</Value>
+								<Style>
+									<FontSize>9pt</FontSize>
+									<FontWeight>Normal</FontWeight>
+									<Color>Gray</Color>
+									<FontFamily>Tahoma</FontFamily>
+								</Style>
+							</TextRun>
+						</TextRuns>
+					</Paragraph>
+				</Paragraphs>
+				<Style>
+					<TextAlign>Center</TextAlign>
+					<PaddingTop>8pt</PaddingTop>
+				</Style>
+				<Top>21cm</Top>
+				<Left>1cm</Left>
+				<Width>25cm</Width>
+				<Height>0.7cm</Height>
+			</Textbox>
+		</ReportItems>
+		<Height>22cm</Height>
+	</Body>
+	<Width>28cm</Width>
+	<Language>ar-YE</Language>
+	<Page>
+		<PageWidth>29.7cm</PageWidth>
+		<PageHeight>21cm</PageHeight>
+		<LeftMargin>1cm</LeftMargin>
+		<RightMargin>1cm</RightMargin>
+		<TopMargin>1cm</TopMargin>
+		<BottomMargin>1cm</BottomMargin>
+	</Page>
+</Report>

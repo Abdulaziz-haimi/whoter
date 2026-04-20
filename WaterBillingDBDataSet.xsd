@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="WaterBillingDBDataSet" targetNamespace="http://tempuri.org/WaterBillingDBDataSet.xsd" xmlns:mstns="http://tempuri.org/WaterBillingDBDataSet.xsd" xmlns="http://tempuri.org/WaterBillingDBDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="WaterBillingDBConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="WaterBillingDBConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.water3.Properties.Settings.GlobalReference.Default.WaterBillingDBConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="vw_SubscriberBalanceTableAdapter" GeneratorDataComponentClassName="vw_SubscriberBalanceTableAdapter" Name="vw_SubscriberBalance" UserDataComponentName="vw_SubscriberBalanceTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="WaterBillingDBConnectionString (Settings)" DbObjectName="WaterBillingDB.dbo.vw_SubscriberBalance" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT SubscriberID, Balance FROM dbo.vw_SubscriberBalance</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="SubscriberID" DataSetColumn="SubscriberID" />
+              <Mapping SourceColumn="Balance" DataSetColumn="Balance" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="WaterBillingDBDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="WaterBillingDBDataSet" msprop:Generator_UserDSName="WaterBillingDBDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vw_SubscriberBalance" msprop:Generator_TableClassName="vw_SubscriberBalanceDataTable" msprop:Generator_TableVarName="tablevw_SubscriberBalance" msprop:Generator_TablePropName="vw_SubscriberBalance" msprop:Generator_RowDeletingName="vw_SubscriberBalanceRowDeleting" msprop:Generator_RowChangingName="vw_SubscriberBalanceRowChanging" msprop:Generator_RowEvHandlerName="vw_SubscriberBalanceRowChangeEventHandler" msprop:Generator_RowDeletedName="vw_SubscriberBalanceRowDeleted" msprop:Generator_UserTableName="vw_SubscriberBalance" msprop:Generator_RowChangedName="vw_SubscriberBalanceRowChanged" msprop:Generator_RowEvArgName="vw_SubscriberBalanceRowChangeEvent" msprop:Generator_RowClassName="vw_SubscriberBalanceRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SubscriberID" msprop:Generator_ColumnVarNameInTable="columnSubscriberID" msprop:Generator_ColumnPropNameInRow="SubscriberID" msprop:Generator_ColumnPropNameInTable="SubscriberIDColumn" msprop:Generator_UserColumnName="SubscriberID" type="xs:int" />
+              <xs:element name="Balance" msprop:Generator_ColumnVarNameInTable="columnBalance" msprop:Generator_ColumnPropNameInRow="Balance" msprop:Generator_ColumnPropNameInTable="BalanceColumn" msprop:Generator_UserColumnName="Balance" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

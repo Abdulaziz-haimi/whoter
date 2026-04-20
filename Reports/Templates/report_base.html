@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>{{TITLE}}</title>
+
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f2f5f8;
+            font-family: Tahoma;
+            font-size: 13px;
+        }
+
+        .report-box {
+            background: #fff;
+            border: 2px solid #0d6efd;
+            padding: 15px;
+        }
+
+        .report-title {
+            color: #0d6efd;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid mt-2">
+        <div class="report-box">
+            <h4 class="report-title">{{TITLE}}</h4>
+            <p class="text-center mb-2">{{DATE_RANGE}}</p>
+
+            {{CONTENT}}
+        </div>
+    </div>
+
+</body>
+</html>
