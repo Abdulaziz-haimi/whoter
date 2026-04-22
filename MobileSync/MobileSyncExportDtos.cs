@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using water3.MobileSync;
-using System;
-using System.Collections.Generic;
+
 namespace water3.MobileSync
 {
-   
     public sealed class SyncExportBundle
     {
-        public SyncExportSummaryDto Summary { get; set; } = new();
-        public List<LocalSubscriberDto> Subscribers { get; set; } = new();
-        public List<LocalSubscriberMeterDto> Meters { get; set; } = new();
-        public List<LocalOpenInvoiceDto> OpenInvoices { get; set; } = new();
-        public List<LocalSubscriberCreditDto> Credits { get; set; } = new();
+        public SyncExportSummaryDto Summary { get; set; } = new SyncExportSummaryDto();
+        public List<LocalSubscriberDto> Subscribers { get; set; } = new List<LocalSubscriberDto>();
+        public List<LocalSubscriberMeterDto> Meters { get; set; } = new List<LocalSubscriberMeterDto>();
+        public List<LocalOpenInvoiceDto> OpenInvoices { get; set; } = new List<LocalOpenInvoiceDto>();
+        public List<LocalSubscriberCreditDto> Credits { get; set; } = new List<LocalSubscriberCreditDto>();
     }
 
     public sealed class SyncExportSummaryDto
@@ -120,7 +114,7 @@ namespace water3.MobileSync
         public DateTime? UpdatedAt { get; set; }
         public DateTime? SentAt { get; set; }
 
-        public List<LocalReceiptDraftLineDto> Lines { get; set; } = new();
+        public List<LocalReceiptDraftLineDto> Lines { get; set; } = new List<LocalReceiptDraftLineDto>();
     }
 
     public sealed class LocalReceiptDraftLineDto
@@ -133,62 +127,3 @@ namespace water3.MobileSync
         public string Notes { get; set; }
     }
 }
-
-/*using System;
-using System.Threading.Tasks;
-using water3.MobileSync;
-
-public class Demo
-{
-    public async Task RunAsync()
-    {
-        string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        MobileSyncService service = MobileSyncBootstrap.Build(appFolder);
-
-        await service.InitializeAsync();
-
-        // لاحقًا: bundle سيأتي من إجراء usp_MobileSync_ExportReceivables
-        var bundle = new SyncExportBundle
-        {
-            Summary = new SyncExportSummaryDto
-            {
-                CollectorID = 1,
-                AsOfDate = DateTime.Today,
-                ExportedAt = DateTime.Now,
-                SubscribersCount = 0,
-                OpenInvoicesCount = 0,
-                OpenCreditsCount = 0
-            }
-        };
-
-        await service.ImportReceivablesAsync(bundle, "PHONE-ABC-123");
-
-        var draft = new LocalReceiptDraftDto
-        {
-            SubscriberID = 1,
-            CollectorID = 1,
-            PaymentDate = DateTime.Today,
-            TotalReceived = 500m,
-            PaymentMethod = "Cash",
-            Notes = "تحصيل ميداني",
-            Lines =
-            {
-                new LocalReceiptDraftLineDto
-                {
-                    InvoiceID = 10,
-                    AppliedAmount = 400m,
-                    ApplicationType = "InvoicePayment"
-                },
-                new LocalReceiptDraftLineDto
-                {
-                    InvoiceID = null,
-                    AppliedAmount = 100m,
-                    ApplicationType = "AdvanceCredit"
-                }
-            }
-        };
-
-        long localReceiptId = await service.SaveReceiptDraftAsync(draft);
-    }
-}
-*/

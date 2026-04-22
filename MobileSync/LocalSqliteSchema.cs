@@ -18,23 +18,30 @@ namespace water3.MobileSync
             _dbPath = dbPath;
         }
 
-        public string ConnectionString => new SqliteConnectionStringBuilder
+        public string ConnectionString
         {
-            DataSource = _dbPath,
-            Mode = SqliteOpenMode.ReadWriteCreate,
-            Cache = SqliteCacheMode.Shared
-        }.ToString();
+            get
+            {
+                return new SqliteConnectionStringBuilder
+                {
+                    DataSource = _dbPath,
+                    Mode = SqliteOpenMode.ReadWriteCreate,
+                    Cache = SqliteCacheMode.Shared
+                }.ToString();
+            }
+        }
 
         public async Task EnsureCreatedAsync(CancellationToken cancellationToken = default)
         {
-            string? dir = Path.GetDirectoryName(_dbPath);
+            string dir = Path.GetDirectoryName(_dbPath);
             if (!string.IsNullOrWhiteSpace(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            await using var con = new SqliteConnection(ConnectionString);
-            await con.OpenAsync(cancellationToken);
+            using (var con = new SqliteConnection(ConnectionString))
+            {
+                await con.OpenAsync(cancellationToken);
 
-            string sql = @"
+                string sql = @"
 CREATE TABLE IF NOT EXISTS LocalSyncInfo
 (
     SyncKey           TEXT PRIMARY KEY,
@@ -190,9 +197,12 @@ CREATE INDEX IF NOT EXISTS IX_LocalReceiptDraftLines_InvoiceID
 ON LocalReceiptDraftLines(InvoiceID);
 ";
 
-            await using var cmd = con.CreateCommand();
-            cmd.CommandText = sql;
-            await cmd.ExecuteNonQueryAsync(cancellationToken);
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    await cmd.ExecuteNonQueryAsync(cancellationToken);
+                }
+            }
         }
     }
 }
