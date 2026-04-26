@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-
+using water3.Models;
+using water3.Services;
 namespace water3
 {
     public partial class LoginForm : Form
@@ -14,7 +15,8 @@ namespace water3
         private Color primaryColor = Color.FromArgb(52, 152, 219);
         private Color successColor = Color.FromArgb(46, 204, 113);
         private Color errorColor = Color.FromArgb(231, 76, 60);
-
+        private readonly UserAuthService _authService = new UserAuthService();
+        private AppUser _loggedInUser;
         private TextBox txtUsername;
         private TextBox txtPassword;
         private CheckBox chkRemember;
@@ -24,9 +26,9 @@ namespace water3
 
         private int failedAttempts = 0;
         private const int MAX_ATTEMPTS = 3;
-
+        private readonly PermissionService _permissionService = new PermissionService();
         // سلسلة الاتصال بقاعدة البيانات
-      
+
         public LoginForm()
         {
             InitializeForm();
@@ -118,7 +120,6 @@ namespace water3
                 Properties.Settings.Default.Save();
             }
         }
-
         private async void BtnLogin_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtUsername.Text))
@@ -127,6 +128,7 @@ namespace water3
                 txtUsername.Focus();
                 return;
             }
+
             if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
                 ShowStatus("يرجى إدخال كلمة المرور", false);
@@ -137,26 +139,54 @@ namespace water3
             SetControlsEnabled(false);
             btnLogin.Text = "جاري التحقق...";
 
-            bool isValid = await ValidateCredentialsAsync(txtUsername.Text, txtPassword.Text);
-
-            if (isValid)
+            try
             {
-                ShowStatus("تم تسجيل الدخول بنجاح!", true);
-                SaveCredentials();
-                failedAttempts = 0;
-                await Task.Delay(500);
+                _loggedInUser = await ValidateCredentialsAsync(txtUsername.Text, txtPassword.Text);
 
-                MainForm mainForm = new MainForm();
-                mainForm.Show();
-                this.Hide();
-            }
-            else
-            {
+                if (_loggedInUser != null)
+                {
+                    CurrentUser.UserID = _loggedInUser.UserID;
+                    CurrentUser.UserName = _loggedInUser.UserName;
+                    CurrentUser.FullName = _loggedInUser.FullName ?? _loggedInUser.UserName;
+                    CurrentUser.RoleID = _loggedInUser.RoleID;
+                    CurrentUser.RoleName = _loggedInUser.RoleName ?? string.Empty;
+                    CurrentUser.IsLoggedIn = true;
+                    CurrentUser.Permissions = _permissionService.GetPermissionsByRole(_loggedInUser.RoleID);
+
+                    ShowStatus("تم تسجيل الدخول بنجاح!", true);
+                    SaveCredentials();
+                    failedAttempts = 0;
+
+                    var audit = new AuditLogService();
+                    audit.Log(
+                        action: "LOGIN_SUCCESS",
+                        tableName: "Users",
+                        recordId: _loggedInUser.UserID,
+                        details: "تم تسجيل الدخول بنجاح",
+                        entityName: _loggedInUser.UserName);
+
+                    await System.Threading.Tasks.Task.Delay(300);
+
+                    DialogResult = DialogResult.OK;
+                    Close();
+                    return;
+                }
+
                 failedAttempts++;
+
+                var auditFailed = new AuditLogService();
+                auditFailed.Log(
+                    action: "LOGIN_FAILED",
+                    tableName: "Users",
+                    recordId: null,
+                    details: $"فشل تسجيل الدخول لاسم المستخدم: {txtUsername.Text}",
+                    entityName: txtUsername.Text);
+
                 if (failedAttempts >= MAX_ATTEMPTS)
                 {
                     ShowStatus("تم تجاوز الحد الأقصى للمحاولات. حاول لاحقاً", false);
                     btnLogin.Enabled = false;
+
                     Timer enableTimer = new Timer();
                     enableTimer.Interval = 300000; // 5 دقائق
                     enableTimer.Tick += (s, ev) =>
@@ -164,6 +194,7 @@ namespace water3
                         btnLogin.Enabled = true;
                         failedAttempts = 0;
                         enableTimer.Stop();
+                        enableTimer.Dispose();
                     };
                     enableTimer.Start();
                 }
@@ -172,40 +203,64 @@ namespace water3
                     ShowStatus($"بيانات الدخول غير صحيحة. المحاولات المتبقية: {MAX_ATTEMPTS - failedAttempts}", false);
                 }
             }
-
-            SetControlsEnabled(true);
-            btnLogin.Text = "تسجيل الدخول";
+            catch (Exception ex)
+            {
+                ShowStatus("حدث خطأ أثناء تسجيل الدخول: " + ex.Message, false);
+            }
+            finally
+            {
+                if (DialogResult != DialogResult.OK)
+                {
+                    SetControlsEnabled(true);
+                    btnLogin.Text = "تسجيل الدخول";
+                }
+            }
         }
-
-        private async Task<bool> ValidateCredentialsAsync(string username, string password)
+  
+        private async System.Threading.Tasks.Task<AppUser> ValidateCredentialsAsync(string username, string password)
         {
-            return await Task.Run(() =>
+            return await System.Threading.Tasks.Task.Run(() =>
             {
                 try
                 {
-                    using (SqlConnection con = Db.GetConnection())
-                    {
-                        string query = "SELECT PasswordHash FROM Users WHERE Username = @Username AND IsActive = 1";
-                        SqlCommand cmd = new SqlCommand(query, con);
-                        cmd.Parameters.AddWithValue("@Username", username);
-
-                        con.Open();
-                        object result = cmd.ExecuteScalar();
-                        if (result != null)
-                        {
-                            string storedHash = result.ToString();
-                            string enteredHash = HashPassword(password);
-                            return storedHash == enteredHash;
-                        }
-                        return false;
-                    }
+                    return _authService.ValidateUser(username, password);
                 }
                 catch
                 {
-                    return false;
+                    return null;
                 }
             });
         }
+
+        //private async Task<bool> ValidateCredentialsAsync(string username, string password)
+        //{
+        //    return await Task.Run(() =>
+        //    {
+        //        try
+        //        {
+        //            using (SqlConnection con = Db.GetConnection())
+        //            {
+        //                string query = "SELECT PasswordHash FROM Users WHERE Username = @Username AND IsActive = 1";
+        //                SqlCommand cmd = new SqlCommand(query, con);
+        //                cmd.Parameters.AddWithValue("@Username", username);
+
+        //                con.Open();
+        //                object result = cmd.ExecuteScalar();
+        //                if (result != null)
+        //                {
+        //                    string storedHash = result.ToString();
+        //                    string enteredHash = HashPassword(password);
+        //                    return storedHash == enteredHash;
+        //                }
+        //                return false;
+        //            }
+        //        }
+        //        catch
+        //        {
+        //            return false;
+        //        }
+        //    });
+        //}
 
         private string HashPassword(string password)
         {

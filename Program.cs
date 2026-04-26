@@ -42,11 +42,17 @@ namespace water3
 
             EnsureDbConnectionOrExit();
 
-            Application.Run(new Form1());
-           
+            using (var login = new LoginForm())
+            {
+                if (login.ShowDialog() == DialogResult.OK)
+                {
+                    Application.Run(new Form1());
+                }
+            }
 
-            
-           
+
+
+
         }
 
         private static void EnsureDbConnectionOrExit()
@@ -87,27 +93,3 @@ namespace water3
     }
 }
 
-/*
- * using System.Globalization;
-using System.Threading;
-using System.Windows.Forms;
-
-namespace water3
-{
-    internal static class Program
-    {
-        [STAThread]
-        static void Main()
-        {
-            var culture = new CultureInfo("ar-YE"); // أو ar-SA
-
-            Thread.CurrentThread.CurrentCulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-        }
-    }
-}
-*/

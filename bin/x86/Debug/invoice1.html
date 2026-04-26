@@ -1,0 +1,562 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <title>فاتورة استهلاك مياه</title>
+
+    <style>
+        :root {
+            --blue: #0aa5da;
+            --text: #0b0b0b;
+            --thin: 2px solid var(--blue);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            font-family: Tahoma, Arial, "Segoe UI";
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        @media print {
+            @page {
+                size: A5 landscape;
+                margin: 6mm;
+            }
+
+            body {
+                margin: 0;
+            }
+
+            .page {
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 148mm;
+            margin: 0 auto;
+            padding: 6mm;
+        }
+
+        /* ===== HEADER ===== */
+        .hdr {
+            display: grid;
+            grid-template-columns: 1fr 90px 1fr;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+            .hdr .left {
+                text-align: left;
+                direction: ltr;
+                font-weight: bold;
+                color: #0b3b8a;
+                line-height: 1.25;
+                font-size: 20px;
+            }
+
+                .hdr .left small {
+                    display: block;
+                    font-size: 18px;
+                    margin-top: 2px;
+                }
+
+            .hdr .mid {
+                text-align: center;
+            }
+
+                .hdr .mid img {
+                    height: 62px;
+                    width: auto;
+                    display: inline-block;
+                }
+
+            .hdr .right {
+                text-align: right;
+                font-weight: bold;
+                color: #0b3b8a;
+                line-height: 1.25;
+                font-size: 20px;
+            }
+
+                .hdr .right small {
+                    display: block;
+                    font-size: 18px;
+                    margin-top: 2px;
+                }
+
+        /* ===== ADDRESS BAR ===== */
+        .addr {
+            border: var(--thin);
+            padding: 6px 10px;
+            text-align: center;
+            color: #0b3b8a;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        /* ===== STRIP ===== */
+        .strip {
+            display: grid;
+            grid-template-columns: 1fr 210px 1fr;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .pill {
+            border: var(--thin);
+            padding: 10px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            background: #fff;
+        }
+
+            .pill.red {
+                color: #d10000;
+            }
+
+            .pill.blueTitle {
+                background: var(--blue);
+                color: #fff;
+                position: relative;
+                padding: 10px 12px;
+            }
+
+                .pill.blueTitle:before,
+                .pill.blueTitle:after {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    width: 55px;
+                    border-top: 3px solid var(--blue);
+                    transform: translateY(-50%);
+                }
+
+                .pill.blueTitle:before {
+                    right: -55px;
+                }
+
+                .pill.blueTitle:after {
+                    left: -55px;
+                }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .t {
+            border: var(--thin);
+            margin-bottom: 10px;
+        }
+
+            .t th, .t td {
+                border: var(--thin);
+                padding: 6px 6px;
+                text-align: center;
+                vertical-align: middle;
+                font-weight: bold;
+                white-space: nowrap;
+            }
+
+            .t .rowHead {
+                background: var(--blue);
+                color: #fff;
+                font-size: 14px;
+            }
+
+            .t .subHead {
+                background: #fff;
+                color: #000;
+                font-size: 13px;
+            }
+
+            .t .mutedCell {
+                background: #f8fdff;
+            }
+
+        /* ===== BOTTOM ===== */
+        .bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .mini {
+            border: var(--thin);
+        }
+
+            .mini th, .mini td {
+                border: var(--thin);
+                padding: 8px 6px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+        .note {
+            margin-top: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: right;
+        }
+
+            .note ul {
+                margin: 6px 0 0;
+                padding: 0 18px 0 0;
+            }
+
+            .note li {
+                margin: 4px 0;
+                line-height: 1.4;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+
+        <div class="hdr">
+            <div class="left">
+                Al-Madena Project
+                <small>for Pure Water</small>
+            </div>
+
+            <div class="mid">
+                <img src="logo.png" alt="logo">
+            </div>
+
+            <div class="right">
+                مشروع المدينة
+                <small>للمياه النقية</small>
+            </div>
+        </div>
+
+        <div class="addr">
+            العنوان / {{Address}} / ضباعاء جولة مصعب / ت: {{Mobile}}
+        </div>
+
+        <div class="strip">
+            <div class="pill red">الرقم : {{InvoiceNo}}</div>
+            <div class="pill blueTitle">فاتورة استهلاك مياه</div>
+            <div class="pill">التاريخ : {{Date}}</div>
+        </div>
+
+        <table class="t">
+            <tr class="rowHead">
+                <th colspan="2">الفترة</th>
+                <th colspan="2">بيانات المشترك</th>
+                <th colspan="3">قراءة العداد</th>
+            </tr>
+
+            <tr class="subHead">
+                <th>من تاريخ</th>
+                <th>الى تاريخ</th>
+                <th>اسم المستهلك</th>
+                <th>رقم العداد</th>
+                <th colspan="3">قراءة العداد</th>
+            </tr>
+
+            <tr>
+                <td class="mutedCell">{{FromDate}}</td>
+                <td class="mutedCell">{{ToDate}}</td>
+                <td>{{Name}}</td>
+                <td>{{Meter}}</td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr class="subHead">
+                <th colspan="2">العنوان</th>
+                <th>المربع</th>
+                <th></th>
+                <th>ق. السابقة</th>
+                <th>ق. الحالية</th>
+                <th>ك. الاستهلاك</th>
+            </tr>
+
+            <tr>
+                <td colspan="2">{{Address}}</td>
+                <td>{{Square}}</td>
+                <td></td>
+                <td>{{Prev}}</td>
+                <td>{{Curr}}</td>
+                <td>{{Cons}}</td>
+            </tr>
+
+            <tr class="subHead">
+                <th>القيمة المستحقة</th>
+                <th>المتأخرات</th>
+                <th>رسوم خدمات</th>
+                <th>قيمة الاستهلاك</th>
+                <th>ك. الاستهلاك</th>
+                <th colspan="2">القيمة الإجمالية ر.ي</th>
+            </tr>
+
+            <tr>
+                <td>{{Total}}</td>
+                <td>{{Arrears}}</td>
+                <td>{{ServiceFees}}</td>
+                <td>{{ConsValue}}</td>
+                <td>{{Cons}}</td>
+                <td colspan="2">{{Total}}</td>
+            </tr>
+        </table>
+
+        <div class="bottom">
+            <table class="mini">
+                <tr>
+                    <th>المدفوعة السابقة</th>
+                    <th>الرصيد الحالي</th>
+                </tr>
+                <tr>
+                    <td>{{Paid}}</td>
+                    <td>{{Balance}}</td>
+                </tr>
+            </table>
+
+            <table class="mini">
+                <tr><th>إجمالي المبلغ المستحق كتابة</th></tr>
+                <tr><td>{{TotalWords}}</td></tr>
+            </table>
+        </div>
+
+        <div class="note">
+            <ul>
+                <li>نرجو سرعة تسديد الفاتورة في مدة أقصاها 3 أيام من إصدارها وفي حالة التأخير سيتم قطع الخدمة ولن يتم إعادتها إلا بغرامة مالية.</li>
+                <li>يخلي مسؤول المشروع أي مشترك من ارتكاب أي مخالفات كالتوصيل في أماكن غير مسموحة أو غير مطابقة للتصميم.</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>
+<!--<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>فاتورة استهلاك مياه</title>
+
+    <style>
+        body {
+            background: #eef6fb;
+            font-family: Tahoma, Arial;
+            font-size: 13px;
+        }
+
+        .invoice {
+            width: 1000px;
+            margin: 15px auto;
+            background: #fff;
+            border: 2px solid #1aa1d8;
+            padding: 10px;
+        }
+
+        /* ====== HEADER ====== */
+        .header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            border-bottom: 2px solid #1aa1d8;
+            padding-bottom: 5px;
+        }
+
+        .header-center {
+            text-align: center;
+        }
+
+            .header-center h2 {
+                margin: 0;
+                color: #1aa1d8;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .header-center p {
+                margin: 2px 0;
+            }
+
+        .header-left,
+        .header-right {
+            font-size: 13px;
+        }
+
+        /* ====== BILL INFO ====== */
+        .bill-info {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+            .bill-info td {
+                border: 1px solid #1aa1d8;
+                padding: 5px;
+                text-align: center;
+            }
+
+        .bill-title {
+            background: #1aa1d8;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* ====== SECTION ====== */
+        .section-title {
+            background: #1aa1d8;
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+
+        /* ====== DATA TABLE ====== */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .data-table td, .data-table th {
+                border: 1px solid #1aa1d8;
+                padding: 5px;
+                text-align: center;
+            }
+
+            .data-table th {
+                background: #f1f9fd;
+            }
+
+        /* ====== SUMMARY ====== */
+        .summary {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+            .summary td {
+                border: 1px solid #1aa1d8;
+                padding: 5px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .logos img {
+            height: 30px;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="invoice">-->
+<!-- ===== HEADER ===== -->
+<!--<div class="header">
+    <div class="header-right">
+        التاريخ: {{Date}}<br>
+        رقم الحساب: {{Account}}
+    </div>
+
+    <div class="header-center">
+        <h2>مشروع المدينة للمياه النقية</h2>
+        <p>صنعاء / جولة مصعب</p>
+        <p>موبايل: {{Mobile}}</p>
+    </div>
+
+    <div class="header-left">
+        الرقم: <strong style="color:red">{{InvoiceNo}}</strong>
+    </div>
+</div>-->
+<!-- ===== BILL INFO ===== -->
+<!--<table class="bill-info">
+    <tr>
+        <td class="bill-title" colspan="4">فاتورة استهلاك مياه</td>
+    </tr>
+    <tr>
+        <td>من تاريخ</td>
+        <td>{{FromDate}}</td>
+        <td>إلى تاريخ</td>
+        <td>{{ToDate}}</td>
+    </tr>
+</table>-->
+<!-- ===== CUSTOMER ===== -->
+<!--<div class="section-title">بيانات المشترك</div>
+<table class="data-table">
+    <tr>
+        <td>اسم المشترك</td>
+        <td>{{Name}}</td>
+        <td>رقم العداد</td>
+        <td>{{Meter}}</td>
+    </tr>
+    <tr>
+        <td>العنوان</td>
+        <td>{{Address}}</td>
+        <td>الفرع</td>
+        <td>{{Branch}}</td>
+    </tr>
+</table>-->
+<!-- ===== READING ===== -->
+<!--<table class="data-table" style="margin-top:6px">
+    <tr>
+        <th colspan="3">قراءة العداد</th>
+        <th rowspan="2">قيمة الاستهلاك</th>
+        <th rowspan="2">المتأخرات</th>
+        <th rowspan="2">القيمة المستحقة</th>
+    </tr>
+    <tr>
+        <th>السابقة</th>
+        <th>الحالية</th>
+        <th>كمية الاستهلاك</th>
+    </tr>
+    <tr>
+        <td>{{Prev}}</td>
+        <td>{{Curr}}</td>
+        <td>{{Cons}}</td>
+        <td>{{ConsValue}}</td>
+        <td>{{Arrears}}</td>
+        <td>{{Total}}</td>
+    </tr>
+</table>-->
+<!-- ===== SUMMARY ===== -->
+<!--<table class="summary">
+    <tr>
+        <td>المدفوعات السابقة</td>
+        <td>الرصيد الحالي</td>
+    </tr>
+    <tr>
+        <td>{{Paid}}</td>
+        <td>{{Total}}</td>
+    </tr>
+</table>-->
+<!-- ===== FOOTER ===== -->
+<!--<div class="footer">
+            للدفع عبر المحافظ الإلكترونية على رقم الحساب {{Account}}<br>
+            تم اعتماد التعرفة الرسمية
+            <div class="logos">
+                <img src="jawali.png">
+                <img src="floosak.png">
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>-->

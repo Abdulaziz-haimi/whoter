@@ -27,31 +27,31 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-  <PlatformTarget>AnyCPU</PlatformTarget>
-  <DebugSymbols>true</DebugSymbols>
-  <DebugType>full</DebugType>
-  <Optimize>false</Optimize>
-  <OutputPath>bin\Debug\</OutputPath>
-  <DefineConstants>DEBUG;TRACE</DefineConstants>
-  <ErrorReport>prompt</ErrorReport>
-  <WarningLevel>4</WarningLevel>
-</PropertyGroup>
-<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-  <PlatformTarget>AnyCPU</PlatformTarget>
-  <DebugType>pdbonly</DebugType>
-  <Optimize>true</Optimize>
-  <OutputPath>bin\Release\</OutputPath>
-  <DefineConstants>TRACE</DefineConstants>
-  <ErrorReport>prompt</ErrorReport>
-  <WarningLevel>4</WarningLevel>
-</PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>appstore.ico</ApplicationIcon>
   </PropertyGroup>
@@ -66,6 +66,26 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
@@ -271,6 +291,66 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AuditLogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AuditLogForm.Designer.cs">
+      <DependentUpon>AuditLogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\CollectorDevicesReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\CollectorDevicesReportForm.Designer.cs">
+      <DependentUpon>CollectorDevicesReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\CollectorCollectionsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\CollectorCollectionsReportForm.Designer.cs">
+      <DependentUpon>CollectorCollectionsReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CollectorDevicesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectorDevicesForm.Designer.cs">
+      <DependentUpon>CollectorDevicesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CollectorEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectorEditForm.Designer.cs">
+      <DependentUpon>CollectorEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CollectorsManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectorsManagementForm.Designer.cs">
+      <DependentUpon>CollectorsManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CollectorUserLinkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectorUserLinkForm.Designer.cs">
+      <DependentUpon>CollectorUserLinkForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateUserForm.Designer.cs">
+      <DependentUpon>CreateUserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DeviceNameEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DeviceNameEditForm.Designer.cs">
+      <DependentUpon>DeviceNameEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EditUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditUserForm.Designer.cs">
+      <DependentUpon>EditUserForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\GeneralJournalReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,6 +360,12 @@
     <Compile Include="Forms\HtmlReportRenderer.cs" />
     <Compile Include="Forms\InvoicePrintPreviewForm.UI.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MobileSyncToPhoneForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MobileSyncToPhoneForm.Designer.cs">
+      <DependentUpon>MobileSyncToPhoneForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\PaymentsForm.Popup.cs">
       <SubType>Form</SubType>
@@ -299,7 +385,37 @@
     <Compile Include="Forms\ReadingF.UI.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\ResetPasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ResetPasswordForm.Designer.cs">
+      <DependentUpon>ResetPasswordForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RoleEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RoleEditForm.Designer.cs">
+      <DependentUpon>RoleEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RolePermissionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RolePermissionsForm.Designer.cs">
+      <DependentUpon>RolePermissionsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RolesManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RolesManagementForm.Designer.cs">
+      <DependentUpon>RolesManagementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Subscriber.cs" />
+    <Compile Include="Forms\UsersManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UsersManagementForm.Designer.cs">
+      <DependentUpon>UsersManagementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmApproveBatch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -348,10 +464,119 @@
     <Compile Include="MobileSync\SqlServerUploadClient.cs" />
     <Compile Include="MobileSync\SyncDemo.cs" />
     <Compile Include="MobileSync\UploadReceiptRowDto.cs" />
+    <Compile Include="Models\AppPermission.cs" />
+    <Compile Include="Models\AppRole.cs" />
+    <Compile Include="Models\AppUser.cs" />
+    <Compile Include="Models\AuditLogItem.cs" />
+    <Compile Include="Models\CollectorCollectionsReportItem.cs" />
+    <Compile Include="Models\CollectorDeviceItem.cs" />
+    <Compile Include="Models\CollectorDevicesReportItem.cs" />
+    <Compile Include="Models\CollectorSubscriberReportItem.cs" />
+    <Compile Include="Models\CollectorUserLinkItem.cs" />
+    <Compile Include="Models\GenericReportRow.cs" />
+    <Compile Include="Models\MobileExportSummaryItem.cs" />
+    <Compile Include="Models\MobileSubscriberExportItem.cs" />
+    <Compile Include="Models\MobileSyncBatchReportItem.cs" />
+    <Compile Include="Models\MobileSyncErrorReportItem.cs" />
+    <Compile Include="Models\PhonePushReportItem.cs" />
+    <Compile Include="Models\RolePermissionItem.cs" />
+    <Compile Include="Models\SubscriberLookupItem.cs" />
+    <Compile Include="Models\UserLookupItem.cs" />
     <Compile Include="Prompt.cs" />
     <Compile Include="Prompt.Designer.cs">
       <DependentUpon>Prompt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\AccountStatementReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\AccountStatementReportForm.Designer.cs">
+      <DependentUpon>AccountStatementReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\AgingReceivablesReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\AgingReceivablesReportForm.Designer.cs">
+      <DependentUpon>AgingReceivablesReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\BaseReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\BaseReportForm.Designer.cs">
+      <DependentUpon>BaseReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\CollectorSubscribersReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\CollectorSubscribersReportForm.Designer.cs">
+      <DependentUpon>CollectorSubscribersReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\GeneralJournalReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\GeneralJournalReportForm.Designer.cs">
+      <DependentUpon>GeneralJournalReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReportForm.Designer.cs">
+      <DependentUpon>InvoiceReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\MobileSyncBatchesReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\MobileSyncBatchesReportForm.Designer.cs">
+      <DependentUpon>MobileSyncBatchesReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\MobileSyncErrorsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\MobileSyncErrorsReportForm.Designer.cs">
+      <DependentUpon>MobileSyncErrorsReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\PaymentsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\PaymentsReportForm.Designer.cs">
+      <DependentUpon>PaymentsReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\PhonePushReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\PhonePushReportForm.Designer.cs">
+      <DependentUpon>PhonePushReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReceiptsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ReceiptsReportForm.Designer.cs">
+      <DependentUpon>ReceiptsReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\ReportsCenterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportsCenterForm.Designer.cs">
+      <DependentUpon>ReportsCenterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\TrialBalanceReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\TrialBalanceReportForm.Designer.cs">
+      <DependentUpon>TrialBalanceReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Security\PermissionKeys.cs" />
+    <Compile Include="Services\AuditLogService.cs" />
+    <Compile Include="Services\CollectorDeviceService.cs" />
+    <Compile Include="Services\CollectorService.cs" />
+    <Compile Include="Services\CollectorUserLinkService.cs" />
+    <Compile Include="Services\MobileSyncToPhoneService.cs" />
+    <Compile Include="Services\OperationsReportsService.cs" />
+    <Compile Include="Services\PermissionService.cs" />
+    <Compile Include="Services\ReportExportService.cs" />
+    <Compile Include="Services\ReportPrintService.cs" />
+    <Compile Include="Services\ReportsService.cs" />
+    <Compile Include="Services\RolePermissionService.cs" />
+    <Compile Include="Services\UserAuthService.cs" />
     <Compile Include="StatCardControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -527,6 +752,7 @@
     </Compile>
     <Compile Include="Utils\MoneyParser.cs" />
     <Compile Include="Utils\NumberParser.cs" />
+    <Compile Include="Utils\PermissionHelper.cs" />
     <Compile Include="Utils\SmsTemplateEngine.cs" />
     <Compile Include="Utils\SmsTemplateVariableInfo.cs" />
     <Compile Include="Utils\TemplateEngine.cs" />
@@ -602,6 +828,7 @@
     <EmbeddedResource Include="RegistrationForm.resx">
       <DependentUpon>RegistrationForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RDLC\InvoiceReport.rdlc" />
     <EmbeddedResource Include="Reports\Render\SubscriberStatementReportForm.resx">
       <DependentUpon>SubscriberStatementReportForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -679,6 +906,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

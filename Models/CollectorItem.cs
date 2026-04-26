@@ -11,7 +11,8 @@ namespace water3.Models
         {
             public int CollectorID { get; set; }
             public string Name { get; set; } = "";
-            public override string ToString() => Name;
+        public string Phone { get; set; }
+        public override string ToString() => Name;
         }
     }
 

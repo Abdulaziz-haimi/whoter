@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<AutoRefresh>0</AutoRefresh>
+		<DataSources>
+			<DataSource Name="InvoiceDataSource">
+				<ConnectionProperties>
+					<DataProvider>System.Data.DataSet</DataProvider>
+					<ConnectString />
+				</ConnectionProperties>
+				<rd:DataSourceID>9d7a1111-2222-3333-4444-555555555555</rd:DataSourceID>
+			</DataSource>
+		</DataSources>
+
+		<ReportParameters>
+			<ReportParameter Name="pReportTitle">
+				<DataType>String</DataType>
+				<Prompt>pReportTitle</Prompt>
+			</ReportParameter>
+			<ReportParameter Name="pFromDate">
+				<DataType>String</DataType>
+				<Prompt>pFromDate</Prompt>
+			</ReportParameter>
+			<ReportParameter Name="pToDate">
+				<DataType>String</DataType>
+				<Prompt>pToDate</Prompt>
+			</ReportParameter>
+			<ReportParameter Name="pPrintedBy">
+				<DataType>String</DataType>
+				<Prompt>pPrintedBy</Prompt>
+			</ReportParameter>
+			<ReportParameter Name="pPrintedAt">
+				<DataType>String</DataType>
+				<Prompt>pPrintedAt</Prompt>
+			</ReportParameter>
+		</ReportParameters>
+
+		<DataSets>
+			<DataSet Name="dsInvoices">
+				<Fields>
+					<Field Name="Dt1">
+						<DataField>Dt1</DataField>
+					</Field>
+					<Field Name="Col1">
+						<DataField>Col1</DataField>
+					</Field>
+					<Field Name="Col2">
+						<DataField>Col2</DataField>
+					</Field>
+					<Field Name="Col3">
+						<DataField>Col3</DataField>
+					</Field>
+					<Field Name="Col4">
+						<DataField>Col4</DataField>
+					</Field>
+					<Field Name="Col5">
+						<DataField>Col5</DataField>
+					</Field>
+					<Field Name="Num1">
+						<DataField>Num1</DataField>
+					</Field>
+					<Field Name="Num2">
+						<DataField>Num2</DataField>
+					</Field>
+					<Field Name="Num3">
+						<DataField>Num3</DataField>
+					</Field>
+					<Field Name="Num4">
+						<DataField>Num4</DataField>
+					</Field>
+					<Field Name="Num5">
+						<DataField>Num5</DataField>
+					</Field>
+				</Fields>
+				<Query>
+					<DataSourceName>InvoiceDataSource</DataSourceName>
+					<CommandText />
+				</Query>
+			</DataSet>
+		</DataSets>
+
+		<Body>
+			<ReportItems>
+				<Textbox Name="txtTitle">
+					<CanGrow>true</CanGrow>
+					<KeepTogether>true</KeepTogether>
+					<Paragraphs>
+						<Paragraph>
+							<TextRuns>
+								<TextRun>
+									<Value>=Parameters!pReportTitle.Value</Value>
+									<Style>
+										<FontFamily>Tahoma</FontFamily>
+										<FontSize>16pt</FontSize>
+										<FontWeight>Bold</FontWeight>
+									</Style>
+								</TextRun>
+							</TextRuns>
+							<Style>
+								<TextAlign>Center</TextAlign>
+							</Style>
+						</Paragraph>
+					</Paragraphs>
+					<Top>0.2cm</Top>
+					<Left>0.5cm</Left>
+					<Height>0.8cm</Height>
+					<Width>26cm</Width>
+					<Style>
+						<Direction>RTL</Direction>
+					</Style>
+				</Textbox>
+
+				<Textbox Name="txtPeriod">
+					<CanGrow>true</CanGrow>
+					<KeepTogether>true</KeepTogether>
+					<Paragraphs>
+						<Paragraph>
+							<TextRuns>
+								<TextRun>
+									<Value>="من " &amp; Parameters!pFromDate.Value &amp; " إلى " &amp; Parameters!pToDate.Value</Value>
+									<Style>
+										<FontFamily>Tahoma</FontFamily>
+										<FontSize>10pt</FontSize>
+									</Style>
+								</TextRun>
+							</TextRuns>
+							<Style>
+								<TextAlign>Center</TextAlign>
+							</Style>
+						</Paragraph>
+					</Paragraphs>
+					<Top>1.1cm</Top>
+					<Left>0.5cm</Left>
+					<Height>0.6cm</Height>
+					<Width>26cm</Width>
+					<Style>
+						<Direction>RTL</Direction>
+					</Style>
+				</Textbox>
+			</ReportItems>
+			<Height>18cm</Height>
+			<Style />
+		</Body>
+
+		<Page>
+			<PageHeight>21cm</PageHeight>
+			<PageWidth>29.7cm</PageWidth>
+			<LeftMargin>1cm</LeftMargin>
+			<RightMargin>1cm</RightMargin>
+			<TopMargin>1cm</TopMargin>
+			<BottomMargin>1cm</BottomMargin>
+			<Style />
+		</Page>
+
+		<rd:ReportUnitType>Cm</rd:ReportUnitType>
+		<rd:ReportID>12345678-aaaa-bbbb-cccc-1234567890ab</rd:ReportID>
+	</Report>
