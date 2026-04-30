@@ -207,6 +207,10 @@ namespace water3
             AddNavButton("🧩 إدارة الرسائل", typeof(MessagesManagementForm), PermissionKeys.MessagesManage, () => OpenForm<MessagesManagementForm>());
             AddNavButton("🔌 إدارة الاتصال", typeof(DbSettingsForm), PermissionKeys.DbSettingsView, () => OpenForm<DbSettingsForm>());
             AddNavButton("📚 مركز التقارير", typeof(ReportsCenterForm), PermissionKeys.ReportsCenterView, () => OpenForm<ReportsCenterForm>());
+            AddNavButton("🚰 تقرير العداد الرئيسي والفاقد", typeof(MainMeterReportForm), PermissionKeys.MainMeterReportView, () => OpenForm<MainMeterReportForm>());
+            AddNavButton("💸 المصروفات والمشتريات", typeof(ExpensesManagementForm), PermissionKeys.ExpensesView, () => OpenForm<ExpensesManagementForm>());
+            AddNavButton("🏷️ تصنيفات المصروفات", typeof(ExpenseCategoriesForm), PermissionKeys.ExpenseCategoriesManage, () => OpenForm<ExpenseCategoriesForm>());
+           
             sidebar.Controls.Add(new Panel
             {
                 Height = 10,

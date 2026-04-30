@@ -1,156 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
-<AutoRefresh>0</AutoRefresh>
-		<DataSources>
-			<DataSource Name="InvoiceDataSource">
-				<ConnectionProperties>
-					<DataProvider>System.Data.DataSet</DataProvider>
-					<ConnectString />
-				</ConnectionProperties>
-				<rd:DataSourceID>9d7a1111-2222-3333-4444-555555555555</rd:DataSourceID>
-			</DataSource>
-		</DataSources>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="InvoiceDataSource">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:DataSourceID>9d7a1111-2222-3333-4444-555555555555</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
 
-		<ReportParameters>
-			<ReportParameter Name="pReportTitle">
-				<DataType>String</DataType>
-				<Prompt>pReportTitle</Prompt>
-			</ReportParameter>
-			<ReportParameter Name="pFromDate">
-				<DataType>String</DataType>
-				<Prompt>pFromDate</Prompt>
-			</ReportParameter>
-			<ReportParameter Name="pToDate">
-				<DataType>String</DataType>
-				<Prompt>pToDate</Prompt>
-			</ReportParameter>
-			<ReportParameter Name="pPrintedBy">
-				<DataType>String</DataType>
-				<Prompt>pPrintedBy</Prompt>
-			</ReportParameter>
-			<ReportParameter Name="pPrintedAt">
-				<DataType>String</DataType>
-				<Prompt>pPrintedAt</Prompt>
-			</ReportParameter>
-		</ReportParameters>
+  <DataSets>
+    <DataSet Name="dsInvoices">
+      <Fields>
+        <Field Name="Dt1"><DataField>Dt1</DataField><rd:TypeName>System.DateTime</rd:TypeName></Field>
+        <Field Name="Col1"><DataField>Col1</DataField><rd:TypeName>System.String</rd:TypeName></Field>
+        <Field Name="Col2"><DataField>Col2</DataField><rd:TypeName>System.String</rd:TypeName></Field>
+        <Field Name="Col3"><DataField>Col3</DataField><rd:TypeName>System.String</rd:TypeName></Field>
+        <Field Name="Col4"><DataField>Col4</DataField><rd:TypeName>System.String</rd:TypeName></Field>
+        <Field Name="Col5"><DataField>Col5</DataField><rd:TypeName>System.String</rd:TypeName></Field>
+        <Field Name="Num1"><DataField>Num1</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field>
+        <Field Name="Num2"><DataField>Num2</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field>
+        <Field Name="Num3"><DataField>Num3</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field>
+        <Field Name="Num4"><DataField>Num4</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field>
+        <Field Name="Num5"><DataField>Num5</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field>
+        <Field Name="RowId"><DataField>RowId</DataField><rd:TypeName>System.Int32</rd:TypeName></Field>
+        <Field Name="RefId1"><DataField>RefId1</DataField><rd:TypeName>System.Int32</rd:TypeName></Field>
+        <Field Name="RefId2"><DataField>RefId2</DataField><rd:TypeName>System.Int32</rd:TypeName></Field>
+      </Fields>
+      <Query>
+        <DataSourceName>InvoiceDataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 
-		<DataSets>
-			<DataSet Name="dsInvoices">
-				<Fields>
-					<Field Name="Dt1">
-						<DataField>Dt1</DataField>
-					</Field>
-					<Field Name="Col1">
-						<DataField>Col1</DataField>
-					</Field>
-					<Field Name="Col2">
-						<DataField>Col2</DataField>
-					</Field>
-					<Field Name="Col3">
-						<DataField>Col3</DataField>
-					</Field>
-					<Field Name="Col4">
-						<DataField>Col4</DataField>
-					</Field>
-					<Field Name="Col5">
-						<DataField>Col5</DataField>
-					</Field>
-					<Field Name="Num1">
-						<DataField>Num1</DataField>
-					</Field>
-					<Field Name="Num2">
-						<DataField>Num2</DataField>
-					</Field>
-					<Field Name="Num3">
-						<DataField>Num3</DataField>
-					</Field>
-					<Field Name="Num4">
-						<DataField>Num4</DataField>
-					</Field>
-					<Field Name="Num5">
-						<DataField>Num5</DataField>
-					</Field>
-				</Fields>
-				<Query>
-					<DataSourceName>InvoiceDataSource</DataSourceName>
-					<CommandText />
-				</Query>
-			</DataSet>
-		</DataSets>
+  <ReportParameters>
+    <ReportParameter Name="pReportTitle"><DataType>String</DataType><Prompt>pReportTitle</Prompt><AllowBlank>true</AllowBlank></ReportParameter>
+    <ReportParameter Name="pFromDate"><DataType>String</DataType><Prompt>pFromDate</Prompt><AllowBlank>true</AllowBlank></ReportParameter>
+    <ReportParameter Name="pToDate"><DataType>String</DataType><Prompt>pToDate</Prompt><AllowBlank>true</AllowBlank></ReportParameter>
+    <ReportParameter Name="pPrintedBy"><DataType>String</DataType><Prompt>pPrintedBy</Prompt><AllowBlank>true</AllowBlank></ReportParameter>
+    <ReportParameter Name="pPrintedAt"><DataType>String</DataType><Prompt>pPrintedAt</Prompt><AllowBlank>true</AllowBlank></ReportParameter>
+  </ReportParameters>
 
-		<Body>
-			<ReportItems>
-				<Textbox Name="txtTitle">
-					<CanGrow>true</CanGrow>
-					<KeepTogether>true</KeepTogether>
-					<Paragraphs>
-						<Paragraph>
-							<TextRuns>
-								<TextRun>
-									<Value>=Parameters!pReportTitle.Value</Value>
-									<Style>
-										<FontFamily>Tahoma</FontFamily>
-										<FontSize>16pt</FontSize>
-										<FontWeight>Bold</FontWeight>
-									</Style>
-								</TextRun>
-							</TextRuns>
-							<Style>
-								<TextAlign>Center</TextAlign>
-							</Style>
-						</Paragraph>
-					</Paragraphs>
-					<Top>0.2cm</Top>
-					<Left>0.5cm</Left>
-					<Height>0.8cm</Height>
-					<Width>26cm</Width>
-					<Style>
-						<Direction>RTL</Direction>
-					</Style>
-				</Textbox>
+  <Body>
+    <ReportItems>
+      <Textbox Name="txtReportTitle">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=IIF(Parameters!pReportTitle.Value = "", "تقرير الفواتير", Parameters!pReportTitle.Value)</Value>
+                <Style><FontFamily>Tahoma</FontFamily><FontSize>16pt</FontSize><FontWeight>Bold</FontWeight></Style>
+              </TextRun>
+            </TextRuns>
+            <Style><TextAlign>Center</TextAlign></Style>
+          </Paragraph>
+        </Paragraphs>
+        <Top>0.15in</Top>
+        <Left>0.15in</Left>
+        <Height>0.35in</Height>
+        <Width>10.9in</Width>
+        <Style><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style>
+      </Textbox>
 
-				<Textbox Name="txtPeriod">
-					<CanGrow>true</CanGrow>
-					<KeepTogether>true</KeepTogether>
-					<Paragraphs>
-						<Paragraph>
-							<TextRuns>
-								<TextRun>
-									<Value>="من " &amp; Parameters!pFromDate.Value &amp; " إلى " &amp; Parameters!pToDate.Value</Value>
-									<Style>
-										<FontFamily>Tahoma</FontFamily>
-										<FontSize>10pt</FontSize>
-									</Style>
-								</TextRun>
-							</TextRuns>
-							<Style>
-								<TextAlign>Center</TextAlign>
-							</Style>
-						</Paragraph>
-					</Paragraphs>
-					<Top>1.1cm</Top>
-					<Left>0.5cm</Left>
-					<Height>0.6cm</Height>
-					<Width>26cm</Width>
-					<Style>
-						<Direction>RTL</Direction>
-					</Style>
-				</Textbox>
-			</ReportItems>
-			<Height>18cm</Height>
-			<Style />
-		</Body>
+      <Textbox Name="txtPeriod">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="الفترة: من " &amp; Parameters!pFromDate.Value &amp; " إلى " &amp; Parameters!pToDate.Value</Value>
+                <Style><FontFamily>Tahoma</FontFamily><FontSize>10pt</FontSize></Style>
+              </TextRun>
+            </TextRuns>
+            <Style><TextAlign>Center</TextAlign></Style>
+          </Paragraph>
+        </Paragraphs>
+        <Top>0.55in</Top>
+        <Left>0.15in</Left>
+        <Height>0.25in</Height>
+        <Width>10.9in</Width>
+        <Style><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style>
+      </Textbox>
 
-		<Page>
-			<PageHeight>21cm</PageHeight>
-			<PageWidth>29.7cm</PageWidth>
-			<LeftMargin>1cm</LeftMargin>
-			<RightMargin>1cm</RightMargin>
-			<TopMargin>1cm</TopMargin>
-			<BottomMargin>1cm</BottomMargin>
-			<Style />
-		</Page>
+      <Textbox Name="txtPrintedMeta">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="طبع بواسطة: " &amp; Parameters!pPrintedBy.Value &amp; "    |    تاريخ الطباعة: " &amp; Parameters!pPrintedAt.Value</Value>
+                <Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize><Color>#555555</Color></Style>
+              </TextRun>
+            </TextRuns>
+            <Style><TextAlign>Center</TextAlign></Style>
+          </Paragraph>
+        </Paragraphs>
+        <Top>0.86in</Top>
+        <Left>0.15in</Left>
+        <Height>0.22in</Height>
+        <Width>10.9in</Width>
+        <Style><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style>
+      </Textbox>
 
-		<rd:ReportUnitType>Cm</rd:ReportUnitType>
-		<rd:ReportID>12345678-aaaa-bbbb-cccc-1234567890ab</rd:ReportID>
-	</Report>
+      <Tablix Name="tablixInvoices">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn><Width>0.85in</Width></TablixColumn>
+            <TablixColumn><Width>1.00in</Width></TablixColumn>
+            <TablixColumn><Width>1.50in</Width></TablixColumn>
+            <TablixColumn><Width>0.95in</Width></TablixColumn>
+            <TablixColumn><Width>0.90in</Width></TablixColumn>
+            <TablixColumn><Width>1.30in</Width></TablixColumn>
+            <TablixColumn><Width>0.75in</Width></TablixColumn>
+            <TablixColumn><Width>0.75in</Width></TablixColumn>
+            <TablixColumn><Width>0.80in</Width></TablixColumn>
+            <TablixColumn><Width>0.80in</Width></TablixColumn>
+            <TablixColumn><Width>0.95in</Width></TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.32in</Height>
+              <TablixCells>
+                <TablixCell><CellContents><Textbox Name="hdrDate"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>التاريخ</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrInvoiceNo"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>رقم الفاتورة</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrSubscriber"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>المشترك</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrMeter"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>العداد</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrStatus"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>الحالة</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrNotes"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>الملاحظات</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrConsumption"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>الاستهلاك</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrUnitPrice"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>سعر الوحدة</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrServiceFees"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>رسوم الخدمة</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrArrears"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>المتأخرات</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="hdrTotal"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>الإجمالي</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><BackgroundColor>#0057B7</BackgroundColor><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.28in</Height>
+              <TablixCells>
+                <TablixCell><CellContents><Textbox Name="txtDate"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=IIF(IsNothing(Fields!Dt1.Value), "", Format(Fields!Dt1.Value, "yyyy-MM-dd"))</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtInvoiceNo"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Col1.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtSubscriber"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Col2.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtMeter"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Col3.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtStatus"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Col4.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtNotes"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Col5.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtConsumption"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=IIF(IsNothing(Fields!Num1.Value), "", FormatNumber(Fields!Num1.Value, 2))</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtUnitPrice"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=IIF(IsNothing(Fields!Num2.Value), "", FormatNumber(Fields!Num2.Value, 2))</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtServiceFees"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=IIF(IsNothing(Fields!Num3.Value), "", FormatNumber(Fields!Num3.Value, 2))</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtArrears"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=IIF(IsNothing(Fields!Num4.Value), "", FormatNumber(Fields!Num4.Value, 2))</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+                <TablixCell><CellContents><Textbox Name="txtTotal"><CanGrow>true</CanGrow><Paragraphs><Paragraph><TextRuns><TextRun><Value>=IIF(IsNothing(Fields!Num5.Value), "", FormatNumber(Fields!Num5.Value, 2))</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8.5pt</FontSize><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><Style><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy><TablixMembers><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /></TablixMembers></TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember><KeepWithGroup>After</KeepWithGroup><RepeatOnNewPage>true</RepeatOnNewPage></TablixMember>
+            <TablixMember><Group Name="Details" /></TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>dsInvoices</DataSetName>
+        <Top>1.20in</Top>
+        <Left>0.15in</Left>
+        <Height>0.60in</Height>
+        <Width>10.65in</Width>
+        <Style />
+      </Tablix>
+
+      <Textbox Name="txtFooterSumLabel">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs><Paragraph><TextRuns><TextRun><Value>إجمالي الفواتير المعروضة:</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs>
+        <Top>7.05in</Top>
+        <Left>7.85in</Left>
+        <Height>0.22in</Height>
+        <Width>1.65in</Width>
+        <Style><Direction>RTL</Direction><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style>
+      </Textbox>
+
+      <Textbox Name="txtFooterSumValue">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs><Paragraph><TextRuns><TextRun><Value>=Sum(Fields!Num5.Value, "dsInvoices")</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>#0057B7</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs>
+        <Top>7.05in</Top>
+        <Left>9.55in</Left>
+        <Height>0.22in</Height>
+        <Width>1.25in</Width>
+        <Style><Direction>RTL</Direction><Border><Color>#D7DFE8</Color><Style>Solid</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style>
+      </Textbox>
+    </ReportItems>
+    <Height>7.4in</Height>
+    <Style />
+  </Body>
+
+  <Width>10.95in</Width>
+  <Page>
+    <PageHeight>8.27in</PageHeight>
+    <PageWidth>11.69in</PageWidth>
+    <LeftMargin>0.35in</LeftMargin>
+    <RightMargin>0.35in</RightMargin>
+    <TopMargin>0.35in</TopMargin>
+    <BottomMargin>0.35in</BottomMargin>
+    <Style />
+  </Page>
+
+  <Language>ar-SA</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>12345678-aaaa-bbbb-cccc-1234567890ab</rd:ReportID>
+</Report>

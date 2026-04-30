@@ -54,21 +54,21 @@ namespace water3.Reports
                 cboSubscribers.ValueMember = "SubscriberID";
             }
 
-            protected override void LoadReportData()
-            {
-                try
-                {
-                    int selectedId = cboSubscribers.SelectedValue is int ? (int)cboSubscribers.SelectedValue : 0;
-                    dgvReport.DataSource = ReportsService.GetInvoicesReport(dtFrom.Value, dtTo.Value, selectedId > 0 ? (int?)selectedId : null);
-                    lblStatus.Text = "تم تحميل تقرير الفواتير.";
-                    ReportsService.LogReportOpen("InvoicesReport", $"From={dtFrom.Value:yyyy-MM-dd}, To={dtTo.Value:yyyy-MM-dd}");
-                }
-                catch (Exception ex)
-                {
-                    lblStatus.ForeColor = System.Drawing.Color.DarkRed;
-                    lblStatus.Text = ex.Message;
-                }
-            }
+            //protected override void LoadReportData()
+            //{
+            //    try
+            //    {
+            //        int selectedId = cboSubscribers.SelectedValue is int ? (int)cboSubscribers.SelectedValue : 0;
+            //        dgvReport.DataSource = ReportsService.GetInvoicesReport(dtFrom.Value, dtTo.Value, selectedId > 0 ? (int?)selectedId : null);
+            //        lblStatus.Text = "تم تحميل تقرير الفواتير.";
+            //        ReportsService.LogReportOpen("InvoicesReport", $"From={dtFrom.Value:yyyy-MM-dd}, To={dtTo.Value:yyyy-MM-dd}");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        lblStatus.ForeColor = System.Drawing.Color.DarkRed;
+            //        lblStatus.Text = ex.Message;
+            //    }
+            //}
 
             protected override void RefreshReport()
             {
@@ -79,5 +79,47 @@ namespace water3.Reports
                 lblStatus.ForeColor = System.Drawing.Color.DarkGreen;
                 lblStatus.Text = "تمت إعادة التهيئة.";
             }
+        protected override void PrintCurrentReport()
+        {
+            try
+            {
+                var rows = dgvReport.DataSource as System.Collections.IEnumerable;
+                if (rows == null)
+                {
+                    lblStatus.ForeColor = System.Drawing.Color.DarkRed;
+                    lblStatus.Text = "لا توجد بيانات للطباعة.";
+                    return;
+                }
+
+                var data = dgvReport.DataSource;
+
+                var dataSources = new List<Microsoft.Reporting.WinForms.ReportDataSource>
+        {
+            new Microsoft.Reporting.WinForms.ReportDataSource("dsInvoices", data)
+        };
+
+                var parameters = new List<water3.Models.Reports.ReportParameterItem>
+        {
+            new water3.Models.Reports.ReportParameterItem { Name = "pReportTitle", Value = "تقرير الفواتير" },
+            new water3.Models.Reports.ReportParameterItem { Name = "pFromDate", Value = dtFrom.Value.ToString("yyyy-MM-dd") },
+            new water3.Models.Reports.ReportParameterItem { Name = "pToDate", Value = dtTo.Value.ToString("yyyy-MM-dd") },
+            new water3.Models.Reports.ReportParameterItem { Name = "pPrintedBy", Value = CurrentUser.FullName },
+            new water3.Models.Reports.ReportParameterItem { Name = "pPrintedAt", Value = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") }
+        };
+            }
+            //    PrintService.ShowRdlcReport(
+            //        title: "تقرير الفواتير",
+            //        reportPath: @"Reports\RDLC\InvoiceReport.rdlc",
+            //        dataSources: dataSources,
+            //        parameters: parameters,
+            //        useEmbeddedReport: false);
+            //}
+            catch (System.Exception ex)
+            {
+                lblStatus.ForeColor = System.Drawing.Color.DarkRed;
+                lblStatus.Text = ex.Message;
+            }
         }
+
     }
+}

@@ -297,6 +297,66 @@
     <Compile Include="Forms\AuditLogForm.Designer.cs">
       <DependentUpon>AuditLogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CollectorDeviceEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollectorDeviceEditForm.Designer.cs">
+      <DependentUpon>CollectorDeviceEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ExpenseCategoriesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExpenseCategoriesForm.Designer.cs">
+      <DependentUpon>ExpenseCategoriesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ExpenseEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExpenseEditForm.Designer.cs">
+      <DependentUpon>ExpenseEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ExpensesManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExpensesManagementForm.Designer.cs">
+      <DependentUpon>ExpensesManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainMeterReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainMeterReportForm.Designer.cs">
+      <DependentUpon>MainMeterReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Reports\ExpenseCategorySummaryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Reports\ExpenseCategorySummaryForm.Designer.cs">
+      <DependentUpon>ExpenseCategorySummaryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Reports\ExpenseTransactionsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Reports\ExpenseTransactionsReportForm.Designer.cs">
+      <DependentUpon>ExpenseTransactionsReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Reports\ReportViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Reports\ReportViewerForm.Designer.cs">
+      <DependentUpon>ReportViewerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountLookupItem.cs" />
+    <Compile Include="Models\ExpenseCategoryItem.cs" />
+    <Compile Include="Models\ExpenseReportRow.cs" />
+    <Compile Include="Models\ExpenseSaveResult.cs" />
+    <Compile Include="Models\ExpenseSummaryRow.cs" />
+    <Compile Include="Models\ExpenseVoucherHeaderRow.cs" />
+    <Compile Include="Models\ExpenseVoucherLineRow.cs" />
+    <Compile Include="Models\MainMeterLookupItem.cs" />
+    <Compile Include="Models\MainMeterReportResult.cs" />
+    <Compile Include="Models\Reports\ReportParameterItem.cs" />
+    <Compile Include="Models\Reports\ReportViewerForm.cs" />
+    <Compile Include="Models\SubMeterReadingSummaryItem.cs" />
     <Compile Include="Reports\CollectorDevicesReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -564,17 +624,25 @@
     <Compile Include="Reports\TrialBalanceReportForm.Designer.cs">
       <DependentUpon>TrialBalanceReportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\CollectorDevicesRepository.cs" />
+    <Compile Include="Repositories\ExpenseReportsRepository.cs" />
+    <Compile Include="Repositories\ExpenseRepository.cs" />
+    <Compile Include="Repositories\MainMeterReportRepository.cs" />
     <Compile Include="Security\PermissionKeys.cs" />
     <Compile Include="Services\AuditLogService.cs" />
     <Compile Include="Services\CollectorDeviceService.cs" />
     <Compile Include="Services\CollectorService.cs" />
     <Compile Include="Services\CollectorUserLinkService.cs" />
+    <Compile Include="Services\ExpenseReportsService.cs" />
+    <Compile Include="Services\ExpenseService.cs" />
+    <Compile Include="Services\MainMeterReportService.cs" />
     <Compile Include="Services\MobileSyncToPhoneService.cs" />
     <Compile Include="Services\OperationsReportsService.cs" />
     <Compile Include="Services\PermissionService.cs" />
     <Compile Include="Services\ReportExportService.cs" />
     <Compile Include="Services\ReportPrintService.cs" />
     <Compile Include="Services\ReportsService.cs" />
+    <Compile Include="Services\Reports\RdlcReportService.cs" />
     <Compile Include="Services\RolePermissionService.cs" />
     <Compile Include="Services\UserAuthService.cs" />
     <Compile Include="StatCardControl.cs">
@@ -828,7 +896,18 @@
     <EmbeddedResource Include="RegistrationForm.resx">
       <DependentUpon>RegistrationForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\RDLC\AccountStatementReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\AgingReceivablesReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\ExpenseCategorySummaryReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\ExpenseReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\ExpenseVoucher.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\GeneralJournalReport.rdlc" />
     <EmbeddedResource Include="Reports\RDLC\InvoiceReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\LossReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\PaymentsReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\PurchaseReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\ReceiptsReport.rdlc" />
+    <EmbeddedResource Include="Reports\RDLC\TrialBalanceReport.rdlc" />
     <EmbeddedResource Include="Reports\Render\SubscriberStatementReportForm.resx">
       <DependentUpon>SubscriberStatementReportForm.cs</DependentUpon>
     </EmbeddedResource>

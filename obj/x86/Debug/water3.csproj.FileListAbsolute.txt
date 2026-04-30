@@ -68,7 +68,6 @@ C:\Users\Abdulaziz\source\repos\water3\bin\x86\Debug\System.Memory.xml
 C:\Users\Abdulaziz\source\repos\water3\bin\x86\Debug\System.Numerics.Vectors.xml
 C:\Users\Abdulaziz\source\repos\water3\bin\x86\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\Abdulaziz\source\repos\water3\bin\x86\Debug\System.Security.Cryptography.Xml.xml
-C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.csproj.AssemblyReference.cache
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Controls.SearchFilterControl.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Controls.SubscriberEditorControl.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.DB.DbSettingsForm.resources
@@ -104,3 +103,4 @@ C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.application
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.csproj.CopyComplete
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.exe
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.pdb
+C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.csproj.AssemblyReference.cache
