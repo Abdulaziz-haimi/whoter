@@ -30,8 +30,8 @@ namespace water3.Forms
             private int _printRowIndex = 0;
             private int _printPageNo = 1;
             private List<DataRowView> _printRows = new List<DataRowView>();
-
-            public ReadingEntryForm()
+        private bool _isMovingToNextReadingCell = false;
+        public ReadingEntryForm()
             {
                 InitializeComponent();
 
@@ -387,33 +387,42 @@ ORDER BY MeterLocation, s.Name, m.MeterNumber;", cn))
                 lblPendingValue.Text = (total - done).ToString();
             }
 
-            #endregion
+        #endregion
 
-            #region Grid Editing
+        #region Grid Editing
 
-            private void DgvReadings_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void DgvReadings_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            if (e.RowIndex >= dgvReadings.Rows.Count)
+                return;
+
+            DataGridViewRow row = dgvReadings.Rows[e.RowIndex];
+
+            if (row.IsNewRow)
+                return;
+
+            string colName = dgvReadings.Columns[e.ColumnIndex].Name;
+
+            if (colName == "القراءة الجديدة")
             {
-                if (e.RowIndex < 0) return;
+                HandleReadingEdit(row, e.RowIndex);
+            }
+            else if (colName == "ملاحظات")
+            {
+                string current = Convert.ToString(row.Cells["القراءة الجديدة"].Value);
+                decimal temp;
 
-                DataGridViewRow row = dgvReadings.Rows[e.RowIndex];
-                string colName = dgvReadings.Columns[e.ColumnIndex].Name;
-
-                if (colName == "القراءة الجديدة")
-                {
-                    HandleReadingEdit(row, e.RowIndex);
-                }
-                else if (colName == "ملاحظات")
-                {
-                    string current = Convert.ToString(row.Cells["القراءة الجديدة"].Value);
-                    decimal temp;
-                    if (TryParseDecimal(current, out temp))
-                        row.Cells["تم"].Value = true;
-                }
-
-                UpdateSummaryFromView();
+                if (TryParseDecimal(current, out temp))
+                    row.Cells["تم"].Value = true;
             }
 
-            private void HandleReadingEdit(DataGridViewRow row, int rowIndex)
+            UpdateSummaryFromView();
+        }
+
+        private void HandleReadingEdit(DataGridViewRow row, int rowIndex)
             {
                 decimal previous = ToDecimal(row.Cells["القراءة السابقة"].Value);
                 decimal current;
@@ -455,15 +464,64 @@ ORDER BY MeterLocation, s.Name, m.MeterNumber;", cn))
                 row.Cells["الاستهلاك"].Value = current - previous;
                 row.Cells["تم"].Value = true;
                 MarkRowValid(row);
+            MoveToNextReadingCellDeferred(rowIndex);
+            //if (rowIndex < dgvReadings.Rows.Count - 1)
+            //{
+            //    dgvReadings.CurrentCell = dgvReadings.Rows[rowIndex + 1].Cells["القراءة الجديدة"];
+            //    dgvReadings.BeginEdit(true);
+            //}
+        }
+        private void MoveToNextReadingCellDeferred(int rowIndex)
+        {
+            if (_isMovingToNextReadingCell)
+                return;
 
-                if (rowIndex < dgvReadings.Rows.Count - 1)
+            if (rowIndex < 0 || rowIndex >= dgvReadings.Rows.Count - 1)
+                return;
+
+            _isMovingToNextReadingCell = true;
+
+            try
+            {
+                dgvReadings.BeginInvoke(new Action(() =>
                 {
-                    dgvReadings.CurrentCell = dgvReadings.Rows[rowIndex + 1].Cells["القراءة الجديدة"];
-                    dgvReadings.BeginEdit(true);
-                }
-            }
+                    try
+                    {
+                        if (IsDisposed || dgvReadings.IsDisposed || !dgvReadings.IsHandleCreated)
+                            return;
 
-            private void ResetRowStyle(DataGridViewRow row)
+                        if (rowIndex < 0 || rowIndex >= dgvReadings.Rows.Count - 1)
+                            return;
+
+                        DataGridViewRow nextRow = dgvReadings.Rows[rowIndex + 1];
+
+                        if (nextRow == null || nextRow.IsNewRow || !nextRow.Visible)
+                            return;
+
+                        DataGridViewCell nextCell = nextRow.Cells["القراءة الجديدة"];
+
+                        if (nextCell == null || nextCell.ReadOnly)
+                            return;
+
+                        dgvReadings.CurrentCell = nextCell;
+                        dgvReadings.BeginEdit(true);
+                    }
+                    catch
+                    {
+                        // منع توقف البرنامج لو حصل تغيير في الفلتر أو الصفوف أثناء النقل
+                    }
+                    finally
+                    {
+                        _isMovingToNextReadingCell = false;
+                    }
+                }));
+            }
+            catch
+            {
+                _isMovingToNextReadingCell = false;
+            }
+        }
+        private void ResetRowStyle(DataGridViewRow row)
             {
                 row.DefaultCellStyle.BackColor = Color.White;
                 row.DefaultCellStyle.ForeColor = Color.FromArgb(33, 37, 41);

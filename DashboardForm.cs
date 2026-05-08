@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,154 +16,438 @@ namespace water3
         private readonly DashboardService _svc = new DashboardService();
         private bool _isLoading;
 
-        private static readonly Color Primary = Color.FromArgb(0, 87, 183);
-        private static readonly Color Bg = Color.FromArgb(245, 247, 250);
-        private static readonly Color Card = Color.White;
-        private static readonly Color Border = Color.FromArgb(225, 230, 235);
-        private static readonly Color Muted = Color.FromArgb(120, 120, 120);
-        private static readonly Color Hover = Color.FromArgb(15, 105, 205);
-        private static readonly Color GridHeaderColor = Color.FromArgb(245, 248, 255);
-        private static readonly Color GridAlternate = Color.FromArgb(252, 252, 252);
-        private static readonly Color GridSelection = Color.FromArgb(220, 235, 255);
-        private static readonly Font TitleFont = new Font("Segoe UI", 12.5f, FontStyle.Bold);
-        private static readonly Font RegularFont = new Font("Segoe UI", 10f);
-        private static readonly Font HeaderFont = new Font("Segoe UI", 10f, FontStyle.Bold);
+        private static readonly Font TitleFont = new Font("Tahoma", 12.5f, FontStyle.Bold);
+        private static readonly Font RegularFont = new Font("Tahoma", 10f);
+        private static readonly Font HeaderFont = new Font("Tahoma", 10f, FontStyle.Bold);
+
+        private AppThemePalette P
+        {
+            get { return AppThemeManager.Palette; }
+        }
+
+        private Color GridHeaderColor
+        {
+            get
+            {
+                return AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? P.Soft
+                    : Color.FromArgb(245, 248, 255);
+            }
+        }
+
+        private Color GridAlternate
+        {
+            get
+            {
+                return AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? P.Bg
+                    : Color.FromArgb(252, 252, 252);
+            }
+        }
+
+        private Color GridSelection
+        {
+            get
+            {
+                return AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? P.Selected
+                    : Color.FromArgb(220, 235, 255);
+            }
+        }
 
         public DashboardForm()
         {
+            AppThemeManager.LoadTheme();
+
             InitializeComponent();
-            BackColor = Bg;
+
+            ApplyArabicLayout();
+
+            BackColor = P.Bg;
             Font = RegularFont;
+
             ApplyTheme();
             InitPresetItems();
         }
 
+        private void ApplyArabicLayout()
+        {
+            Text = "لوحة التحكم";
+
+            RightToLeft = RightToLeft.Yes;
+            RightToLeftLayout = true;
+
+            // مهم: لا نجعل TableLayoutPanel نفسه RTL حتى لا تنقلب الأعمدة
+            root.RightToLeft = RightToLeft.No;
+            filterCard.RightToLeft = RightToLeft.No;
+            filterLayout.RightToLeft = RightToLeft.No;
+            tabsCard.RightToLeft = RightToLeft.No;
+
+            cbPeriodPreset.RightToLeft = RightToLeft.Yes;
+
+            lblPeriodText.RightToLeft = RightToLeft.Yes;
+            lblFrom.RightToLeft = RightToLeft.Yes;
+            lblTo.RightToLeft = RightToLeft.Yes;
+
+            lblPeriodText.Text = "الفترة:";
+            lblFrom.Text = "من:";
+            lblTo.Text = "إلى:";
+
+            dtFrom.RightToLeft = RightToLeft.Yes;
+            dtFrom.RightToLeftLayout = true;
+
+            dtTo.RightToLeft = RightToLeft.Yes;
+            dtTo.RightToLeftLayout = true;
+
+            lblPeriod.RightToLeft = RightToLeft.Yes;
+            lblPeriod.TextAlign = ContentAlignment.MiddleRight;
+            lblPeriod.AutoEllipsis = true;
+
+            kpiPanel.RightToLeft = RightToLeft.Yes;
+            kpiPanel.FlowDirection = FlowDirection.RightToLeft;
+
+            tabs.RightToLeft = RightToLeft.Yes;
+            tabs.RightToLeftLayout = false;
+
+            tabInvoices.RightToLeft = RightToLeft.Yes;
+            tabPayments.RightToLeft = RightToLeft.Yes;
+            tabOutstanding.RightToLeft = RightToLeft.Yes;
+
+            tabInvoices.Text = "📄 آخر الفواتير";
+            tabPayments.Text = "💰 آخر المدفوعات";
+            tabOutstanding.Text = "⚠️ أعلى المتأخرات";
+
+            hdrInvoices.RightToLeft = RightToLeft.No;
+            hdrPayments.RightToLeft = RightToLeft.No;
+            hdrOutstanding.RightToLeft = RightToLeft.No;
+
+            lblHdrInvoices.RightToLeft = RightToLeft.Yes;
+            lblHdrPayments.RightToLeft = RightToLeft.Yes;
+            lblHdrOutstanding.RightToLeft = RightToLeft.Yes;
+
+            lblHdrInvoices.Text = "آخر الفواتير";
+            lblHdrPayments.Text = "آخر المدفوعات";
+            lblHdrOutstanding.Text = "أعلى المتأخرات";
+
+            btnAllInvoices.Text = "عرض الكل";
+            btnAllPayments.Text = "عرض الكل";
+            btnAllOutstanding.Text = "عرض الكل";
+
+            gridInvoices.RightToLeft = RightToLeft.Yes;
+            gridPayments.RightToLeft = RightToLeft.Yes;
+            gridOutstanding.RightToLeft = RightToLeft.Yes;
+        }
+
         private void ApplyTheme()
         {
-            BackColor = Bg;
-            filterCard.BackColor = Card;
-            tabsCard.BackColor = Card;
-            lblPeriod.BackColor = Card;
-            lblPeriod.ForeColor = Muted;
-            lblPeriod.Font = new Font("Segoe UI", 9.8f, FontStyle.Regular);
-            kpiPanel.BackColor = Bg;
+            BackColor = P.Bg;
+
+            root.BackColor = P.Bg;
+
+            filterCard.BackColor = P.Card;
+            tabsCard.BackColor = P.Card;
+
+            pnlFromWrap.BackColor = P.Card;
+            pnlToWrap.BackColor = P.Card;
+
+            lblPeriod.BackColor = P.Card;
+            lblPeriod.ForeColor = P.Muted;
+            lblPeriod.Font = new Font("Tahoma", 9.2f, FontStyle.Regular);
+
+            kpiPanel.BackColor = P.Bg;
             kpiPanel.WrapContents = false;
             kpiPanel.FlowDirection = FlowDirection.RightToLeft;
             kpiPanel.AutoScroll = true;
             kpiPanel.Padding = new Padding(4, 2, 4, 2);
-            lblFrom.ForeColor = Color.FromArgb(60, 60, 60);
-            lblTo.ForeColor = Color.FromArgb(60, 60, 60);
-            lblPeriodText.ForeColor = Color.FromArgb(60, 60, 60);
-            lblPeriodText.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+
+            lblFrom.ForeColor = P.Text;
+            lblTo.ForeColor = P.Text;
+            lblPeriodText.ForeColor = P.Text;
+            lblPeriodText.Font = new Font("Tahoma", 9.5f, FontStyle.Bold);
+
+            cbPeriodPreset.BackColor = P.Card;
+            cbPeriodPreset.ForeColor = P.Text;
+            cbPeriodPreset.Font = new Font("Tahoma", 9.5f);
+
+            dtFrom.CalendarTitleBackColor = P.Primary;
+            dtFrom.CalendarTitleForeColor = Color.White;
+            dtFrom.CalendarForeColor = P.Text;
+
+            dtTo.CalendarTitleBackColor = P.Primary;
+            dtTo.CalendarTitleForeColor = Color.White;
+            dtTo.CalendarForeColor = P.Text;
+
             ConfigureIconButton(btnRefresh, "تحديث البيانات");
             ConfigureIconButton(btnQuickReading, "قراءة سريعة");
             ConfigureIconButton(btnQuickPay, "سداد سريع");
             ConfigureIconButton(btnStatement, "كشف حساب");
+
             lblHdrInvoices.Font = TitleFont;
-            lblHdrInvoices.ForeColor = Primary;
+            lblHdrInvoices.ForeColor = P.Primary;
+
             lblHdrPayments.Font = TitleFont;
-            lblHdrPayments.ForeColor = Primary;
+            lblHdrPayments.ForeColor = P.Primary;
+
             lblHdrOutstanding.Font = TitleFont;
-            lblHdrOutstanding.ForeColor = Primary;
+            lblHdrOutstanding.ForeColor = P.Primary;
+
             ConfigureActionButton(btnAllInvoices);
             ConfigureActionButton(btnAllPayments);
             ConfigureActionButton(btnAllOutstanding);
+
             ConfigureGrid(gridInvoices);
             ConfigureGrid(gridPayments);
             ConfigureGrid(gridOutstanding);
+
+            tabs.BackColor = P.Card;
+
+            tabInvoices.BackColor = P.Card;
+            tabPayments.BackColor = P.Card;
+            tabOutstanding.BackColor = P.Card;
+
+            bodyInvoices.BackColor = P.Card;
+            bodyPayments.BackColor = P.Card;
+            bodyOutstanding.BackColor = P.Card;
+
+            gridCardInvoices.BackColor = P.Card;
+            gridCardPayments.BackColor = P.Card;
+            gridCardOutstanding.BackColor = P.Card;
+
+            filterCard.Invalidate();
+            tabsCard.Invalidate();
+            lblPeriod.Invalidate();
+            tabs.Invalidate();
+        }
+
+        public void RefreshTheme()
+        {
+            ApplyTheme();
+
+            kpiPanel.SuspendLayout();
+
+            foreach (Control c in kpiPanel.Controls)
+                c.Dispose();
+
+            kpiPanel.Controls.Clear();
+
+            kpiPanel.ResumeLayout();
+
+            if (IsHandleCreated && !IsDisposed)
+                _ = RefreshAllAsync();
+
+            Invalidate(true);
         }
 
         private void ConfigureIconButton(Button btn, string tooltip)
         {
             btn.FlatStyle = FlatStyle.Flat;
-            btn.BackColor = Primary;
+            btn.BackColor = P.Primary;
             btn.ForeColor = Color.White;
             btn.FlatAppearance.BorderSize = 0;
             btn.Font = new Font("Segoe UI Emoji", 11.5f, FontStyle.Regular);
             btn.Cursor = Cursors.Hand;
+            btn.TextAlign = ContentAlignment.MiddleCenter;
+
             toolTip1.SetToolTip(btn, tooltip);
+
+            btn.MouseEnter -= IconBtn_MouseEnter;
+            btn.MouseLeave -= IconBtn_MouseLeave;
+            btn.MouseDown -= IconBtn_MouseDown;
+            btn.MouseUp -= IconBtn_MouseUp;
+
             btn.MouseEnter += IconBtn_MouseEnter;
             btn.MouseLeave += IconBtn_MouseLeave;
             btn.MouseDown += IconBtn_MouseDown;
             btn.MouseUp += IconBtn_MouseUp;
         }
 
-        private void IconBtn_MouseEnter(object sender, EventArgs e) { if (sender is Button b) b.BackColor = Hover; }
-        private void IconBtn_MouseLeave(object sender, EventArgs e) { if (sender is Button b) b.BackColor = Primary; }
-        private void IconBtn_MouseDown(object sender, MouseEventArgs e) { if (sender is Button b) b.BackColor = ControlPaint.Dark(Primary, 0.2f); }
-        private void IconBtn_MouseUp(object sender, MouseEventArgs e) { if (sender is Button b) b.BackColor = Primary; }
+        private void IconBtn_MouseEnter(object sender, EventArgs e)
+        {
+            if (sender is Button b)
+                b.BackColor = P.Hover;
+        }
+
+        private void IconBtn_MouseLeave(object sender, EventArgs e)
+        {
+            if (sender is Button b)
+                b.BackColor = P.Primary;
+        }
+
+        private void IconBtn_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (sender is Button b)
+                b.BackColor = P.PrimaryDark;
+        }
+
+        private void IconBtn_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (sender is Button b)
+                b.BackColor = P.Primary;
+        }
 
         private void ConfigureActionButton(Button btn)
         {
-            btn.BackColor = Primary;
+            btn.BackColor = P.Primary;
             btn.ForeColor = Color.White;
             btn.FlatStyle = FlatStyle.Flat;
             btn.FlatAppearance.BorderSize = 0;
             btn.Cursor = Cursors.Hand;
-            btn.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
-            btn.MouseEnter += (s, e) => btn.BackColor = Hover;
-            btn.MouseLeave += (s, e) => btn.BackColor = Primary;
+            btn.Font = new Font("Tahoma", 9.5f, FontStyle.Bold);
+            btn.TextAlign = ContentAlignment.MiddleCenter;
+
+            btn.MouseEnter -= ActionBtn_MouseEnter;
+            btn.MouseLeave -= ActionBtn_MouseLeave;
+
+            btn.MouseEnter += ActionBtn_MouseEnter;
+            btn.MouseLeave += ActionBtn_MouseLeave;
+        }
+
+        private void ActionBtn_MouseEnter(object sender, EventArgs e)
+        {
+            if (sender is Button b)
+                b.BackColor = P.Hover;
+        }
+
+        private void ActionBtn_MouseLeave(object sender, EventArgs e)
+        {
+            if (sender is Button b)
+                b.BackColor = P.Primary;
         }
 
         private void ConfigureGrid(DataGridView dgv)
         {
+            dgv.RightToLeft = RightToLeft.Yes;
             dgv.AutoGenerateColumns = true;
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgv.BackgroundColor = Card;
+            dgv.BackgroundColor = P.Card;
             dgv.BorderStyle = BorderStyle.None;
             dgv.EnableHeadersVisualStyles = false;
-            dgv.ColumnHeadersHeight = 36;
-            dgv.RowTemplate.Height = 32;
+            dgv.ColumnHeadersHeight = 38;
+            dgv.RowTemplate.Height = 34;
             dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dgv.GridColor = Border;
+            dgv.GridColor = P.Border;
             dgv.RowHeadersVisible = false;
             dgv.AllowUserToResizeRows = false;
             dgv.AllowUserToOrderColumns = false;
             dgv.MultiSelect = false;
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.ReadOnly = true;
+
             dgv.ColumnHeadersDefaultCellStyle.BackColor = GridHeaderColor;
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(45, 45, 45);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = P.Text;
             dgv.ColumnHeadersDefaultCellStyle.Font = HeaderFont;
             dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv.DefaultCellStyle.BackColor = Card;
-            dgv.DefaultCellStyle.ForeColor = Color.FromArgb(55, 55, 55);
+
+            dgv.DefaultCellStyle.BackColor = P.Card;
+            dgv.DefaultCellStyle.ForeColor = P.Text;
             dgv.DefaultCellStyle.SelectionBackColor = GridSelection;
-            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgv.DefaultCellStyle.SelectionForeColor = P.SelectedText;
             dgv.DefaultCellStyle.Font = RegularFont;
             dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             dgv.AlternatingRowsDefaultCellStyle.BackColor = GridAlternate;
-            typeof(DataGridView).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)?.SetValue(dgv, true, null);
+            dgv.AlternatingRowsDefaultCellStyle.ForeColor = P.Text;
+
+            typeof(DataGridView)
+                .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(dgv, true, null);
         }
 
         private void InitPresetItems()
         {
             cbPeriodPreset.Items.Clear();
-            cbPeriodPreset.Items.AddRange(new object[] { "اليوم", "أمس", "الأسبوع الحالي", "الشهر الحالي", "الشهر الماضي", "الربع الحالي", "السنة الحالية", "فترة مخصصة" });
+
+            cbPeriodPreset.Items.AddRange(new object[]
+            {
+                "اليوم",
+                "أمس",
+                "الأسبوع الحالي",
+                "الشهر الحالي",
+                "الشهر الماضي",
+                "الربع الحالي",
+                "السنة الحالية",
+                "فترة مخصصة"
+            });
+
             cbPeriodPreset.SelectedIndex = 3;
             ApplyPeriodPreset();
         }
 
-        private void DashboardForm_Load(object sender, EventArgs e) { autoRefreshTimer.Start(); _ = RefreshAllAsync(); }
-        private void DashboardForm_FormClosing(object sender, FormClosingEventArgs e) { autoRefreshTimer.Stop(); }
-        private void cbPeriodPreset_SelectedIndexChanged(object sender, EventArgs e) { ApplyPeriodPreset(); if (IsHandleCreated) _ = RefreshAllAsync(); }
-        private void btnRefresh_Click(object sender, EventArgs e) { _ = RefreshAllAsync(); }
-        private void btnQuickReading_Click(object sender, EventArgs e) => OpenQuickReadingForm();
-        private void btnQuickPay_Click(object sender, EventArgs e) => OpenQuickPaymentForm();
-        private void btnStatement_Click(object sender, EventArgs e) => OpenStatementForm();
-        private void btnAllInvoices_Click(object sender, EventArgs e) => ShowAllRecords("آخر الفواتير");
-        private void btnAllPayments_Click(object sender, EventArgs e) => ShowAllRecords("آخر المدفوعات");
-        private void btnAllOutstanding_Click(object sender, EventArgs e) => ShowAllRecords("أعلى المتأخرات");
-        private void autoRefreshTimer_Tick(object sender, EventArgs e) { _ = RefreshAllAsync(); }
+        private void DashboardForm_Load(object sender, EventArgs e)
+        {
+            autoRefreshTimer.Start();
+            _ = RefreshAllAsync();
+        }
+
+        private void DashboardForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            autoRefreshTimer.Stop();
+        }
+
+        private void cbPeriodPreset_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyPeriodPreset();
+
+            if (IsHandleCreated)
+                _ = RefreshAllAsync();
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            _ = RefreshAllAsync();
+        }
+
+        private void btnQuickReading_Click(object sender, EventArgs e)
+        {
+            OpenQuickReadingForm();
+        }
+
+        private void btnQuickPay_Click(object sender, EventArgs e)
+        {
+            OpenQuickPaymentForm();
+        }
+
+        private void btnStatement_Click(object sender, EventArgs e)
+        {
+            OpenStatementForm();
+        }
+
+        private void btnAllInvoices_Click(object sender, EventArgs e)
+        {
+            ShowAllRecords("آخر الفواتير");
+        }
+
+        private void btnAllPayments_Click(object sender, EventArgs e)
+        {
+            ShowAllRecords("آخر المدفوعات");
+        }
+
+        private void btnAllOutstanding_Click(object sender, EventArgs e)
+        {
+            ShowAllRecords("أعلى المتأخرات");
+        }
+
+        private void autoRefreshTimer_Tick(object sender, EventArgs e)
+        {
+            _ = RefreshAllAsync();
+        }
+
         private void card_Paint(object sender, PaintEventArgs e)
         {
             Panel p = sender as Panel;
             if (p == null) return;
 
-            using (var s = new SolidBrush(Color.FromArgb(10, 0, 0, 0)))
-                e.Graphics.FillRectangle(s, 2, 2, p.Width - 2, p.Height - 2);
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            using (var pen = new Pen(Border))
+            using (var s = new SolidBrush(
+                AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? Color.FromArgb(35, 0, 0, 0)
+                    : Color.FromArgb(10, 0, 0, 0)))
+            {
+                e.Graphics.FillRectangle(s, 2, 2, p.Width - 2, p.Height - 2);
+            }
+
+            using (var pen = new Pen(P.Border))
                 e.Graphics.DrawRectangle(pen, 0, 0, p.Width - 1, p.Height - 1);
         }
 
@@ -172,34 +456,141 @@ namespace water3
             Panel p = sender as Panel;
             if (p == null) return;
 
-            using (var pen = new Pen(Border))
+            using (var pen = new Pen(P.Border))
                 e.Graphics.DrawRectangle(pen, 0, 0, p.Width - 1, p.Height - 1);
         }
-        private void lblPeriod_Paint(object sender, PaintEventArgs e) { using (var pen = new Pen(Border)) e.Graphics.DrawRectangle(pen, 0, 0, lblPeriod.Width - 1, lblPeriod.Height - 1); }
-        private void tabs_DrawItem(object sender, DrawItemEventArgs e) { var tabPage = tabs.TabPages[e.Index]; var rect = tabs.GetTabRect(e.Index); bool selected = tabs.SelectedIndex == e.Index; using (var bg = new SolidBrush(selected ? Primary : Color.FromArgb(245, 245, 245))) e.Graphics.FillRectangle(bg, rect); using (var pen = new Pen(selected ? Primary : Border)) e.Graphics.DrawRectangle(pen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1); TextRenderer.DrawText(e.Graphics, tabPage.Text, HeaderFont, rect, selected ? Color.White : Color.FromArgb(60, 60, 60), TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.RightToLeft); }
-        private void gridInvoices_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) OpenDetailsForm(gridInvoices, e.RowIndex); }
-        private void gridPayments_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) OpenDetailsForm(gridPayments, e.RowIndex); }
-        private void gridOutstanding_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) OpenDetailsForm(gridOutstanding, e.RowIndex); }
-        private void ApplyPeriodPreset() { var now = DateTime.Now; switch (cbPeriodPreset.SelectedIndex) { case 0: dtFrom.Value = now.Date; dtTo.Value = now.Date; break; case 1: dtFrom.Value = now.AddDays(-1).Date; dtTo.Value = now.AddDays(-1).Date; break; case 2: dtFrom.Value = now.AddDays(-(int)now.DayOfWeek).Date; dtTo.Value = now.Date; break; case 3: dtFrom.Value = new DateTime(now.Year, now.Month, 1); dtTo.Value = now.Date; break; case 4: dtFrom.Value = new DateTime(now.Year, now.Month, 1).AddMonths(-1); dtTo.Value = new DateTime(now.Year, now.Month, 1).AddDays(-1); break; case 5: var q = (now.Month - 1) / 3; dtFrom.Value = new DateTime(now.Year, q * 3 + 1, 1); dtTo.Value = now.Date; break; case 6: dtFrom.Value = new DateTime(now.Year, 1, 1); dtTo.Value = now.Date; break; default: break; } }
+
+        private void lblPeriod_Paint(object sender, PaintEventArgs e)
+        {
+            using (var pen = new Pen(P.Border))
+                e.Graphics.DrawRectangle(pen, 0, 0, lblPeriod.Width - 1, lblPeriod.Height - 1);
+        }
+
+        private void tabs_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var tabPage = tabs.TabPages[e.Index];
+            var rect = tabs.GetTabRect(e.Index);
+            bool selected = tabs.SelectedIndex == e.Index;
+
+            Color back = selected ? P.Primary : P.Soft;
+            Color fore = selected ? Color.White : P.Text;
+
+            using (var bg = new SolidBrush(back))
+                e.Graphics.FillRectangle(bg, rect);
+
+            using (var pen = new Pen(selected ? P.Primary : P.Border))
+                e.Graphics.DrawRectangle(pen, rect.X, rect.Y, rect.Width - 1, rect.Height - 1);
+
+            TextRenderer.DrawText(
+                e.Graphics,
+                tabPage.Text,
+                HeaderFont,
+                rect,
+                fore,
+                TextFormatFlags.HorizontalCenter |
+                TextFormatFlags.VerticalCenter |
+                TextFormatFlags.RightToLeft |
+                TextFormatFlags.EndEllipsis);
+        }
+
+        private void gridInvoices_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+                OpenDetailsForm(gridInvoices, e.RowIndex);
+        }
+
+        private void gridPayments_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+                OpenDetailsForm(gridPayments, e.RowIndex);
+        }
+
+        private void gridOutstanding_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+                OpenDetailsForm(gridOutstanding, e.RowIndex);
+        }
+
+        private void ApplyPeriodPreset()
+        {
+            var now = DateTime.Now;
+
+            switch (cbPeriodPreset.SelectedIndex)
+            {
+                case 0:
+                    dtFrom.Value = now.Date;
+                    dtTo.Value = now.Date;
+                    break;
+
+                case 1:
+                    dtFrom.Value = now.AddDays(-1).Date;
+                    dtTo.Value = now.AddDays(-1).Date;
+                    break;
+
+                case 2:
+                    dtFrom.Value = now.AddDays(-(int)now.DayOfWeek).Date;
+                    dtTo.Value = now.Date;
+                    break;
+
+                case 3:
+                    dtFrom.Value = new DateTime(now.Year, now.Month, 1);
+                    dtTo.Value = now.Date;
+                    break;
+
+                case 4:
+                    dtFrom.Value = new DateTime(now.Year, now.Month, 1).AddMonths(-1);
+                    dtTo.Value = new DateTime(now.Year, now.Month, 1).AddDays(-1);
+                    break;
+
+                case 5:
+                    var q = (now.Month - 1) / 3;
+                    dtFrom.Value = new DateTime(now.Year, q * 3 + 1, 1);
+                    dtTo.Value = now.Date;
+                    break;
+
+                case 6:
+                    dtFrom.Value = new DateTime(now.Year, 1, 1);
+                    dtTo.Value = now.Date;
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
         private async Task RefreshAllAsync()
         {
-            if (_isLoading || IsDisposed) return;
+            if (_isLoading || IsDisposed)
+                return;
+
             try
             {
                 _isLoading = true;
                 Cursor = Cursors.WaitCursor;
                 btnRefresh.Enabled = false;
+
                 lblPeriod.Text = "🔄 جاري تحديث البيانات...";
+
                 var from = dtFrom.Value.Date;
                 var to = dtTo.Value.Date;
-                await Task.WhenAll(LoadKpis(from, to), LoadInvoices(), LoadPayments(), LoadOutstanding());
+
+                await Task.WhenAll(
+                    LoadKpis(from, to),
+                    LoadInvoices(),
+                    LoadPayments(),
+                    LoadOutstanding());
+
                 UpdatePeriodLabelDesign(from, to);
             }
             catch (Exception ex)
             {
                 lblPeriod.Text = "❌ حدث خطأ أثناء تحديث البيانات";
-                MessageBox.Show("خطأ: " + ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    "خطأ: " + ex.Message,
+                    "خطأ",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             finally
             {
@@ -213,65 +604,540 @@ namespace water3
         {
             var kpiTask = Task.Run(() => _svc.GetKpis(from, to));
             var smsTask = Task.Run(() => _svc.GetSmsStatistics(from, to));
+
             await Task.WhenAll(kpiTask, smsTask);
-            if (IsHandleCreated && !IsDisposed) BeginInvoke(new Action(() => RenderKpis(kpiTask.Result, smsTask.Result)));
+
+            if (IsHandleCreated && !IsDisposed)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    RenderKpis(kpiTask.Result, smsTask.Result);
+                }));
+            }
         }
 
         private void RenderKpis(DashboardKpis k, SmsStatistics smsStats)
         {
             kpiPanel.SuspendLayout();
             kpiPanel.Controls.Clear();
+
             decimal collectionRate = 0;
-            if (k.BilledThisMonth > 0) collectionRate = (k.CollectedThisMonth / k.BilledThisMonth) * 100m;
-            AddKpi("المشتركين النشطين", k.ActiveSubscribers.ToString("N0"), "👥", Color.FromArgb(33, 150, 243), 100, "إجمالي المشتركين");
-            AddKpi("فواتير الفترة", k.InvoicesThisMonth.ToString("N0"), "📄", Color.FromArgb(76, 175, 80), 100, "عدد الفواتير");
-            AddKpi("إجمالي الفوترة", k.BilledThisMonth.ToString("N2") + " ريال", "💰", Color.FromArgb(255, 193, 7), 100, "قيمة الفواتير");
-            AddKpi("نسبة التحصيل", collectionRate.ToString("N1") + "%", "📊", Color.FromArgb(156, 39, 176), (int)Math.Min(100, Math.Max(0, collectionRate)), $"{k.CollectedThisMonth:N2} ريال");
-            AddKpi("المستحقات الكلية", k.OutstandingTotal.ToString("N2") + " ريال", "⚠️", Color.FromArgb(244, 67, 54), 100, "إجمالي المديونية");
-            int smsProgress = smsStats.Total > 0 ? (smsStats.Sent * 100 / smsStats.Total) : 0;
-            AddKpi("رسائل SMS", $"{smsStats.SentToday} 📨", "💬", Color.FromArgb(0, 150, 136), smsProgress, $"{smsStats.Sent} ✓ | {smsStats.Failed} ✗");
+
+            if (k.BilledThisMonth > 0)
+                collectionRate = (k.CollectedThisMonth / k.BilledThisMonth) * 100m;
+
+            AddKpi(
+                "المشتركين النشطين",
+                k.ActiveSubscribers.ToString("N0"),
+                "👥",
+                P.Accent,
+                100,
+                "إجمالي المشتركين");
+
+            AddKpi(
+                "فواتير الفترة",
+                k.InvoicesThisMonth.ToString("N0"),
+                "📄",
+                P.Success,
+                100,
+                "عدد الفواتير");
+
+            AddKpi(
+                "إجمالي الفوترة",
+                k.BilledThisMonth.ToString("N2") + " ريال",
+                "💰",
+                P.Warning,
+                100,
+                "قيمة الفواتير");
+
+            AddKpi(
+                "نسبة التحصيل",
+                collectionRate.ToString("N1") + "%",
+                "📊",
+                Color.FromArgb(156, 39, 176),
+                (int)Math.Min(100, Math.Max(0, collectionRate)),
+                $"{k.CollectedThisMonth:N2} ريال");
+
+            AddKpi(
+                "المستحقات الكلية",
+                k.OutstandingTotal.ToString("N2") + " ريال",
+                "⚠️",
+                P.Danger,
+                100,
+                "إجمالي المديونية");
+
+            int smsProgress = smsStats.Total > 0
+                ? (smsStats.Sent * 100 / smsStats.Total)
+                : 0;
+
+            AddKpi(
+                "رسائل SMS",
+                $"{smsStats.SentToday} 📨",
+                "💬",
+                Color.FromArgb(0, 150, 136),
+                smsProgress,
+                $"{smsStats.Sent} ✓ | {smsStats.Failed} ✗");
+
             kpiPanel.ResumeLayout();
         }
 
-        private void AddKpi(string title, string value, string icon, Color color, int progress, string subtitle) => kpiPanel.Controls.Add(CreateModernKpiCard(title, value, subtitle, icon, color, progress));
+        private void AddKpi(string title, string value, string icon, Color color, int progress, string subtitle)
+        {
+            kpiPanel.Controls.Add(CreateModernKpiCard(title, value, subtitle, icon, color, progress));
+        }
 
         private Panel CreateModernKpiCard(string title, string value, string subtitle, string icon, Color color, int progress)
         {
-            var card = new Panel { Width = 205, Height = 92, BackColor = Color.White, Margin = new Padding(8, 6, 8, 6), Padding = new Padding(10, 8, 10, 8), Cursor = Cursors.Hand, Tag = title };
-            card.Paint += (s, e) => { using (var sb = new SolidBrush(Color.FromArgb(12, 0, 0, 0))) e.Graphics.FillRectangle(sb, 2, 2, card.Width - 2, card.Height - 2); using (var bp = new Pen(Color.FromArgb(235, 238, 242), 1)) e.Graphics.DrawRectangle(bp, 0, 0, card.Width - 1, card.Height - 1); using (var tb = new SolidBrush(color)) e.Graphics.FillRectangle(tb, 0, 0, card.Width, 3); };
-            var iconLabel = new Label { Text = icon, Font = new Font("Segoe UI Emoji", 19f), Location = new Point(10, 16), Size = new Size(44, 40), TextAlign = ContentAlignment.MiddleCenter, ForeColor = color, BackColor = Color.Transparent };
-            var lblTitle = new Label { Text = title, Location = new Point(60, 8), Size = new Size(135, 18), TextAlign = ContentAlignment.MiddleRight, ForeColor = Color.FromArgb(90, 90, 90), Font = new Font("Segoe UI", 8.8f), BackColor = Color.Transparent };
-            var lblValue = new Label { Text = value, Location = new Point(60, 26), Size = new Size(135, 28), TextAlign = ContentAlignment.MiddleRight, Font = new Font("Segoe UI", 14f, FontStyle.Bold), ForeColor = color, BackColor = Color.Transparent };
-            var lblSubtitle = new Label { Text = subtitle, Location = new Point(60, 54), Size = new Size(135, 16), TextAlign = ContentAlignment.MiddleRight, ForeColor = Color.FromArgb(135, 135, 135), Font = new Font("Segoe UI", 8f), BackColor = Color.Transparent };
-            var progressBar = new Panel { Location = new Point(10, 77), Size = new Size(card.Width - 20, 4), BackColor = Color.FromArgb(235, 235, 235) };
+            var card = new Panel
+            {
+                Width = 205,
+                Height = 92,
+                BackColor = P.Card,
+                Margin = new Padding(8, 6, 8, 6),
+                Padding = new Padding(10, 8, 10, 8),
+                Cursor = Cursors.Hand,
+                Tag = title,
+                RightToLeft = RightToLeft.Yes
+            };
+
+            card.Paint += (s, e) =>
+            {
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                using (var sb = new SolidBrush(
+                    AppThemeManager.CurrentTheme == AppThemeName.Dark
+                        ? Color.FromArgb(35, 0, 0, 0)
+                        : Color.FromArgb(12, 0, 0, 0)))
+                {
+                    e.Graphics.FillRectangle(sb, 2, 2, card.Width - 2, card.Height - 2);
+                }
+
+                using (var bp = new Pen(P.Border, 1))
+                    e.Graphics.DrawRectangle(bp, 0, 0, card.Width - 1, card.Height - 1);
+
+                using (var tb = new SolidBrush(color))
+                    e.Graphics.FillRectangle(tb, 0, 0, card.Width, 3);
+            };
+
+            var iconLabel = new Label
+            {
+                Text = icon,
+                Font = new Font("Segoe UI Emoji", 19f),
+                Location = new Point(10, 16),
+                Size = new Size(44, 40),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = color,
+                BackColor = Color.Transparent
+            };
+
+            var lblTitle = new Label
+            {
+                Text = title,
+                Location = new Point(60, 8),
+                Size = new Size(135, 18),
+                TextAlign = ContentAlignment.MiddleRight,
+                ForeColor = P.Muted,
+                Font = new Font("Tahoma", 8.8f),
+                BackColor = Color.Transparent
+            };
+
+            var lblValue = new Label
+            {
+                Text = value,
+                Location = new Point(60, 26),
+                Size = new Size(135, 28),
+                TextAlign = ContentAlignment.MiddleRight,
+                Font = new Font("Tahoma", 13.5f, FontStyle.Bold),
+                ForeColor = color,
+                BackColor = Color.Transparent
+            };
+
+            var lblSubtitle = new Label
+            {
+                Text = subtitle,
+                Location = new Point(60, 54),
+                Size = new Size(135, 16),
+                TextAlign = ContentAlignment.MiddleRight,
+                ForeColor = P.Muted,
+                Font = new Font("Tahoma", 8f),
+                BackColor = Color.Transparent
+            };
+
+            var progressBar = new Panel
+            {
+                Location = new Point(10, 77),
+                Size = new Size(card.Width - 20, 4),
+                BackColor = P.Soft
+            };
+
             int w = (int)(progressBar.Width * (Math.Min(100, Math.Max(0, progress)) / 100.0));
-            progressBar.Controls.Add(new Panel { Location = new Point(0, 0), Size = new Size(w, progressBar.Height), BackColor = color });
-            void Wire(Control c) { c.Cursor = Cursors.Hand; c.Click += (s, e) => OnKpiCardClick(title); }
-            foreach (Control c in new Control[] { card, iconLabel, lblTitle, lblValue, lblSubtitle, progressBar }) Wire(c);
-            card.MouseEnter += (s, e) => card.BackColor = Color.FromArgb(252, 252, 252);
-            card.MouseLeave += (s, e) => card.BackColor = Color.White;
-            card.Controls.AddRange(new Control[] { iconLabel, lblTitle, lblValue, lblSubtitle, progressBar });
+
+            progressBar.Controls.Add(new Panel
+            {
+                Location = new Point(0, 0),
+                Size = new Size(w, progressBar.Height),
+                BackColor = color
+            });
+
+            void Wire(Control c)
+            {
+                c.Cursor = Cursors.Hand;
+                c.Click += (s, e) => OnKpiCardClick(title);
+            }
+
+            foreach (Control c in new Control[]
+            {
+                card,
+                iconLabel,
+                lblTitle,
+                lblValue,
+                lblSubtitle,
+                progressBar
+            })
+            {
+                Wire(c);
+            }
+
+            card.MouseEnter += (s, e) => card.BackColor = P.Soft;
+            card.MouseLeave += (s, e) => card.BackColor = P.Card;
+
+            card.Controls.AddRange(new Control[]
+            {
+                iconLabel,
+                lblTitle,
+                lblValue,
+                lblSubtitle,
+                progressBar
+            });
+
             return card;
         }
 
-        private void OnKpiCardClick(string title) { if (title.Contains("SMS")) ShowSmsReport(); else if (title.Contains("المستحقات")) ShowAgingReport(); else if (title.Contains("فواتير")) tabs.SelectedTab = tabInvoices; else if (title.Contains("التحصيل")) tabs.SelectedTab = tabPayments; }
-        private async Task LoadInvoices() { var data = await Task.Run(() => _svc.GetLastInvoices(30)); if (IsHandleCreated && !IsDisposed) BeginInvoke(new Action(() => { BindGrid(gridInvoices, data); FormatInvoiceRows(); })); }
-        private async Task LoadPayments() { var data = await Task.Run(() => _svc.GetLastPayments(30)); if (IsHandleCreated && !IsDisposed) BeginInvoke(new Action(() => BindGrid(gridPayments, data))); }
-        private async Task LoadOutstanding() { var data = await Task.Run(() => _svc.GetTopOutstanding(30)); if (IsHandleCreated && !IsDisposed) BeginInvoke(new Action(() => BindGrid(gridOutstanding, data))); }
-        private void BindGrid(DataGridView dgv, DataTable data) { dgv.DataSource = null; dgv.DataSource = data; AutoFormatColumns(dgv); }
-        private void AutoFormatColumns(DataGridView dgv) { foreach (DataGridViewColumn col in dgv.Columns) { col.SortMode = DataGridViewColumnSortMode.NotSortable; string lower = (col.HeaderText ?? string.Empty).Trim().ToLowerInvariant(); if (lower.Contains("تاريخ") || lower.Contains("date")) col.DefaultCellStyle.Format = "yyyy/MM/dd"; else if (lower.Contains("مبلغ") || lower.Contains("إجمالي") || lower.Contains("رصيد") || lower.Contains("amount") || lower.Contains("total") || lower.Contains("balance")) col.DefaultCellStyle.Format = "N2"; } }
-        private void UpdatePeriodLabelDesign(DateTime from, DateTime to) { lblPeriod.Text = $"📅 الفترة: {from:yyyy/MM/dd} إلى {to:yyyy/MM/dd}"; }
-        private void FormatInvoiceRows() { foreach (DataGridViewRow row in gridInvoices.Rows) { string status = GetCellValue(row, "الحالة", "Status", "InvoiceStatus"); if (status.Equals("Unpaid", StringComparison.OrdinalIgnoreCase) || status.Contains("غير مدفوعة") || status.Contains("متأخرة")) { row.DefaultCellStyle.ForeColor = Color.FromArgb(198, 40, 40); row.DefaultCellStyle.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold); } } }
-        private void OpenQuickReadingForm() { try { using (var frm = new ReadingEntryForm()) { frm.StartPosition = FormStartPosition.CenterParent; frm.ShowDialog(this); } } catch { MessageBox.Show("فتح نموذج القراءة السريعة", "قراءة سريعة", MessageBoxButtons.OK, MessageBoxIcon.Information); } }
-        private void OpenQuickPaymentForm() { try { using (var frm = new PaymentsForm()) { frm.StartPosition = FormStartPosition.CenterParent; frm.ShowDialog(this); } } catch { MessageBox.Show("فتح نموذج السداد السريع", "سداد سريع", MessageBoxButtons.OK, MessageBoxIcon.Information); } }
-        private void OpenStatementForm() { try { using (var frm = new AccountStatementForm()) { frm.StartPosition = FormStartPosition.CenterParent; frm.ShowDialog(this); } } catch { MessageBox.Show("فتح نموذج كشف الحساب", "كشف حساب", MessageBoxButtons.OK, MessageBoxIcon.Information); } }
-        private void OpenDetailsForm(DataGridView grid, int rowIndex) { if (rowIndex < 0 || rowIndex >= grid.Rows.Count) return; var row = grid.Rows[rowIndex]; if (grid == gridInvoices) { string invoiceId = GetCellValue(row, "رقم الفاتورة", "InvoiceID", "InvoiceId", "InvoiceNumber"); MessageBox.Show($"فتح تفاصيل الفاتورة: {invoiceId}", "تفاصيل الفاتورة"); } else if (grid == gridPayments) { string paymentId = GetCellValue(row, "رقم السداد", "PaymentID", "PaymentId", "ReceiptNumber", "ReceiptID"); MessageBox.Show($"فتح تفاصيل السداد: {paymentId}", "تفاصيل السداد"); } else if (grid == gridOutstanding) { string subscriberId = GetCellValue(row, "كود المشترك", "SubscriberID", "SubscriberId", "AccountCode"); MessageBox.Show($"فتح تفاصيل المتأخرات للمشترك: {subscriberId}", "تفاصيل المتأخرات"); } }
-        private static string GetCellValue(DataGridViewRow row, params string[] candidateNames) { foreach (string name in candidateNames) { if (row.DataGridView.Columns.Contains(name)) { object value = row.Cells[name]?.Value; return value == null || value == DBNull.Value ? string.Empty : value.ToString(); } } return string.Empty; }
-        private void ShowAllRecords(string tabTitle) { DataTable data = null; switch (tabTitle) { case "آخر الفواتير": data = _svc.GetLastInvoices(1000); break; case "آخر المدفوعات": data = _svc.GetLastPayments(1000); break; case "أعلى المتأخرات": data = _svc.GetTopOutstanding(1000); break; } if (data == null) return; using (var form = new Form()) { form.Text = $"عرض الكل - {tabTitle}"; form.Size = new Size(1000, 600); form.StartPosition = FormStartPosition.CenterParent; form.RightToLeft = RightToLeft.Yes; form.RightToLeftLayout = true; var grid = new DataGridView { Dock = DockStyle.Fill, ReadOnly = true, AutoGenerateColumns = true, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill, DataSource = data, RowHeadersVisible = false, SelectionMode = DataGridViewSelectionMode.FullRowSelect, AllowUserToAddRows = false, AllowUserToDeleteRows = false, BackgroundColor = Color.White }; ConfigureGrid(grid); form.Controls.Add(grid); form.ShowDialog(this); } }
-        private void ShowSmsReport() { using (var reportForm = new Form()) { reportForm.Text = "تقرير الرسائل القصيرة"; reportForm.Size = new Size(1000, 600); reportForm.StartPosition = FormStartPosition.CenterParent; reportForm.RightToLeft = RightToLeft.Yes; reportForm.RightToLeftLayout = true; var grid = new DataGridView { Dock = DockStyle.Fill }; ConfigureGrid(grid); grid.DataSource = _svc.GetSmsReport(dtFrom.Value.Date, dtTo.Value.Date); reportForm.Controls.Add(grid); reportForm.ShowDialog(this); } }
-        private void ShowAgingReport() { using (var reportForm = new Form()) { reportForm.Text = "تقرير شيخوخة المدينين"; reportForm.Size = new Size(900, 600); reportForm.StartPosition = FormStartPosition.CenterParent; reportForm.RightToLeft = RightToLeft.Yes; reportForm.RightToLeftLayout = true; var grid = new DataGridView { Dock = DockStyle.Fill }; ConfigureGrid(grid); grid.DataSource = _svc.GetAgingReceivables(dtTo.Value.Date); reportForm.Controls.Add(grid); reportForm.ShowDialog(this); } }
+        private void OnKpiCardClick(string title)
+        {
+            if (title.Contains("SMS"))
+                ShowSmsReport();
+            else if (title.Contains("المستحقات"))
+                ShowAgingReport();
+            else if (title.Contains("فواتير"))
+                tabs.SelectedTab = tabInvoices;
+            else if (title.Contains("التحصيل"))
+                tabs.SelectedTab = tabPayments;
+        }
+
+        private async Task LoadInvoices()
+        {
+            var data = await Task.Run(() => _svc.GetLastInvoices(30));
+
+            if (IsHandleCreated && !IsDisposed)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    BindGrid(gridInvoices, data);
+                    FormatInvoiceRows();
+                }));
+            }
+        }
+
+        private async Task LoadPayments()
+        {
+            var data = await Task.Run(() => _svc.GetLastPayments(30));
+
+            if (IsHandleCreated && !IsDisposed)
+                BeginInvoke(new Action(() => BindGrid(gridPayments, data)));
+        }
+
+        private async Task LoadOutstanding()
+        {
+            var data = await Task.Run(() => _svc.GetTopOutstanding(30));
+
+            if (IsHandleCreated && !IsDisposed)
+                BeginInvoke(new Action(() => BindGrid(gridOutstanding, data)));
+        }
+
+        private void BindGrid(DataGridView dgv, DataTable data)
+        {
+            dgv.DataSource = null;
+            dgv.DataSource = data;
+
+            AutoFormatColumns(dgv);
+        }
+
+        private void AutoFormatColumns(DataGridView dgv)
+        {
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                string lower = (col.HeaderText ?? string.Empty).Trim().ToLowerInvariant();
+
+                if (lower.Contains("تاريخ") || lower.Contains("date"))
+                {
+                    col.DefaultCellStyle.Format = "yyyy/MM/dd";
+                }
+                else if (
+                    lower.Contains("مبلغ") ||
+                    lower.Contains("إجمالي") ||
+                    lower.Contains("رصيد") ||
+                    lower.Contains("amount") ||
+                    lower.Contains("total") ||
+                    lower.Contains("balance"))
+                {
+                    col.DefaultCellStyle.Format = "N2";
+                }
+            }
+        }
+
+        private void UpdatePeriodLabelDesign(DateTime from, DateTime to)
+        {
+            lblPeriod.Text = $"📅 الفترة: {from:yyyy/MM/dd} إلى {to:yyyy/MM/dd}";
+        }
+
+        private void FormatInvoiceRows()
+        {
+            foreach (DataGridViewRow row in gridInvoices.Rows)
+            {
+                string status = GetCellValue(row, "الحالة", "Status", "InvoiceStatus");
+
+                if (status.Equals("Unpaid", StringComparison.OrdinalIgnoreCase) ||
+                    status.Contains("غير مدفوعة") ||
+                    status.Contains("متأخرة"))
+                {
+                    row.DefaultCellStyle.ForeColor = P.Danger;
+                    row.DefaultCellStyle.Font = new Font("Tahoma", 9.5f, FontStyle.Bold);
+                }
+            }
+        }
+
+        private void OpenQuickReadingForm()
+        {
+            try
+            {
+                using (var frm = new ReadingEntryForm())
+                {
+                    frm.StartPosition = FormStartPosition.CenterParent;
+                    frm.RightToLeft = RightToLeft.Yes;
+                    frm.RightToLeftLayout = true;
+                    frm.ShowDialog(this);
+                }
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "فتح نموذج القراءة السريعة",
+                    "قراءة سريعة",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        private void OpenQuickPaymentForm()
+        {
+            try
+            {
+                using (var frm = new PaymentsForm())
+                {
+                    frm.StartPosition = FormStartPosition.CenterParent;
+                    frm.RightToLeft = RightToLeft.Yes;
+                    frm.RightToLeftLayout = true;
+                    frm.ShowDialog(this);
+                }
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "فتح نموذج السداد السريع",
+                    "سداد سريع",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        private void OpenStatementForm()
+        {
+            try
+            {
+                using (var frm = new AccountStatementForm())
+                {
+                    frm.StartPosition = FormStartPosition.CenterParent;
+                    frm.RightToLeft = RightToLeft.Yes;
+                    frm.RightToLeftLayout = true;
+                    frm.ShowDialog(this);
+                }
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "فتح نموذج كشف الحساب",
+                    "كشف حساب",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        private void OpenDetailsForm(DataGridView grid, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= grid.Rows.Count)
+                return;
+
+            var row = grid.Rows[rowIndex];
+
+            if (grid == gridInvoices)
+            {
+                string invoiceId = GetCellValue(row, "رقم الفاتورة", "InvoiceID", "InvoiceId", "InvoiceNumber");
+
+                MessageBox.Show(
+                    $"فتح تفاصيل الفاتورة: {invoiceId}",
+                    "تفاصيل الفاتورة",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else if (grid == gridPayments)
+            {
+                string paymentId = GetCellValue(row, "رقم السداد", "PaymentID", "PaymentId", "ReceiptNumber", "ReceiptID");
+
+                MessageBox.Show(
+                    $"فتح تفاصيل السداد: {paymentId}",
+                    "تفاصيل السداد",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else if (grid == gridOutstanding)
+            {
+                string subscriberId = GetCellValue(row, "كود المشترك", "SubscriberID", "SubscriberId", "AccountCode");
+
+                MessageBox.Show(
+                    $"فتح تفاصيل المتأخرات للمشترك: {subscriberId}",
+                    "تفاصيل المتأخرات",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        private static string GetCellValue(DataGridViewRow row, params string[] candidateNames)
+        {
+            foreach (string name in candidateNames)
+            {
+                if (row.DataGridView.Columns.Contains(name))
+                {
+                    object value = row.Cells[name]?.Value;
+                    return value == null || value == DBNull.Value ? string.Empty : value.ToString();
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private void ShowAllRecords(string tabTitle)
+        {
+            DataTable data = null;
+
+            switch (tabTitle)
+            {
+                case "آخر الفواتير":
+                    data = _svc.GetLastInvoices(1000);
+                    break;
+
+                case "آخر المدفوعات":
+                    data = _svc.GetLastPayments(1000);
+                    break;
+
+                case "أعلى المتأخرات":
+                    data = _svc.GetTopOutstanding(1000);
+                    break;
+            }
+
+            if (data == null)
+                return;
+
+            using (var form = new Form())
+            {
+                form.Text = "عرض الكل - " + tabTitle;
+                form.Size = new Size(1000, 600);
+                form.StartPosition = FormStartPosition.CenterParent;
+                form.RightToLeft = RightToLeft.Yes;
+                form.RightToLeftLayout = true;
+                form.BackColor = P.Bg;
+                form.Font = RegularFont;
+
+                var grid = new DataGridView
+                {
+                    Dock = DockStyle.Fill,
+                    ReadOnly = true,
+                    AutoGenerateColumns = true,
+                    AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                    DataSource = data,
+                    RowHeadersVisible = false,
+                    SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                    AllowUserToAddRows = false,
+                    AllowUserToDeleteRows = false,
+                    BackgroundColor = P.Card,
+                    RightToLeft = RightToLeft.Yes
+                };
+
+                ConfigureGrid(grid);
+
+                form.Controls.Add(grid);
+                form.ShowDialog(this);
+            }
+        }
+
+        private void ShowSmsReport()
+        {
+            using (var reportForm = new Form())
+            {
+                reportForm.Text = "تقرير الرسائل القصيرة";
+                reportForm.Size = new Size(1000, 600);
+                reportForm.StartPosition = FormStartPosition.CenterParent;
+                reportForm.RightToLeft = RightToLeft.Yes;
+                reportForm.RightToLeftLayout = true;
+                reportForm.BackColor = P.Bg;
+                reportForm.Font = RegularFont;
+
+                var grid = new DataGridView
+                {
+                    Dock = DockStyle.Fill,
+                    RightToLeft = RightToLeft.Yes
+                };
+
+                ConfigureGrid(grid);
+
+                grid.DataSource = _svc.GetSmsReport(dtFrom.Value.Date, dtTo.Value.Date);
+
+                reportForm.Controls.Add(grid);
+                reportForm.ShowDialog(this);
+            }
+        }
+
+        private void ShowAgingReport()
+        {
+            using (var reportForm = new Form())
+            {
+                reportForm.Text = "تقرير شيخوخة المدينين";
+                reportForm.Size = new Size(900, 600);
+                reportForm.StartPosition = FormStartPosition.CenterParent;
+                reportForm.RightToLeft = RightToLeft.Yes;
+                reportForm.RightToLeftLayout = true;
+                reportForm.BackColor = P.Bg;
+                reportForm.Font = RegularFont;
+
+                var grid = new DataGridView
+                {
+                    Dock = DockStyle.Fill,
+                    RightToLeft = RightToLeft.Yes
+                };
+
+                ConfigureGrid(grid);
+
+                grid.DataSource = _svc.GetAgingReceivables(dtTo.Value.Date);
+
+                reportForm.Controls.Add(grid);
+                reportForm.ShowDialog(this);
+            }
+        }
     }
 }
+
 
 
 /*using System;
@@ -319,7 +1185,9 @@ namespace water3
         private static readonly Font RegularFont = new Font("Segoe UI", 10f);
         private static readonly Font HeaderFont = new Font("Segoe UI", 10f, FontStyle.Bold);
 
-        public DashboardForm()
+        
+
+
         {
             InitializeComponent();
 

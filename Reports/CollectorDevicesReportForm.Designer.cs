@@ -1,5 +1,5 @@
 ﻿
-namespace water3.Forms
+namespace water3.Reports
 {
     partial class CollectorDevicesReportForm
     {

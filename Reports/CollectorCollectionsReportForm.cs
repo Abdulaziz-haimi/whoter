@@ -20,7 +20,7 @@ namespace water3.Reports
      
 
 
-        public class CollectorCollectionsReportForm : BaseReportForm
+        public partial class CollectorCollectionsReportForm : BaseReportForm
         {
             private readonly OperationsReportsService _service = new OperationsReportsService();
             private DateTimePicker dtFrom;

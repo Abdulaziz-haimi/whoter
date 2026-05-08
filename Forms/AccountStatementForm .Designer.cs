@@ -126,7 +126,7 @@
             // 
             this.root.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.root.ColumnCount = 1;
-            this.root.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.root.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.root.Controls.Add(this.pnlFiltersCard, 0, 0);
             this.root.Controls.Add(this.pnlInfoCard, 0, 1);
             this.root.Controls.Add(this.pnlGridCard, 0, 2);
@@ -136,10 +136,10 @@
             this.root.Name = "root";
             this.root.Padding = new System.Windows.Forms.Padding(12);
             this.root.RowCount = 4;
-            this.root.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 158F));
-            this.root.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            this.root.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 145F));
+            this.root.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.root.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.root.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 78F));
+            this.root.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 68F));
             this.root.Size = new System.Drawing.Size(1093, 553);
             this.root.TabIndex = 0;
 
@@ -556,11 +556,16 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(1093, 553);
             this.Controls.Add(this.root);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.MinimizeBox = true;
+            this.MaximizeBox = true;
+            this.ControlBox = true;
+            this.ShowIcon = false;
             this.Name = "AccountStatementForm";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.RightToLeftLayout = true;
             this.Text = "كشف حساب المشترك";
+            this.MinimumSize = new System.Drawing.Size(1050, 650);
             this.root.ResumeLayout(false);
             this.pnlFiltersCard.ResumeLayout(false);
             this.filtersLayout.ResumeLayout(false);

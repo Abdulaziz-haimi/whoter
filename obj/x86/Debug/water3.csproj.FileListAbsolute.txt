@@ -78,10 +78,8 @@ C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.DashboardForm.resour
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Form1.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Forms.GeneralJournalReportForm.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Forms.ReadingEntryForm.resources
-C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.InvoiceForm.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Forms.InvoicePrintPreviewForm.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.LoginForm.resources
-C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.MainForm.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Forms.PaymentsForm.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Properties.Resources.resources
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.Forms.ReadingF.resources
@@ -104,3 +102,4 @@ C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.csproj.CopyComplete
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.exe
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.pdb
 C:\Users\Abdulaziz\source\repos\water3\obj\x86\Debug\water3.csproj.AssemblyReference.cache
+C:\Users\Abdulaziz\source\repos\water3\bin\x86\Debug\Reports\RDLC\InvoiceReport.rdlc

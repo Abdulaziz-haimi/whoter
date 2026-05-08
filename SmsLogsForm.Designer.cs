@@ -4,7 +4,13 @@
     {
         private System.ComponentModel.IContainer components = null;
 
+        private System.Windows.Forms.TableLayoutPanel rootLayout;
         private System.Windows.Forms.Panel filterPanel;
+        private System.Windows.Forms.TableLayoutPanel filterMainLayout;
+        private System.Windows.Forms.Panel titlePanel;
+        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblSubtitle;
+        private System.Windows.Forms.TableLayoutPanel filtersLayout;
         private System.Windows.Forms.FlowLayoutPanel buttonsPanel;
 
         private System.Windows.Forms.Label lblStatus;
@@ -28,6 +34,7 @@
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnInvoiceDetails;
 
+        private System.Windows.Forms.Panel gridPanel;
         private System.Windows.Forms.DataGridView smsLogsDataGridView;
 
         private System.Windows.Forms.Panel statsPanel;
@@ -37,6 +44,7 @@
         {
             if (disposing && (components != null))
                 components.Dispose();
+
             base.Dispose(disposing);
         }
 
@@ -44,7 +52,13 @@
         {
             this.components = new System.ComponentModel.Container();
 
+            this.rootLayout = new System.Windows.Forms.TableLayoutPanel();
             this.filterPanel = new System.Windows.Forms.Panel();
+            this.filterMainLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.titlePanel = new System.Windows.Forms.Panel();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.lblSubtitle = new System.Windows.Forms.Label();
+            this.filtersLayout = new System.Windows.Forms.TableLayoutPanel();
             this.buttonsPanel = new System.Windows.Forms.FlowLayoutPanel();
 
             this.lblStatus = new System.Windows.Forms.Label();
@@ -68,154 +82,246 @@
             this.btnExport = new System.Windows.Forms.Button();
             this.btnInvoiceDetails = new System.Windows.Forms.Button();
 
+            this.gridPanel = new System.Windows.Forms.Panel();
             this.smsLogsDataGridView = new System.Windows.Forms.DataGridView();
 
             this.statsPanel = new System.Windows.Forms.Panel();
             this.statsLabel = new System.Windows.Forms.Label();
 
+            this.rootLayout.SuspendLayout();
             this.filterPanel.SuspendLayout();
+            this.filterMainLayout.SuspendLayout();
+            this.titlePanel.SuspendLayout();
+            this.filtersLayout.SuspendLayout();
             this.buttonsPanel.SuspendLayout();
+            this.gridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.smsLogsDataGridView)).BeginInit();
             this.statsPanel.SuspendLayout();
             this.SuspendLayout();
 
-            // ================= Form =================
+            // 
+            // Form
+            // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1200, 700);
+            this.MinimumSize = new System.Drawing.Size(1000, 620);
             this.Name = "SmsLogsForm";
-            this.Text = "SmsLogsForm";
+            this.Text = "سجلات الرسائل النصية";
             this.Load += new System.EventHandler(this.SmsLogsForm_Load);
 
-            // ================= filterPanel =================
-            this.filterPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.filterPanel.Height = 110;
-            this.filterPanel.BackColor = System.Drawing.Color.FromArgb(236, 240, 241);
+            // 
+            // rootLayout
+            // 
+            this.rootLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rootLayout.ColumnCount = 1;
+            this.rootLayout.RowCount = 3;
+            this.rootLayout.Padding = new System.Windows.Forms.Padding(12);
+            this.rootLayout.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.rootLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 132F));
+            this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
+
+            // 
+            // filterPanel
+            // 
+            this.filterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filterPanel.Padding = new System.Windows.Forms.Padding(12);
+            this.filterPanel.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.filterPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
-            int y1 = 12;
-            int y2 = 52;
+            // 
+            // filterMainLayout
+            // 
+            this.filterMainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filterMainLayout.ColumnCount = 1;
+            this.filterMainLayout.RowCount = 2;
+            this.filterMainLayout.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.filterMainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+            this.filterMainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.filterMainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 
-            // Status
-            this.lblStatus.Text = "حالة الرسالة:";
-            this.lblStatus.Location = new System.Drawing.Point(20, y1);
-            this.lblStatus.Size = new System.Drawing.Size(90, 25);
-            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // titlePanel
+            // 
+            this.titlePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.titlePanel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.titlePanel.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
 
-            this.cmbStatusFilter.Location = new System.Drawing.Point(120, y1);
-            this.cmbStatusFilter.Size = new System.Drawing.Size(160, 25);
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblTitle.Width = 280;
+            this.lblTitle.Text = "سجلات الرسائل النصية";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblTitle.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
+
+            // 
+            // lblSubtitle
+            // 
+            this.lblSubtitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSubtitle.Text = "متابعة الرسائل المرسلة والفاشلة والمعلقة مع إمكانية إعادة الإرسال والتصدير";
+            this.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblSubtitle.Font = new System.Drawing.Font("Tahoma", 8.5F, System.Drawing.FontStyle.Regular);
+
+            this.titlePanel.Controls.Add(this.lblSubtitle);
+            this.titlePanel.Controls.Add(this.lblTitle);
+
+            // 
+            // filtersLayout
+            // 
+            this.filtersLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filtersLayout.ColumnCount = 11;
+            this.filtersLayout.RowCount = 1;
+            this.filtersLayout.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.filtersLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 95F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 135F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 135F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.filtersLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 500F));
+
+            // 
+            // cmbStatusFilter
+            // 
+            this.cmbStatusFilter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cmbStatusFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStatusFilter.Margin = new System.Windows.Forms.Padding(4, 12, 4, 8);
+            this.cmbStatusFilter.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 
-            // From
-            this.lblFrom.Text = "من تاريخ:";
-            this.lblFrom.Location = new System.Drawing.Point(300, y1);
-            this.lblFrom.Size = new System.Drawing.Size(70, 25);
-            this.lblFrom.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblStatus.Text = "الحالة:";
+            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblStatus.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
 
-            this.dateFromPicker.Location = new System.Drawing.Point(380, y1);
-            this.dateFromPicker.Size = new System.Drawing.Size(130, 25);
+            // 
+            // dateFromPicker
+            // 
+            this.dateFromPicker.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dateFromPicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateFromPicker.Margin = new System.Windows.Forms.Padding(4, 12, 4, 8);
+            this.dateFromPicker.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.dateFromPicker.RightToLeftLayout = true;
 
-            // To
-            this.lblTo.Text = "إلى تاريخ:";
-            this.lblTo.Location = new System.Drawing.Point(530, y1);
-            this.lblTo.Size = new System.Drawing.Size(70, 25);
-            this.lblTo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblFrom
+            // 
+            this.lblFrom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblFrom.Text = "من تاريخ:";
+            this.lblFrom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblFrom.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
 
-            this.dateToPicker.Location = new System.Drawing.Point(610, y1);
-            this.dateToPicker.Size = new System.Drawing.Size(130, 25);
+            // 
+            // dateToPicker
+            // 
+            this.dateToPicker.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dateToPicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateToPicker.Margin = new System.Windows.Forms.Padding(4, 12, 4, 8);
+            this.dateToPicker.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.dateToPicker.RightToLeftLayout = true;
 
-            // Phone
-            this.lblPhone.Text = "رقم الهاتف:";
-            this.lblPhone.Location = new System.Drawing.Point(20, y2);
-            this.lblPhone.Size = new System.Drawing.Size(90, 25);
-            this.lblPhone.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblTo
+            // 
+            this.lblTo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTo.Text = "إلى تاريخ:";
+            this.lblTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTo.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
 
-            this.txtPhoneFilter.Location = new System.Drawing.Point(120, y2);
-            this.txtPhoneFilter.Size = new System.Drawing.Size(160, 25);
+            // 
+            // txtPhoneFilter
+            // 
+            this.txtPhoneFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPhoneFilter.Margin = new System.Windows.Forms.Padding(4, 12, 4, 8);
+            this.txtPhoneFilter.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 
-            // Search
-            this.lblSearch.Text = "بحث عام:";
-            this.lblSearch.Location = new System.Drawing.Point(300, y2);
-            this.lblSearch.Size = new System.Drawing.Size(70, 25);
-            this.lblSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblPhone
+            // 
+            this.lblPhone.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblPhone.Text = "الهاتف:";
+            this.lblPhone.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblPhone.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
 
-            this.txtSearchGeneral.Location = new System.Drawing.Point(380, y2);
-            this.txtSearchGeneral.Size = new System.Drawing.Size(360, 25);
+            // 
+            // txtSearchGeneral
+            // 
+            this.txtSearchGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSearchGeneral.Margin = new System.Windows.Forms.Padding(4, 12, 4, 8);
+            this.txtSearchGeneral.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 
-            // ================= buttonsPanel =================
-            this.buttonsPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.buttonsPanel.Width = 620;
-            this.buttonsPanel.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
+            // 
+            // lblSearch
+            // 
+            this.lblSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSearch.Text = "بحث:";
+            this.lblSearch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblSearch.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
+
+            // 
+            // buttonsPanel
+            // 
+            this.buttonsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonsPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.buttonsPanel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.buttonsPanel.WrapContents = false;
-            this.buttonsPanel.Padding = new System.Windows.Forms.Padding(10, 12, 10, 10);
-            this.buttonsPanel.BackColor = System.Drawing.Color.Transparent;
+            this.buttonsPanel.AutoScroll = false;
+            this.buttonsPanel.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
+            this.buttonsPanel.Margin = System.Windows.Forms.Padding.Empty;
 
-            // btnRefresh
-            this.btnRefresh.Text = "تحديث";
-            this.btnRefresh.Size = new System.Drawing.Size(120, 60);
-            this.btnRefresh.BackColor = System.Drawing.Color.FromArgb(52, 152, 219);
-            this.btnRefresh.ForeColor = System.Drawing.Color.White;
-            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh.FlatAppearance.BorderSize = 0;
-            this.btnRefresh.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            // 
+            // buttons
+            // 
+            SetupButton(this.btnRefresh, "تحديث", 88);
+            SetupButton(this.btnReset, "إعادة تعيين", 105);
+            SetupButton(this.btnResend, "إعادة إرسال", 105);
+            SetupButton(this.btnExport, "تصدير CSV", 105);
+            SetupButton(this.btnInvoiceDetails, "تفاصيل الفاتورة", 125);
 
-            // btnReset
-            this.btnReset.Text = "إعادة تعيين";
-            this.btnReset.Size = new System.Drawing.Size(120, 60);
-            this.btnReset.BackColor = System.Drawing.Color.FromArgb(149, 165, 166);
-            this.btnReset.ForeColor = System.Drawing.Color.White;
-            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReset.FlatAppearance.BorderSize = 0;
-            this.btnReset.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-
-            // btnResend
-            this.btnResend.Text = "إعادة إرسال";
-            this.btnResend.Size = new System.Drawing.Size(120, 60);
-            this.btnResend.BackColor = System.Drawing.Color.FromArgb(230, 126, 34);
-            this.btnResend.ForeColor = System.Drawing.Color.White;
-            this.btnResend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResend.FlatAppearance.BorderSize = 0;
-            this.btnResend.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-
-            // btnExport
-            this.btnExport.Text = "تصدير Excel";
-            this.btnExport.Size = new System.Drawing.Size(120, 60);
-            this.btnExport.BackColor = System.Drawing.Color.FromArgb(39, 174, 96);
-            this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExport.FlatAppearance.BorderSize = 0;
-            this.btnExport.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-
-            // btnInvoiceDetails
-            this.btnInvoiceDetails.Text = "تفاصيل الفاتورة";
-            this.btnInvoiceDetails.Size = new System.Drawing.Size(120, 60);
-            this.btnInvoiceDetails.BackColor = System.Drawing.Color.FromArgb(155, 89, 182);
-            this.btnInvoiceDetails.ForeColor = System.Drawing.Color.White;
-            this.btnInvoiceDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInvoiceDetails.FlatAppearance.BorderSize = 0;
-            this.btnInvoiceDetails.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-
-            this.buttonsPanel.Controls.Add(this.btnRefresh);
-            this.buttonsPanel.Controls.Add(this.btnReset);
-            this.buttonsPanel.Controls.Add(this.btnResend);
-            this.buttonsPanel.Controls.Add(this.btnExport);
             this.buttonsPanel.Controls.Add(this.btnInvoiceDetails);
+            this.buttonsPanel.Controls.Add(this.btnExport);
+            this.buttonsPanel.Controls.Add(this.btnResend);
+            this.buttonsPanel.Controls.Add(this.btnReset);
+            this.buttonsPanel.Controls.Add(this.btnRefresh);
 
-            // Add controls to filterPanel
-            this.filterPanel.Controls.Add(this.lblStatus);
-            this.filterPanel.Controls.Add(this.cmbStatusFilter);
-            this.filterPanel.Controls.Add(this.lblFrom);
-            this.filterPanel.Controls.Add(this.dateFromPicker);
-            this.filterPanel.Controls.Add(this.lblTo);
-            this.filterPanel.Controls.Add(this.dateToPicker);
-            this.filterPanel.Controls.Add(this.lblPhone);
-            this.filterPanel.Controls.Add(this.txtPhoneFilter);
-            this.filterPanel.Controls.Add(this.lblSearch);
-            this.filterPanel.Controls.Add(this.txtSearchGeneral);
-            this.filterPanel.Controls.Add(this.buttonsPanel);
+            this.filtersLayout.Controls.Add(this.cmbStatusFilter, 0, 0);
+            this.filtersLayout.Controls.Add(this.lblStatus, 1, 0);
+            this.filtersLayout.Controls.Add(this.dateFromPicker, 2, 0);
+            this.filtersLayout.Controls.Add(this.lblFrom, 3, 0);
+            this.filtersLayout.Controls.Add(this.dateToPicker, 4, 0);
+            this.filtersLayout.Controls.Add(this.lblTo, 5, 0);
+            this.filtersLayout.Controls.Add(this.txtPhoneFilter, 6, 0);
+            this.filtersLayout.Controls.Add(this.lblPhone, 7, 0);
+            this.filtersLayout.Controls.Add(this.txtSearchGeneral, 8, 0);
+            this.filtersLayout.Controls.Add(this.lblSearch, 9, 0);
+            this.filtersLayout.Controls.Add(this.buttonsPanel, 10, 0);
 
-            // ================= smsLogsDataGridView =================
+            this.filterMainLayout.Controls.Add(this.titlePanel, 0, 0);
+            this.filterMainLayout.Controls.Add(this.filtersLayout, 0, 1);
+
+            this.filterPanel.Controls.Add(this.filterMainLayout);
+
+            // 
+            // gridPanel
+            // 
+            this.gridPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridPanel.Padding = new System.Windows.Forms.Padding(8);
+            this.gridPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+
+            // 
+            // smsLogsDataGridView
+            // 
             this.smsLogsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.smsLogsDataGridView.BackgroundColor = System.Drawing.Color.White;
             this.smsLogsDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -229,12 +335,17 @@
             this.smsLogsDataGridView.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.smsLogsDataGridView.EnableHeadersVisualStyles = false;
 
-            // ================= statsPanel =================
-            this.statsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.statsPanel.Height = 40;
-            this.statsPanel.BackColor = System.Drawing.Color.FromArgb(52, 73, 94);
-            this.statsPanel.ForeColor = System.Drawing.Color.White;
+            this.gridPanel.Controls.Add(this.smsLogsDataGridView);
 
+            // 
+            // statsPanel
+            // 
+            this.statsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.statsPanel.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+
+            // 
+            // statsLabel
+            // 
             this.statsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.statsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.statsLabel.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
@@ -242,16 +353,34 @@
 
             this.statsPanel.Controls.Add(this.statsLabel);
 
-            // ================= Add to form =================
-            this.Controls.Add(this.smsLogsDataGridView);
-            this.Controls.Add(this.statsPanel);
-            this.Controls.Add(this.filterPanel);
+            this.rootLayout.Controls.Add(this.filterPanel, 0, 0);
+            this.rootLayout.Controls.Add(this.gridPanel, 0, 1);
+            this.rootLayout.Controls.Add(this.statsPanel, 0, 2);
 
+            this.Controls.Add(this.rootLayout);
+
+            this.rootLayout.ResumeLayout(false);
             this.filterPanel.ResumeLayout(false);
+            this.filterMainLayout.ResumeLayout(false);
+            this.titlePanel.ResumeLayout(false);
+            this.filtersLayout.ResumeLayout(false);
+            this.filtersLayout.PerformLayout();
             this.buttonsPanel.ResumeLayout(false);
+            this.gridPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.smsLogsDataGridView)).EndInit();
             this.statsPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+        }
+
+        private void SetupButton(System.Windows.Forms.Button btn, string text, int width)
+        {
+            btn.Text = text;
+            btn.Size = new System.Drawing.Size(width, 34);
+            btn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btn.Cursor = System.Windows.Forms.Cursors.Hand;
+            btn.Font = new System.Drawing.Font("Tahoma", 8.8F, System.Drawing.FontStyle.Bold);
+            btn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         }
     }
 }

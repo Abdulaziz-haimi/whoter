@@ -475,26 +475,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1627128">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1712120">
       <assemblyIdentity name="water3" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>JsDpShG5TnoO7trkc5rymQTaUuQ3C8x+5gMBuHApUQw=</dsig:DigestValue>
+        <dsig:DigestValue>O1vNMhbNNFiyftdI1yEbwNT9eg8dR36SVYLQikLxJlw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ar\water3.resources.dll" size="3584">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ar\water3.resources.dll" size="22528">
       <assemblyIdentity name="water3.resources" version="1.0.0.0" language="ar" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>xqO5gkgr08BG9IJ7Q2YShHzrtYby0nGUBarL+xbP3Uc=</dsig:DigestValue>
+        <dsig:DigestValue>KDrBp7TZGO/G4byLaYIHRvyZjqa7bXhV0V17/2XUf+U=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -550,6 +550,15 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
       <dsig:DigestValue>cXjplQjfWwQ84ggFaJhdl7TJN11zk9N4xnRBcKmk/qw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Reports\RDLC\InvoiceReport.rdlc" size="36871">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>bgYdJs9sw4vN8Yzn6hD0iTJNeVlPoujG9htEbEE7ntc=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Reports\Report_final.rdlc" size="71871">

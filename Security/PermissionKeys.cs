@@ -105,5 +105,6 @@
         public const string ExpenseSummaryView = "EXPENSE_SUMMARY_VIEW";
         public const string PurchaseReportView = "PURCHASE_REPORT_VIEW";
         public const string LossReportView = "LOSS_REPORT_VIEW";
+        public const string DynamicReportDesignerForm = "LOSS_REPORT_VIEW";
     }
 }

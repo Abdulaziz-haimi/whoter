@@ -56,36 +56,56 @@ namespace water3.Services
                 return result;
             }
 
-            private void Validate(ExpenseHeaderItem header, List<ExpenseLineItem> lines)
+        private void Validate(ExpenseHeaderItem header, List<ExpenseLineItem> lines)
+        {
+            if (header == null)
+                throw new InvalidOperationException("بيانات الحركة غير متوفرة.");
+
+            if (header.ExpenseDate == default(DateTime))
+                throw new InvalidOperationException("تاريخ الحركة مطلوب.");
+
+            if (header.CategoryID <= 0)
+                throw new InvalidOperationException("اختر التصنيف.");
+
+            if (string.IsNullOrWhiteSpace(header.PaymentMethod))
+                throw new InvalidOperationException("اختر طريقة الدفع.");
+
+            if (header.PaymentMethod != "Cash" &&
+                header.PaymentMethod != "Transfer" &&
+                header.PaymentMethod != "Cheque" &&
+                header.PaymentMethod != "Credit")
             {
-                if (header == null)
-                    throw new InvalidOperationException("بيانات الحركة غير متوفرة.");
+                throw new InvalidOperationException("طريقة الدفع غير صحيحة.");
+            }
 
-                if (header.ExpenseDate == default(DateTime))
-                    throw new InvalidOperationException("تاريخ الحركة مطلوب.");
+            if (header.CashAccountID.HasValue && header.CashAccountID.Value <= 0)
+                header.CashAccountID = null;
 
-                if (header.CategoryID <= 0)
-                    throw new InvalidOperationException("اختر التصنيف.");
+            if (header.CounterAccountID.HasValue && header.CounterAccountID.Value <= 0)
+                header.CounterAccountID = null;
 
-                if (string.IsNullOrWhiteSpace(header.PaymentMethod))
-                    throw new InvalidOperationException("اختر طريقة الدفع.");
+            if (lines == null || lines.Count == 0)
+                throw new InvalidOperationException("أدخل بندًا واحدًا على الأقل.");
 
-                if (lines == null || lines.Count == 0)
-                    throw new InvalidOperationException("أدخل بندًا واحدًا على الأقل.");
+            foreach (ExpenseLineItem line in lines)
+            {
+                if (line == null)
+                    throw new InvalidOperationException("يوجد بند غير صحيح.");
 
-                foreach (var line in lines)
-                {
-                    if (string.IsNullOrWhiteSpace(line.ItemName))
-                        throw new InvalidOperationException("اسم البند مطلوب.");
+                if (string.IsNullOrWhiteSpace(line.ItemName))
+                    throw new InvalidOperationException("اسم البند مطلوب.");
 
-                    if (line.Qty <= 0)
-                        throw new InvalidOperationException("الكمية يجب أن تكون أكبر من صفر.");
+                if (line.Qty <= 0)
+                    throw new InvalidOperationException("الكمية يجب أن تكون أكبر من صفر.");
 
-                    if (line.UnitPrice < 0)
-                        throw new InvalidOperationException("سعر الوحدة غير صحيح.");
-                }
+                if (line.UnitPrice < 0)
+                    throw new InvalidOperationException("سعر الوحدة غير صحيح.");
+
+                if (line.TargetAccountID.HasValue && line.TargetAccountID.Value <= 0)
+                    line.TargetAccountID = null;
+            }
         }
-    public ExpenseSaveResult UpdateExpense(ExpenseHeaderItem header, List<ExpenseLineItem> lines)
+        public ExpenseSaveResult UpdateExpense(ExpenseHeaderItem header, List<ExpenseLineItem> lines)
         {
             Validate(header, lines);
 

@@ -7,7 +7,7 @@ namespace WaterCollector.BackendApi.Data
     {
         public SqlConnection CreateConnection()
         {
-            var cs = ConfigurationManager.ConnectionStrings["WaterBillingDb"]?.ConnectionString;
+            var cs = ConfigurationManager.ConnectionStrings["WaterBillingDB"]?.ConnectionString;
             if (string.IsNullOrWhiteSpace(cs))
                 throw new ConfigurationErrorsException("ConnectionStrings: DefaultConnection غير موجود في Web.config");
             return new SqlConnection(cs);

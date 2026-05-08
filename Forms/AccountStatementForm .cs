@@ -62,12 +62,21 @@ namespace water3.Forms
             _uiReady = true;
         }
 
+        private AppThemePalette P
+        {
+            get { return AppThemeManager.Palette; }
+        }
+
         private void ApplyTheme()
         {
-            AddCardBorder(pnlFiltersCard);
-            AddCardBorder(pnlInfoCard);
-            AddCardBorder(pnlGridCard);
-            AddCardBorder(pnlTotalsCard);
+            BackColor = P.Bg;
+
+            root.BackColor = P.Bg;
+
+            ApplyCardStyle(pnlFiltersCard);
+            ApplyCardStyle(pnlInfoCard);
+            ApplyCardStyle(pnlGridCard);
+            ApplyCardStyle(pnlTotalsCard);
 
             StyleIconButton(btnApply, "تطبيق");
             StyleIconButton(btnRefresh, "تحديث");
@@ -76,82 +85,258 @@ namespace water3.Forms
             StyleIconButton(btnSavePreset, "حفظ قالب");
             StyleIconButton(btnLoadPreset, "تحميل قالب");
 
-            lblSubscriberInfo.ForeColor = PrimaryDark;
-            lblSubscriberInfo.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
+            lblSubscriberInfo.ForeColor = P.Primary;
+            lblSubscriberInfo.BackColor = P.Card;
+            lblSubscriberInfo.Font = new Font("Tahoma", 10f, FontStyle.Bold);
 
             foreach (var lab in new[] { lblOpen, lblDebitTotal, lblCreditTotal, lblNet, lblClose })
             {
-                lab.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
-                lab.ForeColor = Color.FromArgb(25, 65, 120);
+                lab.Font = new Font("Tahoma", 10f, FontStyle.Bold);
+                lab.ForeColor = P.Text;
+                lab.BackColor = P.Soft;
+                lab.Padding = new Padding(6, 0, 6, 0);
             }
+
+            foreach (var lab in new[]
+            {
+        lblReportType,
+        lblFrom,
+        lblTo,
+        lblSubscriber,
+        lblColumns,
+        lblSortBy,
+        lblGroupBy
+    })
+            {
+                lab.Font = new Font("Tahoma", 9.5f, FontStyle.Bold);
+                lab.ForeColor = P.Text;
+                lab.BackColor = P.Card;
+                lab.TextAlign = ContentAlignment.MiddleCenter;
+            }
+
+            foreach (Control c in pnlFiltersCard.Controls)
+                ApplyThemeRecursive(c);
+
+            chkSortDesc.Font = new Font("Tahoma", 9f, FontStyle.Bold);
+            chkOnlyInvoices.Font = new Font("Tahoma", 9f, FontStyle.Bold);
+            chkOnlyPayments.Font = new Font("Tahoma", 9f, FontStyle.Bold);
+
+            chkSortDesc.ForeColor = P.Text;
+            chkOnlyInvoices.ForeColor = P.Text;
+            chkOnlyPayments.ForeColor = P.Text;
+
+            chkSortDesc.BackColor = P.Card;
+            chkOnlyInvoices.BackColor = P.Card;
+            chkOnlyPayments.BackColor = P.Card;
+
+            clbColumns.Font = new Font("Tahoma", 9f);
+            clbColumns.BackColor = P.Card;
+            clbColumns.ForeColor = P.Text;
+            clbColumns.BorderStyle = BorderStyle.FixedSingle;
 
             StyleGrid(dgv);
 
-            foreach (var lab in new[] { lblReportType, lblFrom, lblTo, lblSubscriber, lblColumns, lblSortBy, lblGroupBy })
+            pnlFiltersCard.Invalidate();
+            pnlInfoCard.Invalidate();
+            pnlGridCard.Invalidate();
+            pnlTotalsCard.Invalidate();
+        }
+        private void ApplyThemeRecursive(Control parent)
+        {
+            foreach (Control c in parent.Controls)
             {
-                lab.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
-                lab.ForeColor = Color.FromArgb(60, 60, 60);
+                if (c is Label lab)
+                {
+                    lab.ForeColor = P.Text;
+                    lab.BackColor = P.Card;
+                }
+
+                if (c is ComboBox combo)
+                {
+                    combo.BackColor = P.Card;
+                    combo.ForeColor = P.Text;
+                    combo.FlatStyle = FlatStyle.Flat;
+                    combo.RightToLeft = RightToLeft.Yes;
+                }
+
+                if (c is DateTimePicker dt)
+                {
+                    dt.RightToLeft = RightToLeft.Yes;
+                    dt.RightToLeftLayout = true;
+                    dt.CalendarTitleBackColor = P.Primary;
+                    dt.CalendarTitleForeColor = Color.White;
+                    dt.CalendarForeColor = P.Text;
+                }
+
+                if (c is CheckBox chk)
+                {
+                    chk.BackColor = P.Card;
+                    chk.ForeColor = P.Text;
+                }
+
+                if (c is CheckedListBox clb)
+                {
+                    clb.BackColor = P.Card;
+                    clb.ForeColor = P.Text;
+                }
+
+                if (c is FlowLayoutPanel flp)
+                {
+                    flp.BackColor = P.Card;
+                }
+
+                if (c is TableLayoutPanel tlp)
+                {
+                    tlp.BackColor = P.Card;
+                }
+
+                if (c.HasChildren)
+                    ApplyThemeRecursive(c);
+            }
+        }
+
+        private void ApplyCardStyle(Panel p)
+        {
+            p.BackColor = P.Card;
+            p.Paint -= CardPanel_Paint;
+            p.Paint += CardPanel_Paint;
+        }
+
+        private void CardPanel_Paint(object sender, PaintEventArgs e)
+        {
+            Control c = sender as Control;
+            if (c == null) return;
+
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            using (var shadow = new SolidBrush(
+                AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? Color.FromArgb(25, 0, 0, 0)
+                    : Color.FromArgb(8, 0, 0, 0)))
+            {
+                e.Graphics.FillRectangle(shadow, 2, 2, c.Width - 2, c.Height - 2);
             }
 
-            chkSortDesc.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
-            chkOnlyInvoices.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
-            chkOnlyPayments.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
-            chkSortDesc.ForeColor = chkOnlyInvoices.ForeColor = chkOnlyPayments.ForeColor = Color.FromArgb(60, 60, 60);
-
-            clbColumns.Font = new Font("Segoe UI", 9.5f);
+            using (var pen = new Pen(P.Border))
+                e.Graphics.DrawRectangle(pen, 0, 0, c.Width - 1, c.Height - 1);
         }
-
         private void AddCardBorder(Panel p)
         {
-            p.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(Border))
-                    e.Graphics.DrawRectangle(pen, 0, 0, p.Width - 1, p.Height - 1);
-            };
+            ApplyCardStyle(p);
         }
-
         private void StyleIconButton(Button b, string tooltip)
         {
-            b.BackColor = Primary;
+            b.BackColor = P.Primary;
             b.ForeColor = Color.White;
             b.FlatStyle = FlatStyle.Flat;
             b.FlatAppearance.BorderSize = 0;
-            b.Font = new Font("Segoe UI Emoji", 12f);
+            b.Font = new Font("Segoe UI Emoji", 11f, FontStyle.Bold);
             b.Cursor = Cursors.Hand;
+            b.TextAlign = ContentAlignment.MiddleCenter;
 
-            b.MouseEnter += (s, e) => b.BackColor = Hover;
-            b.MouseLeave += (s, e) => b.BackColor = Primary;
+            b.MouseEnter -= Button_MouseEnter;
+            b.MouseLeave -= Button_MouseLeave;
+            b.MouseDown -= Button_MouseDown;
+            b.MouseUp -= Button_MouseUp;
 
-            var tt = new ToolTip();
+            b.MouseEnter += Button_MouseEnter;
+            b.MouseLeave += Button_MouseLeave;
+            b.MouseDown += Button_MouseDown;
+            b.MouseUp += Button_MouseUp;
+
+            b.Tag = tooltip;
+
+            ToolTip tt = new ToolTip();
             tt.SetToolTip(b, tooltip);
+        }
+
+        private void Button_MouseEnter(object sender, EventArgs e)
+        {
+            Button b = sender as Button;
+            if (b != null)
+                b.BackColor = P.Hover;
+        }
+
+        private void Button_MouseLeave(object sender, EventArgs e)
+        {
+            Button b = sender as Button;
+            if (b != null)
+                b.BackColor = P.Primary;
+        }
+
+        private void Button_MouseDown(object sender, MouseEventArgs e)
+        {
+            Button b = sender as Button;
+            if (b != null)
+                b.BackColor = P.PrimaryDark;
+        }
+
+        private void Button_MouseUp(object sender, MouseEventArgs e)
+        {
+            Button b = sender as Button;
+            if (b != null)
+                b.BackColor = P.Primary;
         }
 
         private void StyleGrid(DataGridView grid)
         {
             grid.EnableHeadersVisualStyles = false;
-            grid.ColumnHeadersDefaultCellStyle.BackColor = Primary;
-            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+            grid.BackgroundColor = P.Card;
+            grid.GridColor = P.Border;
+            grid.BorderStyle = BorderStyle.None;
+
+            grid.ColumnHeadersDefaultCellStyle.BackColor =
+                AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? P.Soft
+                    : P.Primary;
+
+            grid.ColumnHeadersDefaultCellStyle.ForeColor =
+                AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? P.Text
+                    : Color.White;
+
+            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Tahoma", 10f, FontStyle.Bold);
             grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            grid.ColumnHeadersDefaultCellStyle.Padding = new Padding(4);
 
+            grid.DefaultCellStyle.BackColor = P.Card;
+            grid.DefaultCellStyle.ForeColor = P.Text;
+            grid.DefaultCellStyle.SelectionBackColor = P.Selected;
+            grid.DefaultCellStyle.SelectionForeColor = P.SelectedText;
+            grid.DefaultCellStyle.Font = new Font("Tahoma", 9.5f);
             grid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(210, 232, 255);
-            grid.DefaultCellStyle.SelectionForeColor = Color.Black;
+            grid.DefaultCellStyle.Padding = new Padding(3);
 
-            grid.RowsDefaultCellStyle.BackColor = Color.White;
-            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(242, 247, 255);
-            grid.GridColor = Color.FromArgb(235, 240, 245);
+            grid.RowsDefaultCellStyle.BackColor = P.Card;
+
+            grid.AlternatingRowsDefaultCellStyle.BackColor =
+                AppThemeManager.CurrentTheme == AppThemeName.Dark
+                    ? P.Bg
+                    : P.Soft;
+
+            grid.AlternatingRowsDefaultCellStyle.ForeColor = P.Text;
 
             grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             grid.ColumnHeadersHeight = 40;
             grid.RowTemplate.Height = 36;
-            grid.BorderStyle = BorderStyle.None;
-        }
 
+            grid.RowHeadersVisible = false;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.ReadOnly = true;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.RightToLeft = RightToLeft.Yes;
+        }
         private void HookEvents()
         {
             btnApply.Click += (s, e) => ApplyReportSafe();
-            btnRefresh.Click += (s, e) => LoadSubscribers(ddlSubscribers.Text ?? "", true);
+
+            btnRefresh.Click += (s, e) =>
+            {
+                LoadSubscribers(SafeComboText(ddlSubscribers), true);
+            };
+
             btnExportExcel.Click += (s, e) => ExportToExcelCsv();
             btnPrint.Click += (s, e) => PrintGrid();
 
@@ -174,16 +359,41 @@ namespace water3.Forms
             {
                 if (_suppressAuto) return;
 
-                string key = (ddlSubscribers.Text ?? "").Trim();
+                string key = SafeComboText(ddlSubscribers).Trim();
+
                 if (key.Length == 0)
                 {
-                    ddlSubscribers.Items.Clear();
+                    _suppressAuto = true;
+                    try
+                    {
+                        ddlSubscribers.BeginUpdate();
+                        ddlSubscribers.Items.Clear();
+                        ddlSubscribers.SelectedIndex = -1;
+                        ddlSubscribers.EndUpdate();
+                    }
+                    finally
+                    {
+                        _suppressAuto = false;
+                    }
+
                     return;
                 }
 
                 LoadSubscribers(key, true);
-                ddlSubscribers.DroppedDown = ddlSubscribers.Items.Count > 0;
-                ddlSubscribers.SelectionStart = ddlSubscribers.Text.Length;
+
+                if (ddlSubscribers.Items.Count > 0)
+                {
+                    try
+                    {
+                        ddlSubscribers.DroppedDown = true;
+                        ddlSubscribers.SelectionStart = SafeComboText(ddlSubscribers).Length;
+                        ddlSubscribers.SelectionLength = 0;
+                    }
+                    catch
+                    {
+                        // تجاهل أي مشكلة واجهة أثناء الكتابة
+                    }
+                }
             };
 
             ddlSubscribers.KeyDown += (s, e) =>
@@ -235,8 +445,11 @@ namespace water3.Forms
             _suppressAuto = true;
             try
             {
-                ddlSubscribers.Text = "";
+                ddlSubscribers.BeginUpdate();
+                ddlSubscribers.SelectedIndex = -1;
                 ddlSubscribers.Items.Clear();
+                ddlSubscribers.Text = "";
+                ddlSubscribers.EndUpdate();
             }
             finally
             {
@@ -260,9 +473,10 @@ namespace water3.Forms
 
             if (!(ddlSubscribers.SelectedItem is ComboBoxItem))
             {
-                string typed = (ddlSubscribers.Text ?? "").Trim();
+                string typed = SafeComboText(ddlSubscribers).Trim();
+
                 if (typed.Length > 0)
-                    LoadSubscribers(typed, true);
+                    LoadSubscribers(typed, false);
 
                 if (!(ddlSubscribers.SelectedItem is ComboBoxItem) && ddlSubscribers.Items.Count > 0)
                     ddlSubscribers.SelectedIndex = 0;
@@ -282,21 +496,28 @@ namespace water3.Forms
 
             ShowReport(sid, dtFrom.Value.Date, dtTo.Value.Date, ddlReportType.Text);
         }
-
         private void LoadSubscribers(string searchKey, bool keepTypedText)
         {
+            searchKey = (searchKey ?? "").Trim();
+
             _suppressAuto = true;
             try
             {
-                string typed = keepTypedText ? (ddlSubscribers.Text ?? "") : "";
-                int caret = keepTypedText ? ddlSubscribers.SelectionStart : 0;
+                string typed = keepTypedText ? searchKey : "";
+                int caret = keepTypedText ? typed.Length : 0;
 
                 ddlSubscribers.BeginUpdate();
+
+                ddlSubscribers.SelectedIndex = -1;
                 ddlSubscribers.Items.Clear();
 
-                var items = _svc.SearchSubscribers(searchKey);
-                foreach (var x in items)
-                    ddlSubscribers.Items.Add(x);
+                if (searchKey.Length > 0)
+                {
+                    var items = _svc.SearchSubscribers(searchKey);
+
+                    foreach (var x in items)
+                        ddlSubscribers.Items.Add(x);
+                }
 
                 ddlSubscribers.EndUpdate();
 
@@ -306,16 +527,34 @@ namespace water3.Forms
                     ddlSubscribers.SelectionStart = Math.Min(caret, ddlSubscribers.Text.Length);
                     ddlSubscribers.SelectionLength = 0;
                 }
-
-                if (ddlSubscribers.Items.Count > 0 && ddlSubscribers.SelectedIndex < 0)
-                    ddlSubscribers.SelectedIndex = 0;
+                else
+                {
+                    if (ddlSubscribers.Items.Count > 0)
+                        ddlSubscribers.SelectedIndex = 0;
+                    else
+                        ddlSubscribers.Text = "";
+                }
             }
             finally
             {
                 _suppressAuto = false;
             }
         }
+        private string SafeComboText(ComboBox combo)
+        {
+            if (combo == null)
+                return "";
 
+            try
+            {
+                return combo.Text ?? "";
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                combo.SelectedIndex = -1;
+                return "";
+            }
+        }
         private void ShowReport(int subscriberId, DateTime fromDate, DateTime toDate, string reportType)
         {
             var opt = ReadOptionsFromUi(subscriberId);
@@ -340,13 +579,13 @@ namespace water3.Forms
                 dgv.Columns["StatementID"].Visible = false;
 
             if (dgv.Columns.Contains("مدين"))
-                dgv.Columns["مدين"].DefaultCellStyle.ForeColor = Color.DarkRed;
+                dgv.Columns["مدين"].DefaultCellStyle.ForeColor = P.Danger;
 
             if (dgv.Columns.Contains("دائن"))
-                dgv.Columns["دائن"].DefaultCellStyle.ForeColor = Color.DarkGreen;
+                dgv.Columns["دائن"].DefaultCellStyle.ForeColor = P.Success;
 
             if (dgv.Columns.Contains(AccountStatementService.RunningBalanceCol))
-                dgv.Columns[AccountStatementService.RunningBalanceCol].DefaultCellStyle.ForeColor = Color.DarkBlue;
+                dgv.Columns[AccountStatementService.RunningBalanceCol].DefaultCellStyle.ForeColor = P.Primary;
 
             bool isSummary = (reportType == "إجمالي") || (opt.GroupBy != "بدون");
             if (!isSummary && dgv.Columns.Contains("مدين"))
@@ -359,7 +598,10 @@ namespace water3.Forms
                     if (val == null || val == DBNull.Value) continue;
 
                     if (decimal.TryParse(val.ToString(), out decimal debitVal) && debitVal > 0)
-                        row.DefaultCellStyle.BackColor = Color.FromArgb(255, 248, 232);
+                        row.DefaultCellStyle.BackColor =
+     AppThemeManager.CurrentTheme == AppThemeName.Dark
+         ? P.Soft
+         : Color.FromArgb(255, 248, 232);
                 }
             }
         }
