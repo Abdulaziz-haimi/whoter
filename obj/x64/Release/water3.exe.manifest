@@ -583,14 +583,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1740280">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1821176">
       <assemblyIdentity name="water3" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>tkFFMlu+jbYkRWgNoVVKPSj9ShLi8vl/cCE+I+myGeE=</dsig:DigestValue>
+        <dsig:DigestValue>LcIHCYoIBl+zj+HNbMTaqQ+k+ogxvc0UjshTWSQ4RlY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -602,7 +602,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>tWD3oTsQRk7aU78cDYBfnfvdtA8ehTXOKNItrdCempk=</dsig:DigestValue>
+        <dsig:DigestValue>e8p0k92p7Q0ovwYEr//q4U3v2sOQ53bF+gnYE032TP0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -614,7 +614,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>5cd/gQtGJGiskPhNPNp+/StGXqm1BWK0HGOWiXiQjbk=</dsig:DigestValue>
+        <dsig:DigestValue>Ovj5i2VvCicXncECzpcb7ijOORiwAZs43bP19vYniCc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -717,13 +717,13 @@
       <dsig:DigestValue>1+YO9CvPEzWghBiy+aMHZHSdGp8UBQ4thiYp1HzeYcw=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="water3.exe.config" size="8100">
+  <file name="water3.exe.config" size="8097">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>XEt1Ofw017QOmItbC8WGRczTkIWD+Bq+NUoBOVhHH48=</dsig:DigestValue>
+      <dsig:DigestValue>jeEgSP9qjxJ8p/QeJUirSidBa6tuFouZIAsxP+D0ZsA=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

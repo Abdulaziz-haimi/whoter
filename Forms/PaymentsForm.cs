@@ -111,9 +111,7 @@ namespace water3.Forms
 
             WireAmountInput();
 
-            btnExport.Click += (s, e) =>
-                MessageBox.Show("اربط التصدير هنا (Excel/CSV).", "تصدير",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            btnExport.Click += (s, e) => water3.Utils.DataExportService.ShowExportDialog(dgv, "Payments");
         }
 
         private void LoadCollectors()

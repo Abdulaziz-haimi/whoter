@@ -33,14 +33,17 @@ namespace water3.Forms
         private bool _isMovingToNextReadingCell = false;
         public ReadingEntryForm()
             {
-                InitializeComponent();
+            InitializeComponent();
 
-                ApplyTheme();
-                WireEvents();
-                BuildGridSchema();
-                LoadAreas();
+            DoubleBuffered = true;
+            EnableGridDoubleBuffer();
 
-                dtpReadingDate.Value = DateTime.Today;
+            ApplyTheme();
+            WireEvents();
+            BuildGridSchema();
+            LoadAreas();
+
+            dtpReadingDate.Value = DateTime.Today;
 
                 _previewDialog.Document = _printDocument;
                 _previewDialog.WindowState = FormWindowState.Maximized;
@@ -49,95 +52,128 @@ namespace water3.Forms
                 _printDocument.PrintPage += PrintDocument_PrintPage;
             }
 
-            #region Theme
+        #region Theme
 
-            private void ApplyTheme()
+        private void ApplyTheme()
+        {
+            BackColor = Color.FromArgb(244, 247, 251);
+
+            StyleCard(pnlHeaderCard, Color.White);
+            StyleCard(pnlFiltersCard, Color.White);
+            StyleCard(pnlGridCard, Color.White);
+
+            StyleStatCard(pnlTotalCard, Color.FromArgb(237, 244, 255));
+            StyleStatCard(pnlDoneCard, Color.FromArgb(235, 250, 242));
+            StyleStatCard(pnlPendingCard, Color.FromArgb(255, 244, 232));
+
+            lblTitle.ForeColor = Color.FromArgb(19, 52, 121);
+            lblSubtitle.ForeColor = Color.FromArgb(100, 116, 139);
+            lblGridTitle.ForeColor = Color.FromArgb(30, 41, 59);
+
+            lblArea.ForeColor = Color.FromArgb(51, 65, 85);
+            lblReadingDate.ForeColor = Color.FromArgb(51, 65, 85);
+            lblSearch.ForeColor = Color.FromArgb(51, 65, 85);
+
+            txtSearch.BorderStyle = BorderStyle.FixedSingle;
+            txtSearch.BackColor = Color.White;
+            txtSearch.Font = new Font("Tahoma", 10.5F);
+
+            cmbArea.Font = new Font("Tahoma", 10.5F);
+            cmbArea.FlatStyle = FlatStyle.Flat;
+
+            dtpReadingDate.Font = new Font("Tahoma", 10.5F);
+            dtpReadingDate.Format = DateTimePickerFormat.Custom;
+            dtpReadingDate.CustomFormat = "yyyy/MM/dd";
+
+            StyleButton(btnLoad, Color.FromArgb(37, 99, 235));
+            StyleButton(btnSaveAll, Color.FromArgb(22, 163, 74));
+            StyleButton(btnPrintSheet, Color.FromArgb(14, 165, 233));
+            StyleButton(btnRefresh, Color.FromArgb(100, 116, 139));
+
+            lblTotalCaption.ForeColor = Color.FromArgb(30, 41, 59);
+            lblDoneCaption.ForeColor = Color.FromArgb(30, 41, 59);
+            lblPendingCaption.ForeColor = Color.FromArgb(30, 41, 59);
+
+            lblTotalValue.ForeColor = Color.FromArgb(37, 99, 235);
+            lblDoneValue.ForeColor = Color.FromArgb(22, 163, 74);
+            lblPendingValue.ForeColor = Color.FromArgb(234, 88, 12);
+
+            dgvReadings.EnableHeadersVisualStyles = false;
+            dgvReadings.BackgroundColor = Color.White;
+            dgvReadings.BorderStyle = BorderStyle.None;
+            dgvReadings.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvReadings.GridColor = Color.FromArgb(226, 232, 240);
+            dgvReadings.RowHeadersVisible = false;
+            dgvReadings.MultiSelect = false;
+
+            dgvReadings.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dgvReadings.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(241, 245, 249);
+            dgvReadings.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(30, 41, 59);
+            dgvReadings.ColumnHeadersDefaultCellStyle.Font = new Font("Tahoma", 10F, FontStyle.Bold);
+            dgvReadings.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvReadings.ColumnHeadersHeight = 42;
+
+            dgvReadings.DefaultCellStyle.BackColor = Color.White;
+            dgvReadings.DefaultCellStyle.ForeColor = Color.FromArgb(33, 37, 41);
+            dgvReadings.DefaultCellStyle.SelectionBackColor = Color.FromArgb(219, 234, 254);
+            dgvReadings.DefaultCellStyle.SelectionForeColor = Color.FromArgb(15, 23, 42);
+            dgvReadings.DefaultCellStyle.Font = new Font("Tahoma", 10F);
+            dgvReadings.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            dgvReadings.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
+            dgvReadings.RowTemplate.Height = 38;
+        }
+
+        private void StyleCard(Panel panel, Color backColor)
+        {
+            panel.BackColor = backColor;
+            panel.BorderStyle = BorderStyle.None;
+
+            panel.Paint -= DrawCardBorder;
+            panel.Paint += DrawCardBorder;
+        }
+
+        private void StyleStatCard(Panel panel, Color backColor)
+        {
+            panel.BackColor = backColor;
+            panel.BorderStyle = BorderStyle.None;
+
+            panel.Paint -= DrawCardBorder;
+            panel.Paint += DrawCardBorder;
+        }
+
+        private void DrawCardBorder(object sender, PaintEventArgs e)
+        {
+            Panel panel = sender as Panel;
+            if (panel == null) return;
+
+            Rectangle rect = panel.ClientRectangle;
+            rect.Width -= 1;
+            rect.Height -= 1;
+
+            using (Pen pen = new Pen(Color.FromArgb(220, 228, 238)))
             {
-                BackColor = Color.FromArgb(243, 246, 251);
-
-                StyleCard(pnlHeaderCard, Color.White);
-                StyleCard(pnlFiltersCard, Color.White);
-                StyleCard(pnlGridCard, Color.White);
-
-                StyleStatCard(pnlTotalCard, Color.FromArgb(237, 244, 255));
-                StyleStatCard(pnlDoneCard, Color.FromArgb(235, 250, 242));
-                StyleStatCard(pnlPendingCard, Color.FromArgb(255, 244, 232));
-
-                lblTitle.ForeColor = Color.FromArgb(19, 52, 121);
-                lblSubtitle.ForeColor = Color.FromArgb(107, 114, 128);
-                lblGridTitle.ForeColor = Color.FromArgb(37, 43, 54);
-
-                txtSearch.BorderStyle = BorderStyle.FixedSingle;
-                txtSearch.BackColor = Color.White;
-                txtSearch.Font = new Font("Tahoma", 10.5F);
-
-                cmbArea.Font = new Font("Tahoma", 10.5F);
-                dtpReadingDate.Font = new Font("Tahoma", 10.5F);
-
-                StyleButton(btnLoad, Color.FromArgb(37, 99, 235));
-                StyleButton(btnSaveAll, Color.FromArgb(22, 163, 74));
-                StyleButton(btnPrintSheet, Color.FromArgb(14, 165, 233));
-                StyleButton(btnRefresh, Color.FromArgb(100, 116, 139));
-
-                lblTotalCaption.ForeColor = Color.FromArgb(30, 41, 59);
-                lblDoneCaption.ForeColor = Color.FromArgb(30, 41, 59);
-                lblPendingCaption.ForeColor = Color.FromArgb(30, 41, 59);
-
-                lblTotalValue.ForeColor = Color.FromArgb(37, 99, 235);
-                lblDoneValue.ForeColor = Color.FromArgb(22, 163, 74);
-                lblPendingValue.ForeColor = Color.FromArgb(234, 88, 12);
-
-                dgvReadings.EnableHeadersVisualStyles = false;
-                dgvReadings.BackgroundColor = Color.White;
-                dgvReadings.BorderStyle = BorderStyle.None;
-                dgvReadings.GridColor = Color.FromArgb(230, 235, 241);
-                dgvReadings.RowHeadersVisible = false;
-
-                dgvReadings.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-                dgvReadings.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
-                dgvReadings.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(30, 41, 59);
-                dgvReadings.ColumnHeadersDefaultCellStyle.Font = new Font("Tahoma", 10F, FontStyle.Bold);
-                dgvReadings.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgvReadings.ColumnHeadersHeight = 42;
-
-                dgvReadings.DefaultCellStyle.BackColor = Color.White;
-                dgvReadings.DefaultCellStyle.ForeColor = Color.FromArgb(33, 37, 41);
-                dgvReadings.DefaultCellStyle.SelectionBackColor = Color.FromArgb(219, 234, 254);
-                dgvReadings.DefaultCellStyle.SelectionForeColor = Color.FromArgb(15, 23, 42);
-                dgvReadings.DefaultCellStyle.Font = new Font("Tahoma", 10F);
-                dgvReadings.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
-                dgvReadings.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 252, 255);
-                dgvReadings.RowTemplate.Height = 36;
+                e.Graphics.DrawRectangle(pen, rect);
             }
+        }
 
-            private void StyleCard(Panel panel, Color backColor)
-            {
-                panel.BackColor = backColor;
-                panel.BorderStyle = BorderStyle.FixedSingle;
-            }
+        private void StyleButton(Button btn, Color backColor)
+        {
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatAppearance.MouseOverBackColor = ControlPaint.Light(backColor, 0.08F);
+            btn.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(backColor, 0.08F);
+            btn.BackColor = backColor;
+            btn.ForeColor = Color.White;
+            btn.Font = new Font("Tahoma", 10F, FontStyle.Bold);
+            btn.Cursor = Cursors.Hand;
+        }
 
-            private void StyleStatCard(Panel panel, Color backColor)
-            {
-                panel.BackColor = backColor;
-                panel.BorderStyle = BorderStyle.FixedSingle;
-            }
+        #endregion
 
-            private void StyleButton(Button btn, Color backColor)
-            {
-                btn.FlatStyle = FlatStyle.Flat;
-                btn.FlatAppearance.BorderSize = 0;
-                btn.BackColor = backColor;
-                btn.ForeColor = Color.White;
-                btn.Font = new Font("Tahoma", 10F, FontStyle.Bold);
-                btn.Cursor = Cursors.Hand;
-            }
+        #region Events
 
-            #endregion
-
-            #region Events
-
-            private void WireEvents()
+        private void WireEvents()
             {
                 btnLoad.Click += (s, e) => LoadMetersForFollowUp();
                 btnSaveAll.Click += (s, e) => SaveAllReadingsWithProcedure();
@@ -292,52 +328,88 @@ ORDER BY MeterLocation, s.Name, m.MeterNumber;", cn))
                 }
             }
 
-            private void FormatGrid()
+        private void FormatGrid()
+        {
+            if (dgvReadings.Columns.Count == 0) return;
+
+            foreach (DataGridViewColumn col in dgvReadings.Columns)
+                col.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            dgvReadings.Columns["SubscriberID"].Visible = false;
+            dgvReadings.Columns["MeterID"].Visible = false;
+
+            dgvReadings.Columns["م"].FillWeight = 42;
+            dgvReadings.Columns["رقم الحساب"].FillWeight = 88;
+            dgvReadings.Columns["اسم المشترك"].FillWeight = 175;
+            dgvReadings.Columns["رقم العداد"].FillWeight = 92;
+            dgvReadings.Columns["الموقع"].FillWeight = 135;
+            dgvReadings.Columns["القراءة السابقة"].FillWeight = 95;
+            dgvReadings.Columns["القراءة الجديدة"].FillWeight = 100;
+            dgvReadings.Columns["الاستهلاك"].FillWeight = 88;
+            dgvReadings.Columns["ملاحظات"].FillWeight = 150;
+            dgvReadings.Columns["تم"].FillWeight = 50;
+
+            dgvReadings.Columns["القراءة السابقة"].ReadOnly = true;
+            dgvReadings.Columns["الاستهلاك"].ReadOnly = true;
+            dgvReadings.Columns["تم"].ReadOnly = true;
+
+            foreach (DataGridViewColumn col in dgvReadings.Columns)
             {
-                if (dgvReadings.Columns.Count == 0) return;
-
-                foreach (DataGridViewColumn col in dgvReadings.Columns)
-                    col.SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                dgvReadings.Columns["SubscriberID"].Visible = false;
-                dgvReadings.Columns["MeterID"].Visible = false;
-
-                dgvReadings.Columns["م"].FillWeight = 45;
-                dgvReadings.Columns["رقم الحساب"].FillWeight = 90;
-                dgvReadings.Columns["اسم المشترك"].FillWeight = 170;
-                dgvReadings.Columns["رقم العداد"].FillWeight = 95;
-                dgvReadings.Columns["الموقع"].FillWeight = 140;
-                dgvReadings.Columns["القراءة السابقة"].FillWeight = 95;
-                dgvReadings.Columns["القراءة الجديدة"].FillWeight = 95;
-                dgvReadings.Columns["الاستهلاك"].FillWeight = 90;
-                dgvReadings.Columns["ملاحظات"].FillWeight = 150;
-                dgvReadings.Columns["تم"].FillWeight = 55;
-
-                dgvReadings.Columns["القراءة السابقة"].ReadOnly = true;
-                dgvReadings.Columns["الاستهلاك"].ReadOnly = true;
-                dgvReadings.Columns["تم"].ReadOnly = true;
-
-                foreach (DataGridViewColumn col in dgvReadings.Columns)
+                if (col.Name != "القراءة الجديدة" &&
+                    col.Name != "ملاحظات" &&
+                    col.Name != "SubscriberID" &&
+                    col.Name != "MeterID")
                 {
-                    if (col.Name != "القراءة الجديدة" &&
-                        col.Name != "ملاحظات" &&
-                        col.Name != "SubscriberID" &&
-                        col.Name != "MeterID")
-                    {
-                        col.ReadOnly = true;
-                    }
+                    col.ReadOnly = true;
                 }
-
-                dgvReadings.Columns["القراءة الجديدة"].DefaultCellStyle.BackColor = Color.FromArgb(255, 251, 235);
-                dgvReadings.Columns["ملاحظات"].DefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
-                dgvReadings.Columns["تم"].DefaultCellStyle.BackColor = Color.FromArgb(240, 253, 244);
             }
 
-            #endregion
+            dgvReadings.Columns["اسم المشترك"].DefaultCellStyle.Alignment =
+                DataGridViewContentAlignment.MiddleRight;
 
-            #region Filter + Summary
+            dgvReadings.Columns["الموقع"].DefaultCellStyle.Alignment =
+                DataGridViewContentAlignment.MiddleRight;
 
-            private void ApplyFilter()
+            dgvReadings.Columns["ملاحظات"].DefaultCellStyle.Alignment =
+                DataGridViewContentAlignment.MiddleRight;
+
+            dgvReadings.Columns["القراءة السابقة"].DefaultCellStyle.Format = "0.##";
+            dgvReadings.Columns["الاستهلاك"].DefaultCellStyle.Format = "0.##";
+
+            dgvReadings.Columns["القراءة الجديدة"].DefaultCellStyle.BackColor =
+                Color.FromArgb(255, 251, 235);
+
+            dgvReadings.Columns["القراءة الجديدة"].DefaultCellStyle.Font =
+                new Font("Tahoma", 10F, FontStyle.Bold);
+
+            dgvReadings.Columns["ملاحظات"].DefaultCellStyle.BackColor =
+                Color.FromArgb(248, 250, 252);
+
+            dgvReadings.Columns["تم"].DefaultCellStyle.BackColor =
+                Color.FromArgb(240, 253, 244);
+        }
+        private void EnableGridDoubleBuffer()
+        {
+            try
+            {
+                var prop = typeof(DataGridView).GetProperty(
+                    "DoubleBuffered",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic);
+
+                if (prop != null)
+                    prop.SetValue(dgvReadings, true, null);
+            }
+            catch
+            {
+                // تجاهل أي خطأ غير مؤثر
+            }
+        }
+        #endregion
+
+        #region Filter + Summary
+
+        private void ApplyFilter()
             {
                 if (_table == null || _table.DefaultView == null)
                     return;

@@ -351,17 +351,47 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AppVersionUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AppVersionUpdateForm.Designer.cs">
+      <DependentUpon>AppVersionUpdateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AuditLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AuditLogForm.Designer.cs">
       <DependentUpon>AuditLogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BackupRestoreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BackupRestoreForm.Designer.cs">
+      <DependentUpon>BackupRestoreForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CollectorDeviceEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\CollectorDeviceEditForm.Designer.cs">
       <DependentUpon>CollectorDeviceEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CompanySettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CompanySettingsForm.Designer.cs">
+      <DependentUpon>CompanySettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DatabaseMigrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DatabaseMigrationForm.Designer.cs">
+      <DependentUpon>DatabaseMigrationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ErrorLogsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ErrorLogsForm.Designer.cs">
+      <DependentUpon>ErrorLogsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ExpenseCategoriesForm.cs">
       <SubType>Form</SubType>
@@ -381,11 +411,23 @@
     <Compile Include="Forms\ExpensesManagementForm.Designer.cs">
       <DependentUpon>ExpensesManagementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExportCenterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportCenterForm.Designer.cs">
+      <DependentUpon>ExportCenterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainMeterReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\MainMeterReportForm.Designer.cs">
       <DependentUpon>MainMeterReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PrinterInvoiceSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PrinterInvoiceSettingsForm.Designer.cs">
+      <DependentUpon>PrinterInvoiceSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Reports\ExpenseCategorySummaryForm.cs">
       <SubType>Form</SubType>
@@ -404,6 +446,12 @@
     </Compile>
     <Compile Include="Forms\Reports\ReportViewerForm.Designer.cs">
       <DependentUpon>ReportViewerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SystemHealthForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SystemHealthForm.Designer.cs">
+      <DependentUpon>SystemHealthForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountLookupItem.cs" />
     <Compile Include="Models\ExpenseCategoryItem.cs" />
@@ -705,6 +753,8 @@
     <Compile Include="Repositories\ExpenseRepository.cs" />
     <Compile Include="Repositories\MainMeterReportRepository.cs" />
     <Compile Include="Security\PermissionKeys.cs" />
+    <Compile Include="Services\AppSchemaService.cs" />
+    <Compile Include="Services\AppSettingsService.cs" />
     <Compile Include="Services\AuditLogService.cs" />
     <Compile Include="Services\CollectorDeviceService.cs" />
     <Compile Include="Services\CollectorService.cs" />
@@ -882,9 +932,12 @@
     <Compile Include="UnpaidInvoicesReportForm.Designer.cs">
       <DependentUpon>UnpaidInvoicesReportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\AppErrorLogger.cs" />
+    <Compile Include="Utils\DataExportService.cs" />
     <Compile Include="Utils\MoneyParser.cs" />
     <Compile Include="Utils\NumberParser.cs" />
     <Compile Include="Utils\PermissionHelper.cs" />
+    <Compile Include="Utils\ProductionUi.cs" />
     <Compile Include="Utils\SmsTemplateEngine.cs" />
     <Compile Include="Utils\SmsTemplateVariableInfo.cs" />
     <Compile Include="Utils\TemplateEngine.cs" />

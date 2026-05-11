@@ -407,6 +407,15 @@ namespace water3
                     AddNavButton(body, "إدارة الاتصال", "🔌", typeof(DbSettingsForm), PermissionKeys.DbSettingsView, () => OpenForm<DbSettingsForm>());
                     AddNavButton(body, "المصروفات والمشتريات", "💸", typeof(ExpensesManagementForm), PermissionKeys.ExpensesView, () => OpenForm<ExpensesManagementForm>());
                     AddNavButton(body, "تصنيفات المصروفات", "🏷️", typeof(ExpenseCategoriesForm), PermissionKeys.ExpenseCategoriesManage, () => OpenForm<ExpenseCategoriesForm>());
+                    AddNavButton(body, "النسخ الاحتياطي والاستعادة", "💾", typeof(BackupRestoreForm), PermissionKeys.ExpenseCategoriesManage, () => OpenForm<BackupRestoreForm>());
+                    AddNavButton(body, "بيانات الشركة", "🏢", typeof(CompanySettingsForm), null, () => OpenForm<CompanySettingsForm>());
+                    AddNavButton(body, "إعداد الطابعة والفواتير", "🖨", typeof(PrinterInvoiceSettingsForm), null, () => OpenForm<PrinterInvoiceSettingsForm>());
+                    AddNavButton(body, "فحص النظام", "🩺", typeof(SystemHealthForm), null, () => OpenForm<SystemHealthForm>());
+                    AddNavButton(body, "سجل الأخطاء", "⚠", typeof(ErrorLogsForm), null, () => OpenForm<ErrorLogsForm>());
+                    AddNavButton(body, "ترقية قاعدة البيانات", "⬆", typeof(DatabaseMigrationForm), null, () => OpenForm<DatabaseMigrationForm>());
+                    AddNavButton(body, "مركز التصدير", "📤", typeof(ExportCenterForm), null, () => OpenForm<ExportCenterForm>());
+                    AddNavButton(body, "إدارة النسخة والتحديثات", "🔄", typeof(AppVersionUpdateForm), null, () => OpenForm<AppVersionUpdateForm>());
+
                 });
 
                 AddSidebarControl(CreateSidebarSeparator());

@@ -22,7 +22,7 @@ namespace WaterCollector.BackendApi.Hosting
 
             string port = ConfigurationManager.AppSettings["ApiPort"];
             if (string.IsNullOrWhiteSpace(port))
-                port = "8085";
+                port = "8443";
 
             string host = ConfigurationManager.AppSettings["ApiHost"];
             if (string.IsNullOrWhiteSpace(host))

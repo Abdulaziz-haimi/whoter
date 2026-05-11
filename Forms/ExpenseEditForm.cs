@@ -830,7 +830,7 @@ namespace water3.Forms
         private List<ExpenseCategoryItem> _categories = new List<ExpenseCategoryItem>();
         private List<AccountLookupItem> _accounts = new List<AccountLookupItem>();
 
-        private BindingSource _linesSource = new BindingSource();
+        private readonly BindingSource _linesSource = new BindingSource();
         private List<ExpenseLineItem> _lines = new List<ExpenseLineItem>();
 
         private bool _isLoadingExpense = false;
@@ -856,6 +856,8 @@ namespace water3.Forms
             RecalcTotal();
         }
 
+        #region Build UI
+
         private void BuildUi()
         {
             Text = _readOnly ? "عرض حركة مصروف / شراء" : "إدخال حركة مصروف / شراء";
@@ -863,23 +865,27 @@ namespace water3.Forms
             RightToLeft = RightToLeft.Yes;
             RightToLeftLayout = true;
             Font = new Font("Tahoma", 10F);
-            BackColor = Color.FromArgb(245, 247, 250);
-            MinimumSize = new Size(1050, 700);
-            Size = new Size(1180, 760);
+            BackColor = Color.FromArgb(244, 247, 251);
+            MinimumSize = new Size(1050, 650);
+            Size = new Size(1180, 700);
+            DoubleBuffered = true;
 
             mainLayout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 1,
                 RowCount = 4,
-                Padding = new Padding(18),
-                BackColor = Color.FromArgb(245, 247, 250)
+                Padding = new Padding(12),
+                BackColor = Color.FromArgb(244, 247, 251)
             };
 
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 88));
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 190));
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70));
+            mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+            // تم تخفيض الارتفاع حتى لا تنزل الأزرار أسفل الشاشة
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 78F));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 246F));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
 
             BuildHeader();
             BuildFormPanel();
@@ -892,6 +898,17 @@ namespace water3.Forms
             mainLayout.Controls.Add(footerPanel, 0, 3);
 
             Controls.Add(mainLayout);
+
+            Load += (s, e) =>
+            {
+                Rectangle workingArea = Screen.FromControl(this).WorkingArea;
+
+                if (Height > workingArea.Height - 20)
+                    Height = workingArea.Height - 20;
+
+                if (Width > workingArea.Width - 20)
+                    Width = workingArea.Width - 20;
+            };
         }
 
         private void BuildHeader()
@@ -900,14 +917,34 @@ namespace water3.Forms
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
-                Padding = new Padding(16),
-                Margin = new Padding(0, 0, 0, 12)
+                Padding = new Padding(14),
+                Margin = new Padding(0, 0, 0, 10),
+                BorderStyle = BorderStyle.FixedSingle
             };
+
+            TableLayoutPanel headerLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 1
+            };
+
+            headerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            headerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220F));
+
+            TableLayoutPanel titleLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2
+            };
+
+            titleLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
+            titleLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 22F));
 
             lblTitle = new Label
             {
-                Dock = DockStyle.Top,
-                Height = 34,
+                Dock = DockStyle.Fill,
                 Text = _readOnly ? "عرض حركة مصروف / شراء" : "إدخال حركة مصروف / شراء",
                 Font = new Font("Tahoma", 17F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(15, 76, 117),
@@ -916,29 +953,31 @@ namespace water3.Forms
 
             lblSubtitle = new Label
             {
-                Dock = DockStyle.Top,
-                Height = 26,
-                Text = "أدخل بيانات الحركة، اختر حساب الدفع، وأضف البنود قبل الحفظ",
+                Dock = DockStyle.Fill,
+                Text = "أدخل بيانات الحركة وأضف البنود قبل الحفظ",
                 Font = new Font("Tahoma", 9.5F),
                 ForeColor = Color.FromArgb(100, 116, 139),
                 TextAlign = ContentAlignment.MiddleRight
             };
 
+            titleLayout.Controls.Add(lblTitle, 0, 0);
+            titleLayout.Controls.Add(lblSubtitle, 0, 1);
+
             lblTotal = new Label
             {
-                Dock = DockStyle.Left,
-                Width = 260,
-                Height = 46,
-                BackColor = Color.FromArgb(248, 250, 252),
+                Dock = DockStyle.Fill,
+                Text = "إجمالي الحركة: 0.00",
+                BackColor = Color.FromArgb(237, 244, 255),
                 ForeColor = Color.FromArgb(37, 99, 235),
                 Font = new Font("Tahoma", 11F, FontStyle.Bold),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Margin = new Padding(0)
+                BorderStyle = BorderStyle.FixedSingle
             };
 
-            headerPanel.Controls.Add(lblTotal);
-            headerPanel.Controls.Add(lblSubtitle);
-            headerPanel.Controls.Add(lblTitle);
+            headerLayout.Controls.Add(titleLayout, 0, 0);
+            headerLayout.Controls.Add(lblTotal, 1, 0);
+
+            headerPanel.Controls.Add(headerLayout);
         }
 
         private void BuildFormPanel()
@@ -948,7 +987,27 @@ namespace water3.Forms
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
                 Padding = new Padding(14),
-                Margin = new Padding(0, 0, 0, 12)
+                Margin = new Padding(0, 0, 0, 10),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+
+            TableLayoutPanel outerLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2
+            };
+
+            outerLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
+            outerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            Label lblFormTitle = new Label
+            {
+                Text = "بيانات الحركة",
+                Dock = DockStyle.Fill,
+                Font = new Font("Tahoma", 11F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(30, 41, 59),
+                TextAlign = ContentAlignment.MiddleRight
             };
 
             TableLayoutPanel formLayout = new TableLayoutPanel
@@ -963,29 +1022,34 @@ namespace water3.Forms
             formLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
             formLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34F));
 
-            formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 56F));
+            formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 56F));
+            formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 56F));
+            formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
             cboCategory = MakeCombo();
             txtCategoryType = MakeTextBox(true);
+
             dtExpenseDate = new DateTimePicker
             {
                 Dock = DockStyle.Fill,
-                Format = DateTimePickerFormat.Short,
-                Value = DateTime.Today
+                Format = DateTimePickerFormat.Custom,
+                CustomFormat = "yyyy/MM/dd",
+                Value = DateTime.Today,
+                RightToLeftLayout = true,
+                Margin = Padding.Empty
             };
 
             cboPaymentMethod = MakeCombo();
             cboPaymentMethod.Items.AddRange(new object[]
-            {
-                "Cash",
-                "Transfer",
-                "Cheque",
-                "Credit"
-            });
-            cboPaymentMethod.SelectedIndex = 0;
+ {
+    "Cash",
+    "Transfer",
+    "Cheque",
+    "Credit"
+ });
+
+            SelectFirstIfExists(cboPaymentMethod);
 
             txtSupplierName = MakeTextBox(false);
             txtDescription = MakeTextBox(false);
@@ -996,32 +1060,39 @@ namespace water3.Forms
             cboCategory.SelectedIndexChanged += CboCategory_SelectedIndexChanged;
             cboPaymentMethod.SelectedIndexChanged += CboPaymentMethod_SelectedIndexChanged;
 
+            // العمود الأيمن
             formLayout.Controls.Add(MakeInputBlock("التصنيف", cboCategory), 2, 0);
             formLayout.Controls.Add(MakeInputBlock("النوع", txtCategoryType), 2, 1);
             formLayout.Controls.Add(MakeInputBlock("التاريخ", dtExpenseDate), 2, 2);
-            formLayout.Controls.Add(MakeInputBlock("طريقة الدفع", cboPaymentMethod), 2, 3);
 
+            // العمود الأوسط
             formLayout.Controls.Add(MakeInputBlock("المورد / الجهة", txtSupplierName), 1, 0);
             formLayout.Controls.Add(MakeInputBlock("البيان", txtDescription), 1, 1);
             formLayout.Controls.Add(MakeInputBlock("ملاحظات", txtNotes), 1, 2);
-            formLayout.Controls.Add(MakeInputBlock("حساب الدفع", cboCashAccount), 1, 3);
 
+            // العمود الأيسر
             formLayout.Controls.Add(MakeInputBlock("الحساب المقابل", cboCounterAccount), 0, 0);
+            formLayout.Controls.Add(MakeInputBlock("حساب الدفع", cboCashAccount), 0, 1);
+            formLayout.Controls.Add(MakeInputBlock("طريقة الدفع", cboPaymentMethod), 0, 2);
 
             Label hint = new Label
             {
                 Dock = DockStyle.Fill,
-                Text = "اترك الحساب المقابل على: حسب التصنيف، إلا إذا أردت توجيه الحركة لحساب محدد.",
+                Text = "ملاحظة: اترك الحساب المقابل على «حسب التصنيف» إلا إذا أردت توجيه الحركة إلى حساب محدد.",
                 ForeColor = Color.FromArgb(100, 116, 139),
                 TextAlign = ContentAlignment.MiddleRight,
-                Padding = new Padding(8),
-                Font = new Font("Tahoma", 9F)
+                Padding = new Padding(8, 4, 8, 4),
+                Font = new Font("Tahoma", 9F),
+                BackColor = Color.FromArgb(248, 250, 252)
             };
 
-            formLayout.SetRowSpan(hint, 3);
-            formLayout.Controls.Add(hint, 0, 1);
+            formLayout.SetColumnSpan(hint, 3);
+            formLayout.Controls.Add(hint, 0, 3);
 
-            formPanel.Controls.Add(formLayout);
+            outerLayout.Controls.Add(lblFormTitle, 0, 0);
+            outerLayout.Controls.Add(formLayout, 0, 1);
+
+            formPanel.Controls.Add(outerLayout);
         }
 
         private void BuildGridPanel()
@@ -1031,7 +1102,18 @@ namespace water3.Forms
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
                 Padding = new Padding(12),
-                Margin = new Padding(0, 0, 0, 12)
+                Margin = new Padding(0, 0, 0, 10),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+
+            Label lblLinesTitle = new Label
+            {
+                Text = "بنود الحركة",
+                Dock = DockStyle.Top,
+                Height = 30,
+                Font = new Font("Tahoma", 11F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(30, 41, 59),
+                TextAlign = ContentAlignment.MiddleRight
             };
 
             dgvLines = new DataGridView
@@ -1039,6 +1121,7 @@ namespace water3.Forms
                 Dock = DockStyle.Fill,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
+                AllowUserToResizeRows = false,
                 AutoGenerateColumns = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
@@ -1047,7 +1130,9 @@ namespace water3.Forms
                 BorderStyle = BorderStyle.None,
                 RowHeadersVisible = false,
                 EnableHeadersVisualStyles = false,
-                GridColor = Color.FromArgb(226, 232, 240)
+                GridColor = Color.FromArgb(226, 232, 240),
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                EditMode = DataGridViewEditMode.EditOnEnter
             };
 
             dgvLines.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(15, 76, 117);
@@ -1055,23 +1140,31 @@ namespace water3.Forms
             dgvLines.ColumnHeadersDefaultCellStyle.Font = new Font("Tahoma", 10F, FontStyle.Bold);
             dgvLines.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvLines.ColumnHeadersHeight = 42;
+            dgvLines.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 
             dgvLines.DefaultCellStyle.Font = new Font("Tahoma", 9.5F);
+            dgvLines.DefaultCellStyle.ForeColor = Color.FromArgb(33, 37, 41);
             dgvLines.DefaultCellStyle.SelectionBackColor = Color.FromArgb(219, 234, 254);
             dgvLines.DefaultCellStyle.SelectionForeColor = Color.FromArgb(15, 23, 42);
             dgvLines.DefaultCellStyle.Padding = new Padding(4);
-            dgvLines.RowTemplate.Height = 34;
+            dgvLines.RowTemplate.Height = 36;
             dgvLines.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
 
             dgvLines.Columns.Add(new DataGridViewTextBoxColumn
             {
+                Name = "colItemName",
                 HeaderText = "اسم البند",
                 DataPropertyName = "ItemName",
-                FillWeight = 220
+                FillWeight = 220,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleRight
+                }
             });
 
             dgvLines.Columns.Add(new DataGridViewTextBoxColumn
             {
+                Name = "colQty",
                 HeaderText = "الكمية",
                 DataPropertyName = "Qty",
                 FillWeight = 80,
@@ -1084,6 +1177,7 @@ namespace water3.Forms
 
             dgvLines.Columns.Add(new DataGridViewTextBoxColumn
             {
+                Name = "colUnitPrice",
                 HeaderText = "سعر الوحدة",
                 DataPropertyName = "UnitPrice",
                 FillWeight = 95,
@@ -1096,6 +1190,7 @@ namespace water3.Forms
 
             dgvLines.Columns.Add(new DataGridViewTextBoxColumn
             {
+                Name = "colLineTotal",
                 HeaderText = "الإجمالي",
                 DataPropertyName = "LineTotal",
                 ReadOnly = true,
@@ -1110,6 +1205,7 @@ namespace water3.Forms
 
             colTargetAccount = new DataGridViewComboBoxColumn
             {
+                Name = "colTargetAccount",
                 HeaderText = "الحساب الهدف",
                 DataPropertyName = "TargetAccountID",
                 FillWeight = 150,
@@ -1121,9 +1217,14 @@ namespace water3.Forms
 
             dgvLines.Columns.Add(new DataGridViewTextBoxColumn
             {
+                Name = "colNotes",
                 HeaderText = "ملاحظات",
                 DataPropertyName = "Notes",
-                FillWeight = 180
+                FillWeight = 180,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleRight
+                }
             });
 
             dgvLines.CellEndEdit += DgvLines_CellEndEdit;
@@ -1133,6 +1234,7 @@ namespace water3.Forms
             dgvLines.DataSource = _linesSource;
 
             gridPanel.Controls.Add(dgvLines);
+            gridPanel.Controls.Add(lblLinesTitle);
         }
 
         private void BuildFooter()
@@ -1141,7 +1243,8 @@ namespace water3.Forms
             {
                 Dock = DockStyle.Fill,
                 BackColor = Color.White,
-                Padding = new Padding(14, 10, 14, 10)
+                Padding = new Padding(12, 8, 12, 8),
+                BorderStyle = BorderStyle.FixedSingle
             };
 
             TableLayoutPanel footerLayout = new TableLayoutPanel
@@ -1166,9 +1269,10 @@ namespace water3.Forms
             FlowLayoutPanel buttonsPanel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                FlowDirection = FlowDirection.LeftToRight,
+                FlowDirection = FlowDirection.RightToLeft,
                 WrapContents = false,
-                BackColor = Color.White
+                BackColor = Color.White,
+                Padding = new Padding(0, 3, 0, 0)
             };
 
             btnCancel = MakeButton("إلغاء", Color.FromArgb(100, 116, 139));
@@ -1186,8 +1290,8 @@ namespace water3.Forms
             buttonsPanel.Controls.Add(btnRemoveLine);
             buttonsPanel.Controls.Add(btnAddLine);
 
-            footerLayout.Controls.Add(lblStatus, 1, 0);
             footerLayout.Controls.Add(buttonsPanel, 0, 0);
+            footerLayout.Controls.Add(lblStatus, 1, 0);
 
             footerPanel.Controls.Add(footerLayout);
         }
@@ -1197,7 +1301,8 @@ namespace water3.Forms
             return new ComboBox
             {
                 Dock = DockStyle.Fill,
-                DropDownStyle = ComboBoxStyle.DropDownList
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Margin = Padding.Empty
             };
         }
 
@@ -1207,6 +1312,7 @@ namespace water3.Forms
             {
                 Dock = DockStyle.Fill,
                 ReadOnly = readOnly,
+                Margin = Padding.Empty,
                 BackColor = readOnly ? Color.FromArgb(248, 250, 252) : Color.White
             };
         }
@@ -1220,21 +1326,33 @@ namespace water3.Forms
                 BackColor = Color.White
             };
 
+            TableLayoutPanel layout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2
+            };
+
+            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+
             Label label = new Label
             {
                 Text = caption,
-                Dock = DockStyle.Top,
-                Height = 19,
+                Dock = DockStyle.Fill,
                 ForeColor = Color.FromArgb(71, 85, 105),
                 TextAlign = ContentAlignment.MiddleRight,
                 Font = new Font("Tahoma", 9F)
             };
 
-            input.Dock = DockStyle.Top;
-            input.Height = 28;
+            input.Dock = DockStyle.Fill;
+            input.Font = new Font("Tahoma", 10F);
 
-            panel.Controls.Add(input);
-            panel.Controls.Add(label);
+            layout.Controls.Add(label, 0, 0);
+            layout.Controls.Add(input, 0, 1);
+
+            panel.Controls.Add(layout);
 
             return panel;
         }
@@ -1255,9 +1373,15 @@ namespace water3.Forms
             };
 
             btn.FlatAppearance.BorderSize = 0;
+            btn.FlatAppearance.MouseOverBackColor = ControlPaint.Light(color, 0.08F);
+            btn.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(color, 0.08F);
 
             return btn;
         }
+
+        #endregion
+
+        #region Load Data
 
         private void LoadAccounts()
         {
@@ -1336,8 +1460,14 @@ namespace water3.Forms
 
                 if (_categories.Count > 0)
                 {
-                    cboCategory.SelectedIndex = 0;
-                    txtCategoryType.Text = _categories[0].CategoryType;
+                    SelectFirstIfExists(cboCategory);
+
+                    ExpenseCategoryItem firstCategory =
+                        cboCategory.SelectedItem as ExpenseCategoryItem;
+
+                    txtCategoryType.Text = firstCategory == null
+                        ? string.Empty
+                        : firstCategory.CategoryType;
                 }
                 else
                 {
@@ -1349,6 +1479,10 @@ namespace water3.Forms
                 SetStatus(ex.Message, true);
             }
         }
+
+        #endregion
+
+        #region Events + Helpers
 
         private void CboCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1383,8 +1517,8 @@ namespace water3.Forms
 
             if (accountId > 0)
                 SetComboSelectedValue(cboCashAccount, accountId);
-            else if (cboCashAccount.Items.Count > 0)
-                cboCashAccount.SelectedIndex = 0;
+            else
+                SelectFirstIfExists(cboCashAccount);
         }
 
         private int FindAccountIdByCode(string accountCode)
@@ -1393,7 +1527,10 @@ namespace water3.Forms
                 return 0;
 
             AccountLookupItem account = _accounts
-                .FirstOrDefault(x => string.Equals(x.AccountCode, accountCode, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(x => string.Equals(
+                    x.AccountCode,
+                    accountCode,
+                    StringComparison.OrdinalIgnoreCase));
 
             return account == null ? 0 : account.AccountID;
         }
@@ -1405,9 +1542,7 @@ namespace water3.Forms
 
             if (!value.HasValue || value.Value <= 0)
             {
-                if (combo.Items.Count > 0)
-                    combo.SelectedIndex = 0;
-
+                SelectFirstIfExists(combo);
                 return;
             }
 
@@ -1426,8 +1561,8 @@ namespace water3.Forms
 
             if (exists)
                 combo.SelectedValue = value.Value;
-            else if (combo.Items.Count > 0)
-                combo.SelectedIndex = 0;
+            else
+                SelectFirstIfExists(combo);
         }
 
         private int? GetSelectedAccountId(ComboBox combo)
@@ -1476,7 +1611,7 @@ namespace water3.Forms
                 }
                 else
                 {
-                    cboPaymentMethod.SelectedIndex = 0;
+                    SelectFirstIfExists(cboPaymentMethod);
                 }
 
                 SetComboSelectedValue(cboCashAccount, header.CashAccountID);
@@ -1489,8 +1624,12 @@ namespace water3.Forms
 
                 foreach (ExpenseLineItem line in _lines)
                 {
-                    if (line != null && line.TargetAccountID.HasValue && line.TargetAccountID.Value <= 0)
+                    if (line != null &&
+                        line.TargetAccountID.HasValue &&
+                        line.TargetAccountID.Value <= 0)
+                    {
                         line.TargetAccountID = null;
+                    }
                 }
 
                 _linesSource.DataSource = _lines;
@@ -1537,6 +1676,13 @@ namespace water3.Forms
 
             _linesSource.ResetBindings(false);
             RecalcTotal();
+
+            if (dgvLines.Rows.Count > 0)
+            {
+                int lastRow = dgvLines.Rows.Count - 1;
+                dgvLines.CurrentCell = dgvLines.Rows[lastRow].Cells["colItemName"];
+                dgvLines.BeginEdit(true);
+            }
         }
 
         private void BtnRemoveLine_Click(object sender, EventArgs e)
@@ -1591,6 +1737,10 @@ namespace water3.Forms
             _linesSource.ResetBindings(false);
         }
 
+        #endregion
+
+        #region Save
+
         private void BtnSave_Click(object sender, EventArgs e)
         {
             try
@@ -1600,8 +1750,12 @@ namespace water3.Forms
 
                 if (!(cboCategory.SelectedItem is ExpenseCategoryItem cat))
                 {
-                    MessageBox.Show("اختر التصنيف أولًا.", "تنبيه",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        "اختر التصنيف أولًا.",
+                        "تنبيه",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
                     return;
                 }
 
@@ -1609,8 +1763,12 @@ namespace water3.Forms
 
                 if (string.IsNullOrWhiteSpace(paymentMethod))
                 {
-                    MessageBox.Show("اختر طريقة الدفع.", "تنبيه",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        "اختر طريقة الدفع.",
+                        "تنبيه",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
                     return;
                 }
 
@@ -1630,15 +1788,23 @@ namespace water3.Forms
 
                 if (cashAccountId.HasValue && !AccountExists(cashAccountId.Value))
                 {
-                    MessageBox.Show("حساب الدفع المختار غير موجود في دليل الحسابات.", "تنبيه",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        "حساب الدفع المختار غير موجود في دليل الحسابات.",
+                        "تنبيه",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
                     return;
                 }
 
                 if (counterAccountId.HasValue && !AccountExists(counterAccountId.Value))
                 {
-                    MessageBox.Show("الحساب المقابل المختار غير موجود في دليل الحسابات.", "تنبيه",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        "الحساب المقابل المختار غير موجود في دليل الحسابات.",
+                        "تنبيه",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
                     return;
                 }
 
@@ -1704,7 +1870,11 @@ namespace water3.Forms
         {
             Close();
         }
-
+        private void SelectFirstIfExists(ComboBox combo)
+        {
+            if (combo != null && combo.Items.Count > 0)
+                combo.SelectedIndex = 0;
+        }
         private void SetStatus(string message, bool isError)
         {
             lblStatus.ForeColor = isError
@@ -1713,5 +1883,7 @@ namespace water3.Forms
 
             lblStatus.Text = message;
         }
+
+        #endregion
     }
 }

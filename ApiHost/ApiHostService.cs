@@ -32,10 +32,10 @@ namespace water3.ApiHost
 
                 string port = ConfigurationManager.AppSettings["ApiPort"];
                 if (string.IsNullOrWhiteSpace(port))
-                    port = "8085";
+                    port = "8443";
 
                 // + يعني يقبل الاتصال من أجهزة الشبكة، وليس localhost فقط
-                BaseUrl = "http://+:" + port + "/";
+                BaseUrl = "https://+:" + port + "/";
 
                 _server = WebApp.Start<Startup>(BaseUrl);
             }
