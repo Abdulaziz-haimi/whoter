@@ -1,123 +1,150 @@
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WaterCollector.BackendApi.Security
 {
     public sealed class BearerTokenService
     {
-        public string CreateToken(int userId, string userName, string fullName, int collectorId, string collectorName, out DateTime expiresAt)
-        {
-            var key = GetRequiredAppSetting("Jwt:Key");
-            var issuer = GetRequiredAppSetting("Jwt:Issuer");
-            var audience = GetRequiredAppSetting("Jwt:Audience");
-            var expiryMinutes = int.TryParse(ConfigurationManager.AppSettings["Jwt:ExpiryMinutes"], out var m) ? m : 480;
+        private readonly string _secret;
+        private readonly string _issuer;
+        private readonly string _audience;
+        private readonly int _minutes;
 
-            expiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes);
-            var payload = new TokenPayload
+        public BearerTokenService()
+        {
+            _secret = ConfigurationManager.AppSettings["Jwt:SecretKey"];
+            if (string.IsNullOrWhiteSpace(_secret))
+                _secret = "CHANGE_THIS_SECRET_KEY_WATER_COLLECTOR_2026_LONG_VALUE";
+
+            _issuer = ConfigurationManager.AppSettings["Jwt:Issuer"] ?? "water3";
+            _audience = ConfigurationManager.AppSettings["Jwt:Audience"] ?? "collector-mobile";
+
+            if (!int.TryParse(ConfigurationManager.AppSettings["Jwt:TokenMinutes"], out _minutes) || _minutes <= 0)
+                _minutes = 1440;
+        }
+
+        public string CreateToken(
+            int userId,
+            string userName,
+            string fullName,
+            int collectorId,
+            string collectorName,
+            out DateTime expiresAt)
+        {
+            var now = DateTime.UtcNow;
+            expiresAt = now.AddMinutes(_minutes);
+
+            var header = new
             {
-                iss = issuer,
-                aud = audience,
-                uid = userId,
-                uname = userName,
-                fullName = fullName,
-                collectorId = collectorId,
-                collectorName = collectorName,
-                exp = ToUnixSeconds(expiresAt)
+                alg = "HS256",
+                typ = "JWT"
             };
 
-            var json = JsonConvert.SerializeObject(payload);
-            var body = Base64UrlEncode(Encoding.UTF8.GetBytes(json));
-            var sig = ComputeSignature(body, key);
-            return body + "." + sig;
-        }
-
-        public ClaimsPrincipal Validate(string token)
-        {
-            if (string.IsNullOrWhiteSpace(token)) throw new UnauthorizedAccessException("الرمز غير موجود.");
-            var parts = token.Split('.');
-            if (parts.Length != 2) throw new UnauthorizedAccessException("الرمز غير صالح.");
-
-            var key = GetRequiredAppSetting("Jwt:Key");
-            var expected = ComputeSignature(parts[0], key);
-            if (!FixedTimeEquals(expected, parts[1])) throw new UnauthorizedAccessException("توقيع الرمز غير صالح.");
-
-            var json = Encoding.UTF8.GetString(Base64UrlDecode(parts[0]));
-            var payload = JsonConvert.DeserializeObject<TokenPayload>(json);
-            if (payload == null) throw new UnauthorizedAccessException("الرمز غير صالح.");
-
-            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            if (payload.exp <= now) throw new UnauthorizedAccessException("انتهت صلاحية الجلسة.");
-
-            var issuer = GetRequiredAppSetting("Jwt:Issuer");
-            var audience = GetRequiredAppSetting("Jwt:Audience");
-            if (!string.Equals(payload.iss, issuer, StringComparison.Ordinal) || !string.Equals(payload.aud, audience, StringComparison.Ordinal))
-                throw new UnauthorizedAccessException("مصدر الرمز غير صالح.");
-
-            var claims = new List<Claim>
+            var payload = new
             {
-                new Claim(ClaimTypes.NameIdentifier, payload.uid.ToString()),
-                new Claim(ClaimTypes.Name, payload.uname ?? string.Empty),
-                new Claim("collector_id", payload.collectorId.ToString()),
-                new Claim("collector_name", payload.collectorName ?? string.Empty)
+                iss = _issuer,
+                aud = _audience,
+                exp = ToUnixTimeSeconds(expiresAt),
+                iat = ToUnixTimeSeconds(now),
+                sub = userId.ToString(),
+                name = userName,
+                full_name = fullName,
+                collector_id = collectorId,
+                collector_name = collectorName
             };
-            if (!string.IsNullOrWhiteSpace(payload.fullName)) claims.Add(new Claim("full_name", payload.fullName));
-            var identity = new ClaimsIdentity(claims, "Bearer");
-            return new ClaimsPrincipal(identity);
+
+            string encodedHeader = Base64UrlEncode(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(header)));
+            string encodedPayload = Base64UrlEncode(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(payload)));
+            string signingInput = encodedHeader + "." + encodedPayload;
+            string signature = ComputeSignature(signingInput);
+
+            return signingInput + "." + signature;
         }
 
-        private static string GetRequiredAppSetting(string key)
+        public JObject ValidateToken(string token)
         {
-            var value = ConfigurationManager.AppSettings[key];
-            if (string.IsNullOrWhiteSpace(value)) throw new ConfigurationErrorsException($"AppSettings['{key}'] غير موجود.");
-            return value;
+            if (string.IsNullOrWhiteSpace(token))
+                throw new UnauthorizedAccessException("الرمز غير موجود.");
+
+            string[] parts = token.Split('.');
+            if (parts.Length != 3)
+                throw new UnauthorizedAccessException("صيغة الرمز غير صحيحة.");
+
+            string signingInput = parts[0] + "." + parts[1];
+            string expected = ComputeSignature(signingInput);
+
+            if (!SlowEquals(expected, parts[2]))
+                throw new UnauthorizedAccessException("توقيع الرمز غير صحيح.");
+
+            string payloadJson = Encoding.UTF8.GetString(Base64UrlDecode(parts[1]));
+            var payload = JObject.Parse(payloadJson);
+
+            long exp = payload.Value<long>("exp");
+            if (DateTime.UtcNow > FromUnixTimeSeconds(exp))
+                throw new UnauthorizedAccessException("انتهت صلاحية الرمز.");
+
+            string iss = payload.Value<string>("iss");
+            string aud = payload.Value<string>("aud");
+
+            if (!string.Equals(iss, _issuer, StringComparison.Ordinal))
+                throw new UnauthorizedAccessException("مصدر الرمز غير صحيح.");
+
+            if (!string.Equals(aud, _audience, StringComparison.Ordinal))
+                throw new UnauthorizedAccessException("جمهور الرمز غير صحيح.");
+
+            return payload;
         }
 
-        private static string ComputeSignature(string body, string secret)
+        private string ComputeSignature(string signingInput)
         {
-            using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret)))
+            using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_secret)))
             {
-                return Base64UrlEncode(hmac.ComputeHash(Encoding.UTF8.GetBytes(body)));
+                return Base64UrlEncode(hmac.ComputeHash(Encoding.UTF8.GetBytes(signingInput)));
             }
         }
 
-        private static bool FixedTimeEquals(string a, string b)
+        private static bool SlowEquals(string a, string b)
         {
-            var aa = Encoding.UTF8.GetBytes(a ?? string.Empty);
-            var bb = Encoding.UTF8.GetBytes(b ?? string.Empty);
-            if (aa.Length != bb.Length) return false;
-            var diff = 0;
-            for (var i = 0; i < aa.Length; i++) diff |= aa[i] ^ bb[i];
+            if (a == null || b == null)
+                return false;
+
+            int diff = a.Length ^ b.Length;
+            for (int i = 0; i < a.Length && i < b.Length; i++)
+                diff |= a[i] ^ b[i];
+
             return diff == 0;
         }
 
-        private static long ToUnixSeconds(DateTime dt) => new DateTimeOffset(dt).ToUnixTimeSeconds();
-        private static string Base64UrlEncode(byte[] input) => Convert.ToBase64String(input).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-        private static byte[] Base64UrlDecode(string input)
+        private static long ToUnixTimeSeconds(DateTime value)
         {
-            var s = input.Replace('-', '+').Replace('_', '/');
-            switch (s.Length % 4)
-            {
-                case 2: s += "=="; break;
-                case 3: s += "="; break;
-            }
-            return Convert.FromBase64String(s);
+            return (long)(value.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
-        private sealed class TokenPayload
+        private static DateTime FromUnixTimeSeconds(long seconds)
         {
-            public string iss { get; set; }
-            public string aud { get; set; }
-            public int uid { get; set; }
-            public string uname { get; set; }
-            public string fullName { get; set; }
-            public int collectorId { get; set; }
-            public string collectorName { get; set; }
-            public long exp { get; set; }
+            return new DateTime(1970, 1, 1).AddSeconds(seconds);
+        }
+
+        private static string Base64UrlEncode(byte[] input)
+        {
+            return Convert.ToBase64String(input).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        }
+
+        private static byte[] Base64UrlDecode(string input)
+        {
+            string output = input.Replace('-', '+').Replace('_', '/');
+            switch (output.Length % 4)
+            {
+                case 2: output += "=="; break;
+                case 3: output += "="; break;
+                case 0: break;
+                default: throw new FormatException("Invalid base64url string.");
+            }
+            return Convert.FromBase64String(output);
         }
     }
 }

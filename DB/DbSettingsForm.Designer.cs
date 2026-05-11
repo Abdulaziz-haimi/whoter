@@ -280,7 +280,7 @@
             this.dbRow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dbRow.Location = new System.Drawing.Point(3, 171);
             this.dbRow.Name = "dbRow";
-            this.dbRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.dbRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.dbRow.Size = new System.Drawing.Size(512, 36);
             this.dbRow.TabIndex = 10;
             // 

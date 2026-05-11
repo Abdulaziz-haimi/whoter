@@ -2,7 +2,7 @@ using System;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using WaterCollector.BackendApi.Services;
+using WaterCollector.BackendApi.Contracts.Auth;
 using WaterCollector.BackendApi.Data;
 using WaterCollector.BackendApi.Security;
 
@@ -12,8 +12,16 @@ namespace WaterCollector.BackendApi.Services
     {
         private readonly ISqlConnectionFactory _connectionFactory;
 
+        public AuthService()
+            : this(new SqlConnectionFactory())
+        {
+        }
+
         public AuthService(ISqlConnectionFactory connectionFactory)
         {
+            if (connectionFactory == null)
+                throw new ArgumentNullException(nameof(connectionFactory));
+
             _connectionFactory = connectionFactory;
         }
 
@@ -25,38 +33,47 @@ namespace WaterCollector.BackendApi.Services
             using (var connection = _connectionFactory.CreateConnection())
             {
                 await connection.OpenAsync().ConfigureAwait(false);
-                var sql = await ResolveUserCollectorQueryAsync(connection).ConfigureAwait(false);
+
+                string sql = await ResolveUserCollectorQueryAsync(connection).ConfigureAwait(false);
+
                 using (var command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@UserName", request.UserName.Trim());
+
                     using (var reader = await command.ExecuteReaderAsync().ConfigureAwait(false))
                     {
                         if (!await reader.ReadAsync().ConfigureAwait(false))
                             throw new UnauthorizedAccessException("بيانات الدخول غير صحيحة.");
 
-                        var isActive = reader["IsActive"] == DBNull.Value || Convert.ToBoolean(reader["IsActive"]);
-                        if (!isActive) throw new UnauthorizedAccessException("المستخدم غير نشط.");
+                        bool isActive = reader["IsActive"] == DBNull.Value || Convert.ToBoolean(reader["IsActive"]);
+                        if (!isActive)
+                            throw new UnauthorizedAccessException("المستخدم غير نشط.");
 
-                        var passwordHash = Convert.ToString(reader["PasswordHash"]) ?? string.Empty;
-                        var passwordMode = ConfigurationManager.AppSettings["Authentication:PasswordMode"] ?? "Sha256Hex";
-                        var candidate = string.Equals(passwordMode, "PlainText", StringComparison.OrdinalIgnoreCase)
+                        string passwordHash = Convert.ToString(reader["PasswordHash"]) ?? string.Empty;
+                        string passwordMode = ConfigurationManager.AppSettings["Authentication:PasswordMode"] ?? "Sha256Hex";
+
+                        string candidate = string.Equals(passwordMode, "PlainText", StringComparison.OrdinalIgnoreCase)
                             ? request.Password
                             : PasswordHasher.Sha256Hex(request.Password);
+
                         if (!string.Equals(passwordHash, candidate, StringComparison.OrdinalIgnoreCase))
                             throw new UnauthorizedAccessException("بيانات الدخول غير صحيحة.");
 
-                        var collectorId = reader["CollectorID"] == DBNull.Value ? 0 : Convert.ToInt32(reader["CollectorID"]);
-                        var collectorName = reader["CollectorName"] == DBNull.Value ? string.Empty : Convert.ToString(reader["CollectorName"]);
-                        if (collectorId <= 0) throw new InvalidOperationException("المستخدم لا يملك ربطًا مع محصل.");
+                        int collectorId = reader["CollectorID"] == DBNull.Value ? 0 : Convert.ToInt32(reader["CollectorID"]);
+                        string collectorName = reader["CollectorName"] == DBNull.Value ? string.Empty : Convert.ToString(reader["CollectorName"]);
+
+                        if (collectorId <= 0)
+                            throw new InvalidOperationException("المستخدم لا يملك ربطًا مع محصل.");
 
                         DateTime expiresAt;
-                        var token = new BearerTokenService().CreateToken(
+                        string token = new BearerTokenService().CreateToken(
                             userId: Convert.ToInt32(reader["UserID"]),
                             userName: Convert.ToString(reader["UserName"]),
                             fullName: reader["FullName"] == DBNull.Value ? null : Convert.ToString(reader["FullName"]),
                             collectorId: collectorId,
                             collectorName: collectorName,
-                            expiresAt: out expiresAt);
+                            expiresAt: out expiresAt
+                        );
 
                         return new LoginResponse
                         {
@@ -81,7 +98,7 @@ namespace WaterCollector.BackendApi.Services
 
             using (var cmd = new SqlCommand(hasCollectorIdSql, connection))
             {
-                var hasCollectorId = Convert.ToInt32(await cmd.ExecuteScalarAsync().ConfigureAwait(false)) == 1;
+                bool hasCollectorId = Convert.ToInt32(await cmd.ExecuteScalarAsync().ConfigureAwait(false)) == 1;
                 if (hasCollectorId)
                 {
                     return @"
@@ -94,7 +111,7 @@ WHERE U.UserName = @UserName;";
 
             using (var cmd = new SqlCommand(hasUserCollectorsSql, connection))
             {
-                var hasUserCollectors = Convert.ToInt32(await cmd.ExecuteScalarAsync().ConfigureAwait(false)) == 1;
+                bool hasUserCollectors = Convert.ToInt32(await cmd.ExecuteScalarAsync().ConfigureAwait(false)) == 1;
                 if (hasUserCollectors)
                 {
                     return @"
@@ -109,7 +126,7 @@ WHERE U.UserName = @UserName;";
             return @"
 SELECT TOP 1 U.UserID, U.UserName, U.FullName, U.PasswordHash, U.IsActive, C.CollectorID, C.Name AS CollectorName
 FROM dbo.Users U
-LEFT JOIN dbo.Collectors C ON C.Phone = U.Phone
+LEFT JOIN dbo.Collectors C ON C.UserID = U.UserID
 WHERE U.UserName = @UserName;";
         }
     }

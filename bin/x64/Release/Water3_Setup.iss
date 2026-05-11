@@ -1,0 +1,37 @@
+#define MyAppName "Water3 Billing System"
+#define MyAppVersion "1.0.0"
+#define MyAppPublisher "Water3"
+#define MyAppExeName "water3.exe"
+
+[Setup]
+AppId={{A41B99AB-9A55-4E6D-9F0B-WATER30001}
+AppName={#MyAppName}
+AppVersion={#MyAppVersion}
+AppPublisher={#MyAppPublisher}
+DefaultDirName={autopf}\Water3
+DefaultGroupName=Water3
+DisableProgramGroupPage=yes
+OutputDir=Output
+OutputBaseFilename=Water3_Setup_v1.0.0
+Compression=lzma
+SolidCompression=yes
+WizardStyle=modern
+PrivilegesRequired=admin
+
+[Languages]
+Name: "arabic"; MessagesFile: "compiler:Languages\Arabic.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"
+
+[Tasks]
+Name: "desktopicon"; Description: "إنشاء اختصار على سطح المكتب"; GroupDescription: "اختصارات:"; Flags: unchecked
+
+[Files]
+Source: "C:\Users\Abdulaziz\source\repos\water3\bin\x64\Release*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+[Icons]
+Name: "{group}\Water3"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\Water3"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+
+[Run]
+Filename: "netsh"; Parameters: "advfirewall firewall add rule name=""Water3 API 8085"" dir=in action=allow protocol=TCP localport=8085"; Flags: runhidden
+Filename: "{app}\{#MyAppExeName}"; Description: "تشغيل Water3"; Flags: nowait postinstall skipifsilent

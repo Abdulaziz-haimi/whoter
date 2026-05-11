@@ -1,0 +1,9 @@
+ملاحظة:
+افتح Visual Studio ثم:
+1) Create New Blank Solution باسم WaterCollectorApiSolution
+2) Add Existing Project:
+   - WaterCollector.BackendApi\WaterCollector.BackendApi.csproj
+   - WaterCollector.BackendApi.Host\WaterCollector.BackendApi.Host.csproj
+3) اجعل WaterCollector.BackendApi.Host هو Startup Project للتجربة.
+
+تم وضع ملف .sln.txt بدل .sln لأن Visual Studio ينشئ GUIDs تلقائيًا بسهولة عند إضافة المشاريع.

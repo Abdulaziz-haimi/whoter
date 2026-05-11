@@ -5,13 +5,17 @@ namespace WaterCollector.BackendApi.Security
 {
     public static class PasswordHasher
     {
-        public static string Sha256Hex(string value)
+        public static string Sha256Hex(string password)
         {
             using (var sha = SHA256.Create())
             {
-                var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(value ?? string.Empty));
-                var sb = new StringBuilder(bytes.Length * 2);
-                foreach (var b in bytes) sb.Append(b.ToString("x2"));
+                byte[] bytes = Encoding.UTF8.GetBytes(password ?? string.Empty);
+                byte[] hash = sha.ComputeHash(bytes);
+
+                var sb = new StringBuilder();
+                foreach (byte b in hash)
+                    sb.Append(b.ToString("x2"));
+
                 return sb.ToString();
             }
         }
