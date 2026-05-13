@@ -1,5 +1,976 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using water3.Services;
+
+namespace water3.Reports.Dynamic
+{
+    public partial class DynamicReportDesignerForm : Form
+    {
+        private ComboBox cboReportType;
+        private ComboBox cboTemplates;
+        private ComboBox cboSubscriber;
+        private ComboBox cboCategoryType;
+        private ComboBox cboPrintMode;
+
+        private Label lblPrintMode;
+
+        private CheckedListBox chkColumns;
+
+        private CheckBox chkUseFromDate;
+        private CheckBox chkUseToDate;
+        private DateTimePicker dtFrom;
+        private DateTimePicker dtTo;
+
+        private TextBox txtSearch;
+        private TextBox txtTemplateName;
+
+        private Button btnPreview;
+        private Button btnSaveTemplate;
+        private Button btnLoadTemplate;
+        private Button btnDeleteTemplate;
+        private Button btnExportCsv;
+        private Button btnPrint;
+        private Button btnSelectAll;
+        private Button btnClearAll;
+
+        private DataGridView dgv;
+        private Label lblStatus;
+
+        private readonly DynamicReportService _service = new DynamicReportService();
+        private readonly DynamicGridPrintService _printService = new DynamicGridPrintService();
+
+        private readonly SubscriberInvoicePrintService _invoicePrintService =
+            new SubscriberInvoicePrintService();
+
+        private DataTable _currentData;
+
+        public DynamicReportDesignerForm()
+        {
+            BuildUi();
+            LoadReportTypes();
+            LoadSubscribers();
+            ApplyPrintModeRules();
+        }
+
+        private void BuildUi()
+        {
+            Text = "مصمم التقارير الديناميكي";
+            WindowState = FormWindowState.Maximized;
+            StartPosition = FormStartPosition.CenterParent;
+            RightToLeft = RightToLeft.Yes;
+            RightToLeftLayout = true;
+            Font = new Font("Tahoma", 10F);
+            BackColor = Color.White;
+
+            Panel pnlTop = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 245,
+                BackColor = Color.FromArgb(248, 250, 252),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+
+            Label lblTitle = new Label
+            {
+                Text = "مصمم التقارير الديناميكي",
+                Font = new Font("Tahoma", 16F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(0, 102, 204),
+                AutoSize = true,
+                Location = new Point(20, 15)
+            };
+
+            Label lblReportType = MakeLabel("نوع التقرير", 1120, 55);
+            cboReportType = new ComboBox
+            {
+                Location = new Point(900, 50),
+                Size = new Size(200, 28),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            cboReportType.SelectedIndexChanged += CboReportType_SelectedIndexChanged;
+
+            Label lblTemplate = MakeLabel("التصميمات", 700, 55);
+            cboTemplates = new ComboBox
+            {
+                Location = new Point(480, 50),
+                Size = new Size(200, 28),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            btnLoadTemplate = MakeButton("تحميل التصميم", 350, 48, 120, Color.SteelBlue);
+            btnLoadTemplate.Click += BtnLoadTemplate_Click;
+
+            btnDeleteTemplate = MakeButton("حذف التصميم", 220, 48, 120, Color.Firebrick);
+            btnDeleteTemplate.Click += BtnDeleteTemplate_Click;
+
+            Label lblTemplateName = MakeLabel("اسم التصميم", 1120, 95);
+            txtTemplateName = new TextBox
+            {
+                Location = new Point(900, 90),
+                Size = new Size(200, 28),
+                TextAlign = HorizontalAlignment.Right
+            };
+
+            btnSaveTemplate = MakeButton("حفظ التصميم", 770, 88, 120, Color.SeaGreen);
+            btnSaveTemplate.Click += BtnSaveTemplate_Click;
+
+            chkUseFromDate = new CheckBox
+            {
+                Text = "من تاريخ",
+                Location = new Point(650, 92),
+                AutoSize = true
+            };
+
+            dtFrom = new DateTimePicker
+            {
+                Location = new Point(500, 90),
+                Size = new Size(140, 28),
+                Format = DateTimePickerFormat.Short,
+                Value = DateTime.Today.AddMonths(-1),
+                RightToLeft = RightToLeft.Yes,
+                RightToLeftLayout = true
+            };
+
+            chkUseToDate = new CheckBox
+            {
+                Text = "إلى تاريخ",
+                Location = new Point(380, 92),
+                AutoSize = true
+            };
+
+            dtTo = new DateTimePicker
+            {
+                Location = new Point(230, 90),
+                Size = new Size(140, 28),
+                Format = DateTimePickerFormat.Short,
+                Value = DateTime.Today,
+                RightToLeft = RightToLeft.Yes,
+                RightToLeftLayout = true
+            };
+
+            Label lblSubscriber = MakeLabel("المشترك", 1120, 135);
+            cboSubscriber = new ComboBox
+            {
+                Location = new Point(900, 130),
+                Size = new Size(200, 28),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            Label lblCategoryType = MakeLabel("نوع المصروف", 700, 135);
+            cboCategoryType = new ComboBox
+            {
+                Location = new Point(480, 130),
+                Size = new Size(200, 28),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            cboCategoryType.Items.AddRange(new object[] { "الكل", "Expense", "Purchase", "Loss" });
+            cboCategoryType.SelectedIndex = 0;
+
+            lblPrintMode = MakeLabel("نوع الطباعة", 380, 135);
+            cboPrintMode = new ComboBox
+            {
+                Location = new Point(230, 130),
+                Size = new Size(140, 28),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            cboPrintMode.Items.AddRange(new object[]
+            {
+                "كشف الفواتير",
+                "كل فاتورة مستقلة"
+            });
+            cboPrintMode.SelectedIndex = 0;
+            cboPrintMode.SelectedIndexChanged += (s, e) => ApplyPrintModeRules();
+
+            Label lblSearch = MakeLabel("بحث", 1120, 175);
+            txtSearch = new TextBox
+            {
+                Location = new Point(900, 170),
+                Size = new Size(200, 28),
+                TextAlign = HorizontalAlignment.Right
+            };
+
+            btnPreview = MakeButton("معاينة", 770, 168, 120, Color.FromArgb(0, 122, 204));
+            btnPreview.Click += BtnPreview_Click;
+
+            btnExportCsv = MakeButton("تصدير CSV", 640, 168, 120, Color.FromArgb(22, 163, 74));
+            btnExportCsv.Click += BtnExportCsv_Click;
+
+            btnPrint = MakeButton("طباعة", 510, 168, 120, Color.FromArgb(14, 165, 233));
+            btnPrint.Click += BtnPrint_Click;
+
+            chkColumns = new CheckedListBox
+            {
+                Location = new Point(20, 50),
+                Size = new Size(190, 110),
+                CheckOnClick = true,
+                DisplayMember = "ColumnTitle",
+                RightToLeft = RightToLeft.Yes
+            };
+
+            btnSelectAll = MakeButton("تحديد الكل", 20, 168, 90, Color.Gray);
+            btnSelectAll.Click += BtnSelectAll_Click;
+
+            btnClearAll = MakeButton("إلغاء الكل", 115, 168, 90, Color.Gray);
+            btnClearAll.Click += BtnClearAll_Click;
+
+            lblStatus = new Label
+            {
+                Location = new Point(220, 205),
+                Size = new Size(1000, 25),
+                ForeColor = Color.DarkGreen,
+                TextAlign = ContentAlignment.MiddleRight
+            };
+
+            pnlTop.Controls.Add(lblTitle);
+            pnlTop.Controls.Add(lblReportType);
+            pnlTop.Controls.Add(cboReportType);
+            pnlTop.Controls.Add(lblTemplate);
+            pnlTop.Controls.Add(cboTemplates);
+            pnlTop.Controls.Add(btnLoadTemplate);
+            pnlTop.Controls.Add(btnDeleteTemplate);
+            pnlTop.Controls.Add(lblTemplateName);
+            pnlTop.Controls.Add(txtTemplateName);
+            pnlTop.Controls.Add(btnSaveTemplate);
+            pnlTop.Controls.Add(chkUseFromDate);
+            pnlTop.Controls.Add(dtFrom);
+            pnlTop.Controls.Add(chkUseToDate);
+            pnlTop.Controls.Add(dtTo);
+            pnlTop.Controls.Add(lblSubscriber);
+            pnlTop.Controls.Add(cboSubscriber);
+            pnlTop.Controls.Add(lblCategoryType);
+            pnlTop.Controls.Add(cboCategoryType);
+            pnlTop.Controls.Add(lblPrintMode);
+            pnlTop.Controls.Add(cboPrintMode);
+            pnlTop.Controls.Add(lblSearch);
+            pnlTop.Controls.Add(txtSearch);
+            pnlTop.Controls.Add(btnPreview);
+            pnlTop.Controls.Add(btnExportCsv);
+            pnlTop.Controls.Add(btnPrint);
+            pnlTop.Controls.Add(chkColumns);
+            pnlTop.Controls.Add(btnSelectAll);
+            pnlTop.Controls.Add(btnClearAll);
+            pnlTop.Controls.Add(lblStatus);
+
+            dgv = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                RowHeadersVisible = false,
+                RightToLeft = RightToLeft.Yes,
+                EnableHeadersVisualStyles = false
+            };
+
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 102, 204);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Tahoma", 9.5F, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgv.DefaultCellStyle.Font = new Font("Tahoma", 9.2F);
+
+            Controls.Add(dgv);
+            Controls.Add(pnlTop);
+        }
+
+        private Label MakeLabel(string text, int left, int top)
+        {
+            return new Label
+            {
+                Text = text,
+                AutoSize = true,
+                Location = new Point(left, top + 4)
+            };
+        }
+
+        private Button MakeButton(string text, int left, int top, int width, Color color)
+        {
+            Button btn = new Button
+            {
+                Text = text,
+                Location = new Point(left, top),
+                Size = new Size(width, 32),
+                BackColor = color,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Font = new Font("Tahoma", 9F, FontStyle.Bold)
+            };
+
+            btn.FlatAppearance.BorderSize = 0;
+            return btn;
+        }
+
+        private void LoadReportTypes()
+        {
+            List<DynamicReportDefinition> reports = DynamicReportDefinitions.GetAll();
+
+            cboReportType.DataSource = null;
+            cboReportType.DisplayMember = "Title";
+            cboReportType.ValueMember = "ReportKey";
+            cboReportType.DataSource = reports;
+
+            if (reports.Count > 0)
+                cboReportType.SelectedIndex = 0;
+
+            ApplyPrintModeRules();
+        }
+
+        private void LoadSubscribers()
+        {
+            try
+            {
+                DataTable dt = _service.GetSubscribersLookup();
+
+                cboSubscriber.DataSource = null;
+                cboSubscriber.DisplayMember = "Name";
+                cboSubscriber.ValueMember = "SubscriberID";
+                cboSubscriber.DataSource = dt;
+            }
+            catch
+            {
+                DataTable dt = new DataTable();
+                dt.Columns.Add("SubscriberID", typeof(int));
+                dt.Columns.Add("Name", typeof(string));
+                dt.Rows.Add(0, "الكل");
+
+                cboSubscriber.DataSource = null;
+                cboSubscriber.DisplayMember = "Name";
+                cboSubscriber.ValueMember = "SubscriberID";
+                cboSubscriber.DataSource = dt;
+            }
+        }
+
+        private void CboReportType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadColumnsForSelectedReport();
+            LoadTemplatesForSelectedReport();
+            ApplyFilterAvailability();
+            ApplyPrintModeRules();
+        }
+
+        private void LoadColumnsForSelectedReport()
+        {
+            chkColumns.Items.Clear();
+
+            DynamicReportDefinition def = GetSelectedDefinition();
+
+            if (def == null)
+                return;
+
+            foreach (DynamicReportColumn col in def.Columns.OrderBy(c => c.DisplayOrder))
+            {
+                int index = chkColumns.Items.Add(col);
+                chkColumns.SetItemChecked(index, col.IsDefaultVisible);
+            }
+
+            ApplyPrintModeRules();
+        }
+
+        private void LoadTemplatesForSelectedReport()
+        {
+            try
+            {
+                string reportKey = GetSelectedReportKey();
+
+                List<DynamicReportTemplateInfo> templates =
+                    _service.GetTemplates(reportKey);
+
+                cboTemplates.DataSource = null;
+                cboTemplates.DisplayMember = "TemplateName";
+                cboTemplates.ValueMember = "TemplateID";
+                cboTemplates.DataSource = templates;
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.DarkRed;
+                lblStatus.Text = ex.Message;
+            }
+        }
+
+        private void ApplyFilterAvailability()
+        {
+            DynamicReportDefinition def = GetSelectedDefinition();
+
+            if (def == null)
+                return;
+
+            chkUseFromDate.Enabled = def.HasDateFilter;
+            chkUseToDate.Enabled = def.HasDateFilter;
+            dtFrom.Enabled = def.HasDateFilter;
+            dtTo.Enabled = def.HasDateFilter;
+
+            cboSubscriber.Enabled = def.HasSubscriberFilter;
+            cboCategoryType.Enabled = def.HasCategoryTypeFilter;
+        }
+
+        private DynamicReportDefinition GetSelectedDefinition()
+        {
+            string key = GetSelectedReportKey();
+            return DynamicReportDefinitions.GetByKey(key);
+        }
+
+        private string GetSelectedReportKey()
+        {
+            if (cboReportType.SelectedValue == null)
+                return "Invoices";
+
+            return Convert.ToString(cboReportType.SelectedValue);
+        }
+
+        private List<string> GetSelectedColumnKeys()
+        {
+            return chkColumns.CheckedItems
+                .Cast<DynamicReportColumn>()
+                .Select(c => c.ColumnKey)
+                .ToList();
+        }
+
+        private int? GetSelectedSubscriberId()
+        {
+            if (cboSubscriber.SelectedValue == null ||
+                cboSubscriber.SelectedValue == DBNull.Value)
+                return null;
+
+            int id;
+
+            if (int.TryParse(Convert.ToString(cboSubscriber.SelectedValue), out id) && id > 0)
+                return id;
+
+            return null;
+        }
+
+        private string GetSelectedCategoryType()
+        {
+            if (cboCategoryType.SelectedItem == null)
+                return "الكل";
+
+            return Convert.ToString(cboCategoryType.SelectedItem);
+        }
+
+        private void BtnPreview_Click(object sender, EventArgs e)
+        {
+            LoadPreview();
+        }
+
+        private void LoadPreview()
+        {
+            try
+            {
+                if (PrintEachInvoiceSeparately())
+                    SelectRequiredInvoiceColumns();
+
+                List<string> selectedKeys = GetSelectedColumnKeys();
+
+                if (selectedKeys.Count == 0)
+                {
+                    MessageBox.Show("يجب اختيار عمود واحد على الأقل.", "تنبيه",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                DateTime? fromDate =
+                    chkUseFromDate.Enabled && chkUseFromDate.Checked
+                        ? (DateTime?)dtFrom.Value.Date
+                        : null;
+
+                DateTime? toDate =
+                    chkUseToDate.Enabled && chkUseToDate.Checked
+                        ? (DateTime?)dtTo.Value.Date
+                        : null;
+
+                _currentData = _service.LoadReport(
+                    GetSelectedReportKey(),
+                    selectedKeys,
+                    fromDate,
+                    toDate,
+                    GetSelectedSubscriberId(),
+                    GetSelectedCategoryType(),
+                    txtSearch.Text.Trim());
+
+                dgv.DataSource = null;
+                dgv.DataSource = _currentData;
+
+                lblStatus.ForeColor = Color.DarkGreen;
+                lblStatus.Text = "تم تحميل التقرير. عدد السجلات: " + _currentData.Rows.Count;
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.DarkRed;
+                lblStatus.Text = ex.Message;
+            }
+        }
+
+        private void BtnSaveTemplate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (PrintEachInvoiceSeparately())
+                    SelectRequiredInvoiceColumns();
+
+                DynamicReportTemplateState state = new DynamicReportTemplateState
+                {
+                    TemplateName = txtTemplateName.Text.Trim(),
+                    ReportKey = GetSelectedReportKey(),
+                    ColumnKeys = GetSelectedColumnKeys(),
+                    UseFromDate = chkUseFromDate.Checked,
+                    UseToDate = chkUseToDate.Checked,
+                    FromDate = dtFrom.Value.Date,
+                    ToDate = dtTo.Value.Date,
+                    SubscriberID = GetSelectedSubscriberId(),
+                    CategoryType = GetSelectedCategoryType(),
+                    SearchText = txtSearch.Text.Trim()
+                };
+
+                int templateId = _service.SaveTemplate(state, Environment.UserName);
+
+                lblStatus.ForeColor = Color.DarkGreen;
+                lblStatus.Text = "تم حفظ التصميم بنجاح. رقم التصميم: " + templateId;
+
+                LoadTemplatesForSelectedReport();
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.DarkRed;
+                lblStatus.Text = ex.Message;
+            }
+        }
+
+        private void BtnLoadTemplate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cboTemplates.SelectedValue == null)
+                {
+                    MessageBox.Show("اختر تصميمًا أولًا.", "تنبيه",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                int templateId;
+
+                if (!int.TryParse(Convert.ToString(cboTemplates.SelectedValue), out templateId))
+                    return;
+
+                DynamicReportTemplateState state = _service.GetTemplate(templateId);
+
+                for (int i = 0; i < chkColumns.Items.Count; i++)
+                {
+                    DynamicReportColumn col = chkColumns.Items[i] as DynamicReportColumn;
+                    chkColumns.SetItemChecked(i, col != null && state.ColumnKeys.Contains(col.ColumnKey));
+                }
+
+                txtTemplateName.Text = state.TemplateName;
+                chkUseFromDate.Checked = state.UseFromDate;
+                chkUseToDate.Checked = state.UseToDate;
+
+                if (state.FromDate.HasValue)
+                    dtFrom.Value = state.FromDate.Value;
+
+                if (state.ToDate.HasValue)
+                    dtTo.Value = state.ToDate.Value;
+
+                if (state.SubscriberID.HasValue)
+                    cboSubscriber.SelectedValue = state.SubscriberID.Value;
+                else
+                    cboSubscriber.SelectedValue = 0;
+
+                if (!string.IsNullOrWhiteSpace(state.CategoryType) &&
+                    cboCategoryType.Items.Contains(state.CategoryType))
+                    cboCategoryType.SelectedItem = state.CategoryType;
+                else
+                    cboCategoryType.SelectedIndex = 0;
+
+                txtSearch.Text = state.SearchText ?? "";
+
+                ApplyPrintModeRules();
+
+                lblStatus.ForeColor = Color.DarkGreen;
+                lblStatus.Text = "تم تحميل التصميم.";
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.DarkRed;
+                lblStatus.Text = ex.Message;
+            }
+        }
+
+        private void BtnDeleteTemplate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cboTemplates.SelectedValue == null)
+                    return;
+
+                int templateId;
+
+                if (!int.TryParse(Convert.ToString(cboTemplates.SelectedValue), out templateId))
+                    return;
+
+                DialogResult result = MessageBox.Show(
+                    "هل تريد حذف هذا التصميم؟",
+                    "تأكيد",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result != DialogResult.Yes)
+                    return;
+
+                _service.DeleteTemplate(templateId);
+                LoadTemplatesForSelectedReport();
+
+                lblStatus.ForeColor = Color.DarkGreen;
+                lblStatus.Text = "تم حذف التصميم.";
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.DarkRed;
+                lblStatus.Text = ex.Message;
+            }
+        }
+
+        private void BtnExportCsv_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_currentData == null || _currentData.Rows.Count == 0)
+                {
+                    MessageBox.Show("لا توجد بيانات للتصدير.", "تنبيه",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                ReportExportService exportService = new ReportExportService();
+                exportService.ExportGridToCsv(dgv, "DynamicReport");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "خطأ في التصدير",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnPrint_Click(object sender, EventArgs e)
+        {
+            if (PrintEachInvoiceSeparately())
+            {
+                SelectRequiredInvoiceColumns();
+                LoadPreview();
+
+                if (_currentData == null || _currentData.Rows.Count == 0)
+                {
+                    MessageBox.Show("لا توجد بيانات للطباعة.", "تنبيه",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string fromText =
+                    chkUseFromDate.Enabled && chkUseFromDate.Checked
+                        ? dtFrom.Value.ToString("yyyy-MM-dd")
+                        : "";
+
+                string toText =
+                    chkUseToDate.Enabled && chkUseToDate.Checked
+                        ? dtTo.Value.ToString("yyyy-MM-dd")
+                        : "";
+
+                _invoicePrintService.PrintPreview(dgv, fromText, toText);
+                return;
+            }
+
+            if (_currentData == null || _currentData.Rows.Count == 0)
+            {
+                MessageBox.Show("لا توجد بيانات للطباعة.", "تنبيه",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DynamicReportDefinition def = GetSelectedDefinition();
+
+            string reportTitle = def != null && !string.IsNullOrWhiteSpace(def.Title)
+                ? def.Title
+                : cboReportType.Text;
+
+            _printService.PrintPreview(dgv, reportTitle);
+        }
+
+        private void BtnSelectAll_Click(object sender, EventArgs e)
+        {
+            if (PrintEachInvoiceSeparately())
+                return;
+
+            for (int i = 0; i < chkColumns.Items.Count; i++)
+                chkColumns.SetItemChecked(i, true);
+        }
+
+        private void BtnClearAll_Click(object sender, EventArgs e)
+        {
+            if (PrintEachInvoiceSeparately())
+                return;
+
+            for (int i = 0; i < chkColumns.Items.Count; i++)
+                chkColumns.SetItemChecked(i, false);
+        }
+
+        private void ApplyPrintModeRules()
+        {
+            bool isInvoices = IsInvoicesReport();
+            bool printEachInvoice = PrintEachInvoiceSeparately();
+
+            if (lblPrintMode != null)
+                lblPrintMode.Visible = isInvoices;
+
+            if (cboPrintMode != null)
+            {
+                cboPrintMode.Visible = isInvoices;
+                cboPrintMode.Enabled = isInvoices;
+
+                if (!isInvoices && cboPrintMode.Items.Count > 0)
+                    cboPrintMode.SelectedIndex = 0;
+            }
+
+            if (printEachInvoice)
+            {
+                SelectRequiredInvoiceColumns();
+                SetColumnsSelectionEnabled(false);
+
+                if (lblStatus != null)
+                {
+                    lblStatus.ForeColor = Color.DarkGreen;
+                    lblStatus.Text = "تم تخميد اختيار الأعمدة لأن الطباعة ستكون لكل فاتورة مستقلة.";
+                }
+            }
+            else
+            {
+                SetColumnsSelectionEnabled(true);
+            }
+        }
+
+        private void SetColumnsSelectionEnabled(bool enabled)
+        {
+            if (chkColumns != null)
+            {
+                chkColumns.Enabled = enabled;
+                chkColumns.BackColor = enabled ? Color.White : Color.FromArgb(235, 235, 235);
+                chkColumns.ForeColor = enabled ? Color.Black : Color.Gray;
+            }
+
+            if (btnSelectAll != null)
+                btnSelectAll.Enabled = enabled;
+
+            if (btnClearAll != null)
+                btnClearAll.Enabled = enabled;
+        }
+
+        private void SelectRequiredInvoiceColumns()
+        {
+            if (chkColumns == null || chkColumns.Items.Count == 0)
+                return;
+
+            int checkedCount = 0;
+
+            for (int i = 0; i < chkColumns.Items.Count; i++)
+            {
+                DynamicReportColumn col = chkColumns.Items[i] as DynamicReportColumn;
+
+                bool required = IsRequiredInvoiceColumn(col);
+
+                chkColumns.SetItemChecked(i, required);
+
+                if (required)
+                    checkedCount++;
+            }
+
+            // إذا لم يجد أسماء الأعمدة المطلوبة بسبب اختلاف أسماء ColumnKey، اختر الكل كحل آمن
+            if (checkedCount == 0)
+            {
+                for (int i = 0; i < chkColumns.Items.Count; i++)
+                    chkColumns.SetItemChecked(i, true);
+            }
+        }
+
+        private bool IsRequiredInvoiceColumn(DynamicReportColumn col)
+        {
+            if (col == null)
+                return false;
+
+            string key = NormalizeName(col.ColumnKey);
+            string title = NormalizeName(col.ColumnTitle);
+            string merged = key + " " + title;
+
+            string[] required =
+            {
+                "رقمالفاتوره",
+                "رقمالفاتورة",
+                "invoiceno",
+                "invoicenumber",
+
+                "تاريخالفاتوره",
+                "تاريخالفاتورة",
+                "invoicedate",
+
+                "منتاريخ",
+                "fromdate",
+                "periodfrom",
+
+                "اليتاريخ",
+                "الىتاريخ",
+                "todate",
+                "periodto",
+
+                "اسمالمشترك",
+                "اسمالمستهلك",
+                "المشترك",
+                "subscribername",
+                "customername",
+                "name",
+
+                "رقمالعداد",
+                "meterno",
+                "meternumber",
+                "meter",
+
+                "العنوان",
+                "address",
+
+                "المربع",
+                "square",
+                "block",
+
+                "السابقه",
+                "السابقة",
+                "قراءهسابقه",
+                "قراءةسابقة",
+                "previous",
+                "prev",
+
+                "الحاليه",
+                "الحالية",
+                "قراءهحاليه",
+                "قراءةحالية",
+                "current",
+                "curr",
+
+                "الاستهلاك",
+                "كاستهلاك",
+                "consumption",
+                "cons",
+
+                "سعرالوحده",
+                "سعرالوحدة",
+                "unitprice",
+                "price",
+
+                "قيمهالاستهلاك",
+                "قيمةالاستهلاك",
+                "consumptionvalue",
+                "consvalue",
+
+                "رسومالخدمه",
+                "رسومالخدمة",
+                "رسومخدمات",
+                "servicefees",
+                "fees",
+
+                "المتاخرات",
+                "المتأخرات",
+                "arrears",
+
+                "الاجمالي",
+                "الإجمالي",
+                "القيمهالمستحقه",
+                "القيمةالمستحقة",
+                "total",
+                "amount",
+
+                "المدفوع",
+                "المدفوعهالسابقه",
+                "المدفوعةالسابقة",
+                "paid",
+
+                "الرصيد",
+                "الرصيدالحالي",
+                "المتبقي",
+                "balance",
+                "remaining",
+
+                "الحاله",
+                "الحالة",
+                "status"
+            };
+
+            foreach (string item in required)
+            {
+                string n = NormalizeName(item);
+
+                if (key == n || title == n || merged.Contains(n))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool IsInvoicesReport()
+        {
+            string key = GetSelectedReportKey();
+            string text = cboReportType == null ? string.Empty : cboReportType.Text;
+
+            if (!string.IsNullOrWhiteSpace(key) &&
+                key.Equals("Invoices", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (!string.IsNullOrWhiteSpace(text) &&
+                text.Contains("الفواتير"))
+                return true;
+
+            return false;
+        }
+
+        private bool PrintEachInvoiceSeparately()
+        {
+            if (!IsInvoicesReport())
+                return false;
+
+            if (cboPrintMode == null || cboPrintMode.SelectedItem == null)
+                return false;
+
+            return Convert.ToString(cboPrintMode.SelectedItem) == "كل فاتورة مستقلة";
+        }
+
+        private string NormalizeName(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
+            return value
+                .Replace("أ", "ا")
+                .Replace("إ", "ا")
+                .Replace("آ", "ا")
+                .Replace("ى", "ي")
+                .Replace("ة", "ه")
+                .Replace("ؤ", "و")
+                .Replace("ئ", "ي")
+                .Replace(".", "")
+                .Replace(":", "")
+                .Replace("/", "")
+                .Replace("\\", "")
+                .Replace(" ", "")
+                .Replace("_", "")
+                .Replace("-", "")
+                .Trim()
+                .ToLowerInvariant();
+        }
+    }
+}
+/*using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -7,13 +978,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using water3.Services;
 namespace water3.Reports.Dynamic
 {
@@ -54,8 +1019,12 @@ namespace water3.Reports.Dynamic
             private readonly DynamicGridPrintService _printService = new DynamicGridPrintService();
 
             private DataTable _currentData;
+        private Label lblPrintMode;
+        private ComboBox cboPrintMode;
 
-            public DynamicReportDesignerForm()
+        private readonly SubscriberInvoicePrintService _invoicePrintService =
+            new SubscriberInvoicePrintService();
+        public DynamicReportDesignerForm()
             {
                 BuildUi();
                 LoadReportTypes();
@@ -148,7 +1117,20 @@ namespace water3.Reports.Dynamic
                 cboCategoryType.Items.AddRange(new object[] { "الكل", "Expense", "Purchase", "Loss" });
                 cboCategoryType.SelectedIndex = 0;
 
-                Label lblSearch = MakeLabel("بحث", 1120, 175);
+            lblPrintMode = MakeLabel("نوع الطباعة", 380, 135);
+
+            cboPrintMode = new ComboBox();
+            cboPrintMode.Location = new Point(230, 130);
+            cboPrintMode.Size = new Size(140, 28);
+            cboPrintMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboPrintMode.Items.AddRange(new object[]
+            {
+    "كشف الفواتير",
+    "كل فاتورة مستقلة"
+            });
+            cboPrintMode.SelectedIndex = 0;
+
+            Label lblSearch = MakeLabel("بحث", 1120, 175);
                 txtSearch = new TextBox();
                 txtSearch.Location = new Point(900, 170);
                 txtSearch.Size = new Size(200, 28);
@@ -198,8 +1180,15 @@ namespace water3.Reports.Dynamic
                 pnlTop.Controls.Add(cboSubscriber);
                 pnlTop.Controls.Add(lblCategoryType);
                 pnlTop.Controls.Add(cboCategoryType);
-                pnlTop.Controls.Add(lblSearch);
-                pnlTop.Controls.Add(txtSearch);
+            pnlTop.Controls.Add(lblCategoryType);
+            pnlTop.Controls.Add(cboCategoryType);
+
+            pnlTop.Controls.Add(lblPrintMode);
+            pnlTop.Controls.Add(cboPrintMode);
+
+            pnlTop.Controls.Add(lblSearch);
+            pnlTop.Controls.Add(txtSearch);
+            
                 pnlTop.Controls.Add(btnPreview);
                 pnlTop.Controls.Add(btnExportCsv);
                 pnlTop.Controls.Add(btnPrint);
@@ -256,7 +1245,8 @@ namespace water3.Reports.Dynamic
 
                 if (reports.Count > 0)
                     cboReportType.SelectedIndex = 0;
-            }
+            UpdatePrintModeVisibility();
+        }
 
             private void LoadSubscribers()
             {
@@ -282,15 +1272,16 @@ namespace water3.Reports.Dynamic
                     cboSubscriber.DataSource = dt;
                 }
             }
+        private void CboReportType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadColumnsForSelectedReport();
+            LoadTemplatesForSelectedReport();
+            ApplyFilterAvailability();
+            UpdatePrintModeVisibility();
+        }
+       
 
-            private void CboReportType_SelectedIndexChanged(object sender, EventArgs e)
-            {
-                LoadColumnsForSelectedReport();
-                LoadTemplatesForSelectedReport();
-                ApplyFilterAvailability();
-            }
-
-            private void LoadColumnsForSelectedReport()
+        private void LoadColumnsForSelectedReport()
             {
                 chkColumns.Items.Clear();
 
@@ -560,20 +1551,42 @@ namespace water3.Reports.Dynamic
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
-            private void BtnPrint_Click(object sender, EventArgs e)
+        private void BtnPrint_Click(object sender, EventArgs e)
+        {
+            if (_currentData == null || _currentData.Rows.Count == 0)
             {
-                if (_currentData == null || _currentData.Rows.Count == 0)
-                {
-                    MessageBox.Show("لا توجد بيانات للطباعة.", "تنبيه",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                _printService.PrintPreview(dgv, GetSelectedDefinition().Title);
+                MessageBox.Show("لا توجد بيانات للطباعة.", "تنبيه",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
-            private void BtnSelectAll_Click(object sender, EventArgs e)
+            if (PrintEachInvoiceSeparately())
+            {
+                string fromText =
+                    chkUseFromDate.Enabled && chkUseFromDate.Checked
+                        ? dtFrom.Value.ToString("yyyy-MM-dd")
+                        : "";
+
+                string toText =
+                    chkUseToDate.Enabled && chkUseToDate.Checked
+                        ? dtTo.Value.ToString("yyyy-MM-dd")
+                        : "";
+
+                _invoicePrintService.PrintPreview(dgv, fromText, toText);
+                return;
+            }
+
+            DynamicReportDefinition def = GetSelectedDefinition();
+
+            string reportTitle = def != null && !string.IsNullOrWhiteSpace(def.Title)
+                ? def.Title
+                : cboReportType.Text;
+
+            _printService.PrintPreview(dgv, reportTitle);
+        }
+     
+
+        private void BtnSelectAll_Click(object sender, EventArgs e)
             {
                 for (int i = 0; i < chkColumns.Items.Count; i++)
                     chkColumns.SetItemChecked(i, true);
@@ -584,5 +1597,49 @@ namespace water3.Reports.Dynamic
                 for (int i = 0; i < chkColumns.Items.Count; i++)
                     chkColumns.SetItemChecked(i, false);
             }
+        private void UpdatePrintModeVisibility()
+        {
+            bool isInvoices = IsInvoicesReport();
+
+            if (lblPrintMode != null)
+                lblPrintMode.Visible = isInvoices;
+
+            if (cboPrintMode != null)
+            {
+                cboPrintMode.Visible = isInvoices;
+                cboPrintMode.Enabled = isInvoices;
+
+                if (!isInvoices)
+                    cboPrintMode.SelectedIndex = 0;
+            }
+        }
+
+        private bool IsInvoicesReport()
+        {
+            string key = GetSelectedReportKey();
+            string text = cboReportType == null ? string.Empty : cboReportType.Text;
+
+            if (!string.IsNullOrWhiteSpace(key) &&
+                key.Equals("Invoices", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (!string.IsNullOrWhiteSpace(text) &&
+                text.Contains("الفواتير"))
+                return true;
+
+            return false;
+        }
+
+        private bool PrintEachInvoiceSeparately()
+        {
+            if (!IsInvoicesReport())
+                return false;
+
+            if (cboPrintMode == null || cboPrintMode.SelectedItem == null)
+                return false;
+
+            return Convert.ToString(cboPrintMode.SelectedItem) == "كل فاتورة مستقلة";
         }
     }
+    }
+*/

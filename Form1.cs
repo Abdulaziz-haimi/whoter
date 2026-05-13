@@ -380,6 +380,14 @@ namespace water3
                     AddNavButton(body, "سجل العمليات", "🕘", typeof(AuditLogForm), PermissionKeys.AuditLogView, () => OpenForm<AuditLogForm>());
                     AddNavButton(body, "تقرير العداد والفاقد", "🚰", typeof(MainMeterReportForm), PermissionKeys.MainMeterReportView, () => OpenForm<MainMeterReportForm>());
                     AddNavButton(body, "مصمم التقارير", "📚", typeof(DynamicReportDesignerForm), null, () => OpenForm<DynamicReportDesignerForm>());
+                    AddNavButton(
+          body,
+          "كشف الإيرادات والمنصرفات",
+          "",
+          typeof(RevenueExpenseStatementForm),
+          PermissionKeys.AccountStatementView,
+          () => OpenForm<RevenueExpenseStatementForm>()
+      );
                 });
 
                 AddAccordionSection("المستخدمون والصلاحيات", "🛡️", false, body =>

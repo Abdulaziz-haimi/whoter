@@ -447,6 +447,12 @@
     <Compile Include="Forms\Reports\ReportViewerForm.Designer.cs">
       <DependentUpon>ReportViewerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RevenueExpenseStatementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RevenueExpenseStatementForm.Designer.cs">
+      <DependentUpon>RevenueExpenseStatementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SystemHealthForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -464,6 +470,9 @@
     <Compile Include="Models\MainMeterReportResult.cs" />
     <Compile Include="Models\Reports\ReportParameterItem.cs" />
     <Compile Include="Models\Reports\ReportViewerForm.cs" />
+    <Compile Include="Models\RevenueExpenseStatementFilter.cs" />
+    <Compile Include="Models\RevenueExpenseStatementResult.cs" />
+    <Compile Include="Models\RevenueExpenseStatementRow.cs" />
     <Compile Include="Models\SubMeterReadingSummaryItem.cs" />
     <Compile Include="ModernDashboardForm.cs">
       <SubType>Form</SubType>
@@ -752,6 +761,7 @@
     <Compile Include="Repositories\ExpenseReportsRepository.cs" />
     <Compile Include="Repositories\ExpenseRepository.cs" />
     <Compile Include="Repositories\MainMeterReportRepository.cs" />
+    <Compile Include="Repositories\RevenueExpenseStatementRepository.cs" />
     <Compile Include="Security\PermissionKeys.cs" />
     <Compile Include="Services\AppSchemaService.cs" />
     <Compile Include="Services\AppSettingsService.cs" />
@@ -769,7 +779,9 @@
     <Compile Include="Services\ReportPrintService.cs" />
     <Compile Include="Services\ReportsService.cs" />
     <Compile Include="Services\Reports\RdlcReportService.cs" />
+    <Compile Include="Services\RevenueExpenseStatementService.cs" />
     <Compile Include="Services\RolePermissionService.cs" />
+    <Compile Include="Services\SubscriberInvoicePrintService.cs" />
     <Compile Include="Services\UserAuthService.cs" />
     <Compile Include="StatCardControl.cs">
       <SubType>UserControl</SubType>
@@ -933,10 +945,12 @@
       <DependentUpon>UnpaidInvoicesReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppErrorLogger.cs" />
+    <Compile Include="Utils\CompanyPrintInfoData.cs" />
     <Compile Include="Utils\DataExportService.cs" />
     <Compile Include="Utils\MoneyParser.cs" />
     <Compile Include="Utils\NumberParser.cs" />
     <Compile Include="Utils\PermissionHelper.cs" />
+    <Compile Include="Utils\PrintHeaderHelper.cs" />
     <Compile Include="Utils\ProductionUi.cs" />
     <Compile Include="Utils\SmsTemplateEngine.cs" />
     <Compile Include="Utils\SmsTemplateVariableInfo.cs" />

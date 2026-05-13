@@ -583,14 +583,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1821176">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1891832">
       <assemblyIdentity name="water3" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>LcIHCYoIBl+zj+HNbMTaqQ+k+ogxvc0UjshTWSQ4RlY=</dsig:DigestValue>
+        <dsig:DigestValue>FCqboFxNdikE19XAQcvGAdaIOCkEPaDqisBNl/FEG74=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -602,7 +602,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>e8p0k92p7Q0ovwYEr//q4U3v2sOQ53bF+gnYE032TP0=</dsig:DigestValue>
+        <dsig:DigestValue>vWwpJPZsSIgTQuW8/Ee31t65a90jQBNPjzbIMVPUGLY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

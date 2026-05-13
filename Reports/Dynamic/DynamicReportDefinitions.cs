@@ -28,7 +28,6 @@ namespace water3.Reports.Dynamic
 
             return def ?? GetInvoices();
         }
-
         private static DynamicReportDefinition GetInvoices()
         {
             DynamicReportDefinition def = new DynamicReportDefinition();
@@ -51,27 +50,165 @@ WHERE 1 = 1
             def.SearchExpressions.Add("ISNULL(i.InvoiceNumber, N'')");
             def.SearchExpressions.Add("CAST(i.InvoiceID AS NVARCHAR(50))");
             def.SearchExpressions.Add("ISNULL(s.Name, N'')");
+            def.SearchExpressions.Add("ISNULL(s.PhoneNumber, N'')");
+            def.SearchExpressions.Add("ISNULL(s.Address, N'')");
             def.SearchExpressions.Add("ISNULL(m.MeterNumber, N'')");
             def.SearchExpressions.Add("ISNULL(i.Status, N'')");
             def.SearchExpressions.Add("ISNULL(i.Notes, N'')");
 
+            // بيانات أساسية
             Add(def, "InvoiceID", "رقم داخلي", "i.InvoiceID", 1, false);
-            Add(def, "InvoiceNumber", "رقم الفاتورة", "ISNULL(i.InvoiceNumber, N'')", 2, true);
-            Add(def, "InvoiceDate", "تاريخ الفاتورة", "i.InvoiceDate", 3, true);
-            Add(def, "SubscriberName", "اسم المشترك", "s.Name", 4, true);
-            Add(def, "MeterNumber", "رقم العداد", "ISNULL(m.MeterNumber, N'')", 5, true);
-            Add(def, "PreviousReading", "القراءة السابقة", "ISNULL(r.PreviousReading, 0)", 6, false);
-            Add(def, "CurrentReading", "القراءة الحالية", "ISNULL(r.CurrentReading, 0)", 7, false);
-            Add(def, "Consumption", "الاستهلاك", "ISNULL(i.Consumption, 0)", 8, true);
-            Add(def, "UnitPrice", "سعر الوحدة", "ISNULL(i.UnitPrice, 0)", 9, true);
-            Add(def, "ServiceFees", "رسوم الخدمة", "ISNULL(i.ServiceFees, 0)", 10, true);
-            Add(def, "Arrears", "المتأخرات", "ISNULL(i.Arrears, 0)", 11, true);
-            Add(def, "TotalAmount", "الإجمالي", "ISNULL(i.TotalAmount, 0)", 12, true);
-            Add(def, "Status", "الحالة", "ISNULL(i.Status, N'')", 13, true);
-            Add(def, "Notes", "ملاحظات", "ISNULL(i.Notes, N'')", 14, false);
+
+            Add(def, "InvoiceNumber", "رقم الفاتورة",
+                "ISNULL(i.InvoiceNumber, N'')",
+                2, true);
+
+            Add(def, "InvoiceDate", "تاريخ الفاتورة",
+                "i.InvoiceDate",
+                3, true);
+
+            // فترة الفاتورة
+            // إذا لا يوجد عندك FromDate و ToDate داخل جدول Invoices، هذا يعطي فترة تقريبية:
+            // من تاريخ = قبل تاريخ الفاتورة بشهر
+            // إلى تاريخ = تاريخ الفاتورة
+            Add(def, "FromDate", "من تاريخ",
+                "DATEADD(MONTH, -1, CAST(i.InvoiceDate AS DATE))",
+                4, false);
+
+            Add(def, "ToDate", "إلى تاريخ",
+                "CAST(i.InvoiceDate AS DATE)",
+                5, false);
+
+            // بيانات المشترك
+            Add(def, "SubscriberName", "اسم المشترك",
+                "s.Name",
+                6, true);
+
+            Add(def, "SubscriberPhone", "هاتف المشترك",
+                "ISNULL(s.PhoneNumber, N'')",
+                7, false);
+
+            Add(def, "Address", "العنوان",
+                "ISNULL(s.Address, N'')",
+                8, false);
+
+            // لا يوجد واضح في الكود الحالي عمود مربع، لذلك نجعله فارغًا حتى لا يعطي SQL Error
+            Add(def, "Square", "المربع",
+                "N''",
+                9, false);
+
+            Add(def, "MeterNumber", "رقم العداد",
+                "ISNULL(m.MeterNumber, N'')",
+                10, true);
+
+            // القراءات
+            Add(def, "PreviousReading", "السابقة",
+                "ISNULL(r.PreviousReading, 0)",
+                11, false);
+
+            Add(def, "CurrentReading", "الحالية",
+                "ISNULL(r.CurrentReading, 0)",
+                12, false);
+
+            Add(def, "Consumption", "الاستهلاك",
+                "ISNULL(i.Consumption, 0)",
+                13, true);
+
+            Add(def, "UnitPrice", "سعر الوحدة",
+                "ISNULL(i.UnitPrice, 0)",
+                14, true);
+
+            Add(def, "ConsumptionValue", "قيمة الاستهلاك",
+                "ISNULL(i.Consumption, 0) * ISNULL(i.UnitPrice, 0)",
+                15, false);
+
+            // الرسوم والمتأخرات
+            Add(def, "ServiceFees", "رسوم الخدمة",
+                "ISNULL(i.ServiceFees, 0)",
+                16, true);
+
+            Add(def, "Arrears", "المتأخرات",
+                "ISNULL(i.Arrears, 0)",
+                17, true);
+
+            // الإجمالي
+            Add(def, "TotalAmount", "الإجمالي",
+                "ISNULL(i.TotalAmount, 0)",
+                18, true);
+
+            // المدفوع من جدول Payments المرتبط بالفاتورة
+            Add(def, "PaidAmount", "المدفوع",
+                @"ISNULL((
+            SELECT SUM(ISNULL(p.Amount, 0))
+            FROM dbo.Payments p
+            WHERE p.InvoiceID = i.InvoiceID
+        ), 0)",
+                19, false);
+
+            // الرصيد = الإجمالي - المدفوع
+            Add(def, "Balance", "الرصيد",
+                @"ISNULL(i.TotalAmount, 0) -
+        ISNULL((
+            SELECT SUM(ISNULL(p.Amount, 0))
+            FROM dbo.Payments p
+            WHERE p.InvoiceID = i.InvoiceID
+        ), 0)",
+                20, false);
+
+            Add(def, "Status", "الحالة",
+                "ISNULL(i.Status, N'')",
+                21, true);
+
+            Add(def, "Notes", "ملاحظات",
+                "ISNULL(i.Notes, N'')",
+                22, false);
 
             return def;
         }
+
+        //        private static DynamicReportDefinition GetInvoices()
+        //        {
+        //            DynamicReportDefinition def = new DynamicReportDefinition();
+
+        //            def.ReportKey = "Invoices";
+        //            def.Title = "تقرير الفواتير";
+        //            def.DateExpression = "i.InvoiceDate";
+        //            def.SubscriberIdExpression = "i.SubscriberID";
+
+        //            def.BaseSql = @"
+        //FROM dbo.Invoices i
+        //INNER JOIN dbo.Subscribers s ON s.SubscriberID = i.SubscriberID
+        //LEFT JOIN dbo.Meters m ON m.MeterID = i.MeterID
+        //LEFT JOIN dbo.Readings r ON r.ReadingID = i.ReadingID
+        //WHERE 1 = 1
+        //";
+
+        //            def.OrderBySql = "ORDER BY i.InvoiceDate DESC, i.InvoiceID DESC";
+
+        //            def.SearchExpressions.Add("ISNULL(i.InvoiceNumber, N'')");
+        //            def.SearchExpressions.Add("CAST(i.InvoiceID AS NVARCHAR(50))");
+        //            def.SearchExpressions.Add("ISNULL(s.Name, N'')");
+        //            def.SearchExpressions.Add("ISNULL(m.MeterNumber, N'')");
+        //            def.SearchExpressions.Add("ISNULL(i.Status, N'')");
+        //            def.SearchExpressions.Add("ISNULL(i.Notes, N'')");
+
+        //            Add(def, "InvoiceID", "رقم داخلي", "i.InvoiceID", 1, false);
+        //            Add(def, "InvoiceNumber", "رقم الفاتورة", "ISNULL(i.InvoiceNumber, N'')", 2, true);
+        //            Add(def, "InvoiceDate", "تاريخ الفاتورة", "i.InvoiceDate", 3, true);
+        //            Add(def, "SubscriberName", "اسم المشترك", "s.Name", 4, true);
+        //            Add(def, "MeterNumber", "رقم العداد", "ISNULL(m.MeterNumber, N'')", 5, true);
+        //            Add(def, "PreviousReading", "القراءة السابقة", "ISNULL(r.PreviousReading, 0)", 6, false);
+        //            Add(def, "CurrentReading", "القراءة الحالية", "ISNULL(r.CurrentReading, 0)", 7, false);
+        //            Add(def, "Consumption", "الاستهلاك", "ISNULL(i.Consumption, 0)", 8, true);
+        //            Add(def, "UnitPrice", "سعر الوحدة", "ISNULL(i.UnitPrice, 0)", 9, true);
+        //            Add(def, "ServiceFees", "رسوم الخدمة", "ISNULL(i.ServiceFees, 0)", 10, true);
+        //            Add(def, "Arrears", "المتأخرات", "ISNULL(i.Arrears, 0)", 11, true);
+        //            Add(def, "TotalAmount", "الإجمالي", "ISNULL(i.TotalAmount, 0)", 12, true);
+        //            Add(def, "Status", "الحالة", "ISNULL(i.Status, N'')", 13, true);
+        //            Add(def, "Notes", "ملاحظات", "ISNULL(i.Notes, N'')", 14, false);
+
+        //            return def;
+        //        }
 
         private static DynamicReportDefinition GetPayments()
         {
