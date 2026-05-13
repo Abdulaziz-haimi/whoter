@@ -213,6 +213,9 @@
     <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=3.0.2.2801, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
       <HintPath>packages\SQLitePCLRaw.provider.e_sqlite3.3.0.2\lib\net471\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
     </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
@@ -459,6 +462,15 @@
     <Compile Include="Forms\SystemHealthForm.Designer.cs">
       <DependentUpon>SystemHealthForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Licensing\Base64Url.cs" />
+    <Compile Include="Licensing\LicenseActivationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Licensing\LicenseInfo.cs" />
+    <Compile Include="Licensing\LicenseService.cs" />
+    <Compile Include="Licensing\LicenseStatus.cs" />
+    <Compile Include="Licensing\LicenseStore.cs" />
+    <Compile Include="Licensing\MachineFingerprint.cs" />
     <Compile Include="Models\AccountLookupItem.cs" />
     <Compile Include="Models\ExpenseCategoryItem.cs" />
     <Compile Include="Models\ExpenseReportRow.cs" />
@@ -1065,6 +1077,7 @@
     <None Include="ClassDiagram3.cd" />
     <None Include="EmployeeReport.frx" />
     <None Include="FalconSidebarWinForms.csproj" />
+    <None Include="Fix_Water3_API_8443.bat" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

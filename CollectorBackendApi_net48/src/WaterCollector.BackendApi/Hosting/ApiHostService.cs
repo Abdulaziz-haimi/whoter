@@ -28,7 +28,7 @@ namespace WaterCollector.BackendApi.Hosting
             if (string.IsNullOrWhiteSpace(host))
                 host = "+";
 
-            BaseUrl = "http://" + host + ":" + port + "/";
+            BaseUrl = "https://" + host + ":" + port + "/";
             _server = WebApp.Start<Startup>(BaseUrl);
         }
 

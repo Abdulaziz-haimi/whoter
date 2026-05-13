@@ -1,4 +1,43 @@
-﻿using System;
+﻿using Newtonsoft.Json.Serialization;
+using Owin;
+using System.Web.Http;
+using Swashbuckle.Application;
+
+namespace water3.ApiHost
+{
+    public class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
+            var config = new HttpConfiguration();
+
+            config.MapHttpAttributeRoutes();
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
+                new CamelCasePropertyNamesContractResolver();
+
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
+                Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
+            config.EnableSwagger(c =>
+            {
+                c.SingleApiVersion("v1", "Water3 API");
+            })
+            .EnableSwaggerUi();
+
+            app.UseWebApi(config);
+        }
+    }
+}
+/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,3 +75,4 @@ namespace water3.ApiHost
             }
         }
     }
+*/

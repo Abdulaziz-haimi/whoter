@@ -17,6 +17,7 @@ namespace water3.Services
             public string CompanyName { get; set; }
             public string SystemName { get; set; }
             public string Phone { get; set; }
+            public string Mobile { get; set; }
             public string Email { get; set; }
             public string Address { get; set; }
             public string LogoPath { get; set; }
@@ -218,7 +219,7 @@ namespace water3.Services
             int y = bounds.Top;
             int width = bounds.Width;
 
-            Font companyFont = new Font("Tahoma", 14F, FontStyle.Bold);
+            Font companyFont = new Font("Tahoma", 15F, FontStyle.Bold);
             Font systemFont = new Font("Tahoma", 9.5F, FontStyle.Bold);
             Font infoFont = new Font("Tahoma", 8.2F);
             Font titleFont = new Font("Tahoma", 13F, FontStyle.Bold);
@@ -250,6 +251,7 @@ namespace water3.Services
 
             string contacts = JoinParts(
                 AddPrefix("الهاتف", info.Phone),
+                AddPrefix("الجوال", info.Mobile),
                 AddPrefix("البريد", info.Email)
             );
 
@@ -509,6 +511,7 @@ namespace water3.Services
                 info.CompanyName = AppSettingsService.Get("Company.Name", "مؤسسة المياه");
                 info.SystemName = AppSettingsService.Get("System.Name", "نظام إدارة المياه");
                 info.Phone = AppSettingsService.Get("Company.Phone", "");
+                info.Mobile = AppSettingsService.Get("Company.Mobile", info.Phone);
                 info.Email = AppSettingsService.Get("Company.Email", "");
                 info.Address = AppSettingsService.Get("Company.Address", "");
                 info.LogoPath = AppSettingsService.Get("Company.LogoPath", "");
@@ -518,6 +521,7 @@ namespace water3.Services
                 info.CompanyName = "مؤسسة المياه";
                 info.SystemName = "نظام إدارة المياه";
                 info.Phone = "";
+                info.Mobile = "";
                 info.Email = "";
                 info.Address = "";
                 info.LogoPath = "";

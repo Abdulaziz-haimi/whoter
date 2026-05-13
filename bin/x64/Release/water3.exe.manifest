@@ -427,6 +427,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Swashbuckle.Core.dll" size="4129280">
+      <assemblyIdentity name="Swashbuckle.Core" version="1.0.0.0" publicKeyToken="CD1BB07A5AC7C7BC" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>eiT5Fl5ljeO3a7PARlPTJSBne+zKXU5bBQFnkrYc+3o=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="System.Buffers.dll" size="23816">
       <assemblyIdentity name="System.Buffers" version="4.0.5.0" publicKeyToken="CC7B13FFCD2DDD51" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -583,14 +595,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1891832">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1903096">
       <assemblyIdentity name="water3" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>FCqboFxNdikE19XAQcvGAdaIOCkEPaDqisBNl/FEG74=</dsig:DigestValue>
+        <dsig:DigestValue>Wt528z/dz0FPv3Y7dqjE9ROgfzXBlK40bB4AFa91gy4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -602,7 +614,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>vWwpJPZsSIgTQuW8/Ee31t65a90jQBNPjzbIMVPUGLY=</dsig:DigestValue>
+        <dsig:DigestValue>eIVLp74lJxHSl/9Rv5Z9UvWlLmmcZliZFczL9gaheWw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -614,7 +626,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Ovj5i2VvCicXncECzpcb7ijOORiwAZs43bP19vYniCc=</dsig:DigestValue>
+        <dsig:DigestValue>KspKvRpAfdDQPth9RxZb83z5o53n1tJ7dJICIH9mHj4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -717,13 +729,13 @@
       <dsig:DigestValue>1+YO9CvPEzWghBiy+aMHZHSdGp8UBQ4thiYp1HzeYcw=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="water3.exe.config" size="8097">
+  <file name="water3.exe.config" size="7657">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>jeEgSP9qjxJ8p/QeJUirSidBa6tuFouZIAsxP+D0ZsA=</dsig:DigestValue>
+      <dsig:DigestValue>qekHc0LBxSCerMntznzXJAibnjXuncC6KLzZY3tEjKk=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

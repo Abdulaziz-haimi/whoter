@@ -126,3 +126,4 @@ C:\Users\Abdulaziz\source\repos\water3\obj\x64\Release\water3.application
 C:\Users\Abdulaziz\source\repos\water3\obj\x64\Release\water3.csproj.CopyComplete
 C:\Users\Abdulaziz\source\repos\water3\obj\x64\Release\water3.exe
 C:\Users\Abdulaziz\source\repos\water3\obj\x64\Release\water3.pdb
+C:\Users\Abdulaziz\source\repos\water3\bin\x64\Release\Swashbuckle.Core.dll
