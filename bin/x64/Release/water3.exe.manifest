@@ -595,14 +595,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1903096">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="water3.exe" size="1920504">
       <assemblyIdentity name="water3" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Wt528z/dz0FPv3Y7dqjE9ROgfzXBlK40bB4AFa91gy4=</dsig:DigestValue>
+        <dsig:DigestValue>CUHlM13IOqArtz/slrAxg4ewAJfDNrnJszk5yae6gcs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -614,19 +614,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>eIVLp74lJxHSl/9Rv5Z9UvWlLmmcZliZFczL9gaheWw=</dsig:DigestValue>
+        <dsig:DigestValue>658/T3pTCpt2mPYgnTXj7W3dIj5QaA9RdGLQhrY2x+8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WaterCollector.BackendApi.dll" size="70144">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WaterCollector.BackendApi.dll" size="71168">
       <assemblyIdentity name="WaterCollector.BackendApi" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>KspKvRpAfdDQPth9RxZb83z5o53n1tJ7dJICIH9mHj4=</dsig:DigestValue>
+        <dsig:DigestValue>Ndzq5YFaWkaaFgWHWRCYlFUYfIkbcmlIudvvkmem3i4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

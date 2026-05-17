@@ -113,20 +113,39 @@ namespace WaterCollector.BackendApi.Controllers
                 return InternalServerError(ex);
             }
         }
-
         private int GetCollectorId()
         {
             var principal = User as ClaimsPrincipal;
 
-            string value = principal?.Claims.FirstOrDefault(c =>
-                c.Type == "collector_id" || c.Type == "CollectorID" || c.Type == ClaimTypes.NameIdentifier
-            )?.Value;
+            if (principal == null)
+                throw new UnauthorizedAccessException("رمز الدخول غير صالح.");
+
+            // مهم: نبحث عن رقم المحصل فقط، ولا نستخدم NameIdentifier لأنه غالبًا UserID
+            string value =
+                principal.Claims.FirstOrDefault(c => c.Type == "collector_id")?.Value ??
+                principal.Claims.FirstOrDefault(c => c.Type == "collectorId")?.Value ??
+                principal.Claims.FirstOrDefault(c => c.Type == "CollectorID")?.Value;
 
             int collectorId;
+
             if (!int.TryParse(value, out collectorId) || collectorId <= 0)
                 throw new UnauthorizedAccessException("collector_id غير موجود داخل الرمز.");
 
             return collectorId;
         }
+        //private int GetCollectorId()
+        //{
+        //    var principal = User as ClaimsPrincipal;
+
+        //    string value = principal?.Claims.FirstOrDefault(c =>
+        //        c.Type == "collector_id" || c.Type == "CollectorID" || c.Type == ClaimTypes.NameIdentifier
+        //    )?.Value;
+
+        //    int collectorId;
+        //    if (!int.TryParse(value, out collectorId) || collectorId <= 0)
+        //        throw new UnauthorizedAccessException("collector_id غير موجود داخل الرمز.");
+
+        //    return collectorId;
+        //}
     }
 }

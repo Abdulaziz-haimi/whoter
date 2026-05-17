@@ -5,9 +5,11 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using water3.Utils;
 using Font = System.Drawing.Font;
 
 namespace water3
@@ -22,19 +24,30 @@ namespace water3
         private bool _printedTotals = false;
 
         // Presets
-        private const string FormKey = "SubscribersBillingReportForm";
+        private const string FormKey = "SubscribersBillingReportForm_CustomerAccountStatement";
+
+        private readonly Color PageBack = Color.FromArgb(245, 248, 252);
+        private readonly Color CardBack = Color.White;
+        private readonly Color Primary = Color.FromArgb(0, 102, 204);
+        private readonly Color PrimaryDark = Color.FromArgb(0, 77, 153);
+        private readonly Color Green = Color.FromArgb(0, 153, 76);
+        private readonly Color Red = Color.FromArgb(220, 38, 38);
+        private readonly Color Muted = Color.FromArgb(100, 116, 139);
+        private readonly Color TextDark = Color.FromArgb(33, 37, 41);
+        private readonly Color Border = Color.FromArgb(220, 227, 235);
 
         public SubscribersBillingReportForm()
         {
             InitializeComponent();
 
-            Text = "تقرير القراءات والفواتير - جميع المشتركين";
+            Text = "كشف حساب العملاء";
             RightToLeft = RightToLeft.Yes;
             RightToLeftLayout = true;
-            BackColor = Color.White;
+            BackColor = PageBack;
+            Font = new Font("Tahoma", 9F);
 
             ApplyTheme();
-            InitUserControlOptions();   // ✅ بدل ما تبني usercontrol في BuildLayout
+            InitUserControlOptions();
             InitPrinting();
             WireEvents();
 
@@ -50,100 +63,164 @@ namespace water3
 
         private void ApplyTheme()
         {
-            // Fonts
-            var f11 = new Font("Segoe UI", 11F, FontStyle.Regular);
-            var f11b = new Font("Segoe UI", 11F, FontStyle.Bold);
+            var f9 = new Font("Tahoma", 9F, FontStyle.Regular);
+            var f9b = new Font("Tahoma", 9F, FontStyle.Bold);
+            var f10b = new Font("Tahoma", 10F, FontStyle.Bold);
 
-            lblSearchTitle.Font = f11b;
-            lblFromTitle.Font = f11;
-            lblToTitle.Font = f11;
-            lblReportTypeTitle.Font = f11;
-            lblFilterModeTitle.Font = f11;
+            Font = f9;
+            BackColor = PageBack;
+            mainLayout.BackColor = PageBack;
 
-            txtSearch.Font = f11;
-            dtFrom.Font = f11;
-            dtTo.Font = f11;
-            ddlReportType.Font = f11;
-            ddlFilterMode.Font = f11;
-            ddlCollectors.Font = f11;
-            txtMeterFilter.Font = f11;
+            topPanel.BackColor = CardBack;
+            topPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+            reportOptions.BackColor = CardBack;
+            totalsPanel.BackColor = CardBack;
+            totalsPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
 
-            // Buttons
+            lblSearchTitle.Text = "العميل:";
+            lblReportTypeTitle.Text = "نوع الكشف:";
+            lblFilterModeTitle.Text = "فلترة:";
+
+            lblSearchTitle.Font = f9b;
+            lblFromTitle.Font = f9b;
+            lblToTitle.Font = f9b;
+            lblReportTypeTitle.Font = f9b;
+            lblFilterModeTitle.Font = f9b;
+
+            lblSearchTitle.ForeColor = TextDark;
+            lblFromTitle.ForeColor = TextDark;
+            lblToTitle.ForeColor = TextDark;
+            lblReportTypeTitle.ForeColor = TextDark;
+            lblFilterModeTitle.ForeColor = TextDark;
+
+            StyleInputsRecursive(this);
+
             StylePrimary(btnApply);
             StyleLight(btnRefresh);
             StyleLight(btnExportExcel);
             StylePrimary(btnPrint);
-            btnPrint.BackColor = Color.FromArgb(90, 90, 90);
+            btnPrint.BackColor = Color.FromArgb(82, 82, 82);
+            btnPrint.FlatAppearance.MouseOverBackColor = Color.FromArgb(65, 65, 65);
 
-            // Grid styles
-            dgv.Font = f11;
+            dgv.Font = f9;
+            dgv.BackgroundColor = CardBack;
+            dgv.BorderStyle = BorderStyle.None;
             dgv.EnableHeadersVisualStyles = false;
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 87, 183);
+            dgv.GridColor = Border;
+            dgv.ColumnHeadersHeight = 42;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = PrimaryDark;
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgv.ColumnHeadersDefaultCellStyle.Font = f11b;
-            dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(210, 232, 255);
-            dgv.RowsDefaultCellStyle.BackColor = Color.White;
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(242, 247, 255);
+            dgv.ColumnHeadersDefaultCellStyle.Font = f10b;
+            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = PrimaryDark;
+            dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
 
-            // Totals styles
-            totalsPanel.BackColor = Color.FromArgb(247, 251, 255);
+            dgv.DefaultCellStyle.BackColor = CardBack;
+            dgv.DefaultCellStyle.ForeColor = TextDark;
+            dgv.DefaultCellStyle.Font = f9;
+            dgv.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(218, 238, 255);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 40, 60);
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 251, 255);
+            dgv.RowTemplate.Height = 34;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.ScrollBars = ScrollBars.Both;
+
             StyleTotalLabel(lblCount);
             StyleTotalLabel(lblTotalConsumption);
             StyleTotalLabel(lblTotalInvoices);
         }
 
+        private void StyleInputsRecursive(Control root)
+        {
+            foreach (Control c in root.Controls)
+            {
+                TextBox tb = c as TextBox;
+                if (tb != null)
+                {
+                    tb.BorderStyle = BorderStyle.FixedSingle;
+                    tb.BackColor = Color.White;
+                    tb.ForeColor = TextDark;
+                    tb.Font = new Font("Tahoma", 9F);
+                    tb.TextAlign = HorizontalAlignment.Right;
+                }
+
+                ComboBox cb = c as ComboBox;
+                if (cb != null)
+                {
+                    cb.FlatStyle = FlatStyle.Flat;
+                    cb.BackColor = Color.White;
+                    cb.ForeColor = TextDark;
+                    cb.Font = new Font("Tahoma", 9F);
+                }
+
+                DateTimePicker dt = c as DateTimePicker;
+                if (dt != null)
+                {
+                    dt.CalendarFont = new Font("Tahoma", 9F);
+                    dt.Font = new Font("Tahoma", 9F);
+                    dt.RightToLeft = RightToLeft.Yes;
+                    dt.RightToLeftLayout = true;
+                }
+
+                if (c.HasChildren)
+                    StyleInputsRecursive(c);
+            }
+        }
+
         private void StylePrimary(Button b)
         {
-            b.Height = 34;
-            b.BackColor = Color.FromArgb(0, 106, 204);
+            b.Height = 36;
+            b.BackColor = Primary;
             b.ForeColor = Color.White;
             b.FlatStyle = FlatStyle.Flat;
-            b.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            b.Font = new Font("Tahoma", 9F, FontStyle.Bold);
             b.Cursor = Cursors.Hand;
             b.FlatAppearance.BorderSize = 0;
+            b.FlatAppearance.MouseOverBackColor = Color.FromArgb(0, 86, 179);
+            b.FlatAppearance.MouseDownBackColor = Color.FromArgb(0, 72, 153);
         }
 
         private void StyleLight(Button b)
         {
-            b.Height = 34;
+            b.Height = 36;
             b.BackColor = Color.White;
-            b.ForeColor = Color.FromArgb(0, 106, 204);
+            b.ForeColor = Primary;
             b.FlatStyle = FlatStyle.Flat;
-            b.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            b.Font = new Font("Tahoma", 9F, FontStyle.Bold);
             b.Cursor = Cursors.Hand;
-            b.FlatAppearance.BorderColor = Color.FromArgb(0, 106, 204);
+            b.FlatAppearance.BorderColor = Primary;
             b.FlatAppearance.BorderSize = 1;
+            b.FlatAppearance.MouseOverBackColor = Color.FromArgb(235, 246, 255);
+            b.FlatAppearance.MouseDownBackColor = Color.FromArgb(220, 238, 255);
         }
 
         private void StyleTotalLabel(Label l)
         {
-            l.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            l.ForeColor = Color.DarkBlue;
+            l.Font = new Font("Tahoma", 10F, FontStyle.Bold);
+            l.ForeColor = Color.FromArgb(0, 54, 140);
+            l.BackColor = Color.White;
+            l.TextAlign = ContentAlignment.MiddleCenter;
         }
 
         private void InitUserControlOptions()
         {
-            // نفس الذي كان في BuildLayout
             var cols = new List<string>
             {
-                "التاريخ","المشترك","العداد","الاستهلاك","قيمة الفاتورة","الحالة","المحصل","رقم الفاتورة"
+                "التاريخ", "نوع الحركة", "رقم المرجع", "العميل", "العداد", "البيان", "مدين", "دائن", "الرصيد", "المحصل"
             };
-            var defaults = new[] { "التاريخ", "المشترك", "العداد", "الاستهلاك", "قيمة الفاتورة", "المحصل" };
+
+            var defaults = new[] { "التاريخ", "نوع الحركة", "رقم المرجع", "العميل", "العداد", "البيان", "مدين", "دائن", "الرصيد", "المحصل" };
 
             reportOptions.SetColumns(cols, defaults);
-
-            reportOptions.SetSortFields(new[]
-            {
-                "التاريخ","المشترك","العداد","الاستهلاك","قيمة الفاتورة","الحالة","المحصل","رقم الفاتورة"
-            }, defaultField: "التاريخ");
+            reportOptions.SetSortFields(new[] { "التاريخ", "العميل", "نوع الحركة", "مدين", "دائن", "الرصيد", "المحصل" }, defaultField: "التاريخ");
         }
 
         private void WireEvents()
         {
             btnApply.Click += (s, e) => LoadReport();
             btnRefresh.Click += (s, e) => { LoadCollectors(); LoadReport(); };
-            btnExportExcel.Click += (s, e) => ExportToExcelCsv();
+            btnExportExcel.Click += (s, e) => ExportToExcelHtml();
             btnPrint.Click += (s, e) => PrintGrid();
 
             ddlFilterMode.SelectedIndexChanged += (s, e) => UpdateFilterVisibility();
@@ -164,99 +241,112 @@ namespace water3
                 ApplyUserControlSortToGrid(opt);
             };
         }
-        // ==========================
-        // ✅ Apply UserControl -> Grid
-        // ==========================
+
         private static readonly Dictionary<string, string> ColumnMap = new Dictionary<string, string>
         {
-            ["التاريخ"] = "تاريخ الفاتورة",
-            ["المشترك"] = "اسم المشترك",
+            ["التاريخ"] = "التاريخ",
+            ["نوع الحركة"] = "نوع الحركة",
+            ["رقم المرجع"] = "رقم المرجع",
+            ["العميل"] = "اسم العميل",
             ["العداد"] = "رقم العداد",
-            ["الاستهلاك"] = "الاستهلاك",
-            ["قيمة الفاتورة"] = "إجمالي الفاتورة",
-            ["الحالة"] = "حالة الفاتورة",
-            ["المحصل"] = "المحصل",
-            ["رقم الفاتورة"] = "رقم الفاتورة",
+            ["البيان"] = "البيان",
+            ["مدين"] = "مدين",
+            ["دائن"] = "دائن",
+            ["الرصيد"] = "الرصيد",
+            ["المحصل"] = "المحصل"
         };
 
         private static readonly Dictionary<string, string> SortMap = new Dictionary<string, string>
         {
-            ["التاريخ"] = "تاريخ الفاتورة",
-            ["المشترك"] = "اسم المشترك",
-            ["العداد"] = "رقم العداد",
-            ["الاستهلاك"] = "الاستهلاك",
-            ["قيمة الفاتورة"] = "إجمالي الفاتورة",
-            ["الحالة"] = "حالة الفاتورة",
-            ["المحصل"] = "المحصل",
-            ["رقم الفاتورة"] = "رقم الفاتورة",
+            ["التاريخ"] = "التاريخ",
+            ["نوع الحركة"] = "نوع الحركة",
+            ["العميل"] = "اسم العميل",
+            ["مدين"] = "مدين",
+            ["دائن"] = "دائن",
+            ["الرصيد"] = "الرصيد",
+            ["المحصل"] = "المحصل"
         };
 
         private void ApplyUserControlColumnsToGrid(ReportOptionsPanel.ReportOptions opt)
         {
             if (dgv.DataSource == null || dgv.Columns.Count == 0) return;
 
-            if (dgv.Columns.Contains("SubscriberID"))
-                dgv.Columns["SubscriberID"].Visible = false;
+            HideTechnicalColumns();
 
-            if (opt?.SelectedColumns == null || opt.SelectedColumns.Count == 0) return;
+            if (opt == null || opt.SelectedColumns == null || opt.SelectedColumns.Count == 0) return;
 
             var visibleReal = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var uiCol in opt.SelectedColumns)
             {
-                if (ColumnMap.TryGetValue(uiCol, out var real))
+                string real;
+                if (ColumnMap.TryGetValue(uiCol, out real))
                     visibleReal.Add(real);
             }
 
             foreach (DataGridViewColumn c in dgv.Columns)
             {
-                if (c.Name == "SubscriberID") { c.Visible = false; continue; }
+                if (IsTechnicalColumn(c.Name))
+                {
+                    c.Visible = false;
+                    continue;
+                }
+
                 c.Visible = visibleReal.Contains(c.Name);
             }
         }
 
-        // ==========================
-        // ضع هنا باقي دوالك كما هي:
-        // UpdateFilterVisibility / SetMeterPlaceholder / LoadCollectors / LoadReport
-        // PaintNumberColumns / CalcTotalsFromGrid / SavePreset / LoadPreset ...
-        // ExportToExcelCsv / Printing ...
-        // ==========================
-        // ==========================
-        // ✅ Load collectors
-        // ==========================
+        private void HideTechnicalColumns()
+        {
+            foreach (DataGridViewColumn c in dgv.Columns)
+            {
+                if (IsTechnicalColumn(c.Name))
+                    c.Visible = false;
+            }
+        }
+
+        private bool IsTechnicalColumn(string name)
+        {
+            return name == "SubscriberID" || name == "SortDate" || name == "SortOrder" || name == "RefSort";
+        }
+
         private void LoadCollectors()
         {
             ddlCollectors.Items.Clear();
             ddlCollectors.Items.Add(new ComboItem("كل المحصلين", "0"));
 
-            using (var con = Db.GetConnection())
-            using (var da = new SqlDataAdapter("SELECT CollectorID, Name FROM Collectors ORDER BY Name", con))
+            try
             {
-                var dt = new DataTable();
-                da.Fill(dt);
-                foreach (DataRow r in dt.Rows)
-                    ddlCollectors.Items.Add(new ComboItem(r["Name"].ToString(), r["CollectorID"].ToString()));
+                using (var con = Db.GetConnection())
+                using (var da = new SqlDataAdapter("SELECT CollectorID, Name FROM Collectors ORDER BY Name", con))
+                {
+                    var dt = new DataTable();
+                    da.Fill(dt);
+                    foreach (DataRow r in dt.Rows)
+                        ddlCollectors.Items.Add(new ComboItem(r["Name"].ToString(), r["CollectorID"].ToString()));
+                }
+            }
+            catch
+            {
+                // في حالة عدم وجود جدول المحصلين لا نوقف الشاشة؛ نترك خيار كل المحصلين فقط.
             }
 
             ddlCollectors.SelectedIndex = 0;
         }
 
-        // ==========================
-        // ✅ Load report (with Collector column)
-        // ==========================
         private void LoadReport()
         {
             DateTime from = dtFrom.Value.Date;
             DateTime to = dtTo.Value.Date;
+            DateTime toEnd = to.AddDays(1);
+
             if (from > to)
             {
-                MessageBox.Show("تاريخ (من) يجب أن يكون أقل أو يساوي (إلى).");
+                MessageBox.Show("تاريخ (من) يجب أن يكون أقل أو يساوي (إلى).", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             string q = (txtSearch.Text ?? "").Trim();
             string likeq = "%" + q + "%";
-
-            string reportType = ddlReportType.Text;
             string filterMode = ddlFilterMode.Text;
 
             int collectorId = 0;
@@ -266,221 +356,345 @@ namespace water3
             string meterKey = "";
             if (txtMeterFilter.Visible && txtMeterFilter.ForeColor != Color.Gray)
                 meterKey = (txtMeterFilter.Text ?? "").Trim();
-
             string likeMeter = "%" + meterKey + "%";
 
-            // فلترة حسب المحصل: وجود سداد على الفاتورة داخل الفترة من هذا المحصل
-            string collectorExistsClause = @"
+            try
+            {
+                string paymentAmountColumn;
+                using (var con = Db.GetConnection())
+                {
+                    con.Open();
+                    paymentAmountColumn = GetFirstExistingColumn(con, "Payments", new[]
+                    {
+                        "PaymentAmount", "Amount", "PaidAmount", "AmountPaid", "TotalAmount", "PaidValue", "Value", "ReceivedAmount", "CollectedAmount"
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(paymentAmountColumn))
+                {
+                    MessageBox.Show(
+                        "لم أستطع تحديد عمود مبلغ السداد داخل جدول Payments.\n" +
+                        "أضف أحد الأعمدة التالية أو غيّر اسم العمود في الكود: PaymentAmount / Amount / PaidAmount / AmountPaid.",
+                        "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string paymentAmountExpr = "CAST(ISNULL(P." + Bracket(paymentAmountColumn) + ",0) AS DECIMAL(18,2))";
+                string collectorInvoiceFilter = @"
 AND (
     @CollectorID = 0
     OR EXISTS (
         SELECT 1
-        FROM Payments p
-        WHERE p.InvoiceID = I.InvoiceID
-          AND p.CollectorID = @CollectorID
-          AND p.PaymentDate >= @from AND p.PaymentDate <= @to
+        FROM Payments p2
+        WHERE p2.InvoiceID = I.InvoiceID
+          AND p2.CollectorID = @CollectorID
+          AND p2.PaymentDate >= @from AND p2.PaymentDate < @toEnd
     )
 )";
 
-            string meterClause = @"
-AND (
-    @MeterKey = N''
-    OR ISNULL(M.MeterNumber,N'') LIKE @likeMeter
-)";
+                string sql = BuildCustomerStatementSql(paymentAmountExpr, collectorInvoiceFilter);
 
-            string baseSearchClause = @"
-AND (
-    @q = N''
-    OR S.Name LIKE @likeq
-    OR ISNULL(S.PhoneNumber,N'') LIKE @likeq
-    OR ISNULL(S.Address,N'') LIKE @likeq
-    OR ISNULL(M.MeterNumber,N'') LIKE @likeq
-)";
+                var dt = new DataTable();
+                using (var con = Db.GetConnection())
+                using (var da = new SqlDataAdapter(sql, con))
+                {
+                    da.SelectCommand.Parameters.AddWithValue("@from", from);
+                    da.SelectCommand.Parameters.AddWithValue("@toEnd", toEnd);
+                    da.SelectCommand.Parameters.AddWithValue("@q", q);
+                    da.SelectCommand.Parameters.AddWithValue("@likeq", likeq);
+                    da.SelectCommand.Parameters.AddWithValue("@CollectorID", collectorId);
+                    da.SelectCommand.Parameters.AddWithValue("@MeterKey", meterKey);
+                    da.SelectCommand.Parameters.AddWithValue("@likeMeter", likeMeter);
+                    da.Fill(dt);
+                }
 
-            // ✅ عمود المحصل: نجيب آخر سداد (داخل الفترة) على الفاتورة
-            // لو ما فيه سداد داخل الفترة، يطلع فاضي
-            string collectorApply = @"
-OUTER APPLY (
-    SELECT TOP 1 p.CollectorID, p.PaymentDate
-    FROM Payments p
-    WHERE p.InvoiceID = I.InvoiceID
-      AND p.PaymentDate >= @from AND p.PaymentDate <= @to
-    ORDER BY p.PaymentDate DESC, p.PaymentID DESC
-) px
-LEFT JOIN Collectors C ON C.CollectorID = px.CollectorID
-";
+                dgv.DataSource = dt;
+                HideTechnicalColumns();
 
-            string sql;
+                var uiOpt = reportOptions.GetOptions();
+                ApplyUserControlColumnsToGrid(uiOpt);
+                ApplyUserControlSortToGrid(uiOpt);
 
-            if (reportType.StartsWith("آخر فاتورة"))
+                FormatGridColumns();
+                PaintNumberColumns();
+                CalcTotalsFromGrid();
+            }
+            catch (Exception ex)
             {
-                sql = @"
+                MessageBox.Show("تعذر تحميل كشف حساب العملاء:\n" + ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string BuildCustomerStatementSql(string paymentAmountExpr, string collectorInvoiceFilter)
+        {
+            return @"
+;WITH BaseSubscribers AS
+(
+    SELECT
+        S.SubscriberID,
+        S.Name AS CustomerName,
+        ISNULL(S.PhoneNumber, N'') AS PhoneNumber,
+        ISNULL(S.Address, N'') AS Address,
+        ISNULL(M.MeterNumber, N'') AS MeterNumber
+    FROM Subscribers S
+    OUTER APPLY
+    (
+        SELECT TOP 1 sm.MeterID
+        FROM SubscriberMeters sm
+        WHERE sm.SubscriberID = S.SubscriberID
+        ORDER BY sm.IsPrimary DESC, sm.SubscriberMeterID DESC
+    ) smx
+    LEFT JOIN Meters M ON M.MeterID = smx.MeterID
+    WHERE S.IsActive = 1
+      AND (
+            @q = N''
+            OR S.Name LIKE @likeq
+            OR ISNULL(S.PhoneNumber,N'') LIKE @likeq
+            OR ISNULL(S.Address,N'') LIKE @likeq
+            OR ISNULL(M.MeterNumber,N'') LIKE @likeq
+          )
+      AND (
+            @MeterKey = N''
+            OR ISNULL(M.MeterNumber,N'') LIKE @likeMeter
+          )
+),
+Opening AS
+(
+    SELECT X.SubscriberID, CAST(SUM(X.Debit - X.Credit) AS DECIMAL(18,2)) AS OpeningBalance
+    FROM
+    (
+        SELECT I.SubscriberID,
+               CAST(ISNULL(I.TotalAmount,0) AS DECIMAL(18,2)) AS Debit,
+               CAST(0 AS DECIMAL(18,2)) AS Credit
+        FROM Invoices I
+        INNER JOIN BaseSubscribers B ON B.SubscriberID = I.SubscriberID
+        WHERE I.InvoiceDate < @from
+
+        UNION ALL
+
+        SELECT I.SubscriberID,
+               CAST(0 AS DECIMAL(18,2)) AS Debit,
+               " + paymentAmountExpr + @" AS Credit
+        FROM Payments P
+        INNER JOIN Invoices I ON I.InvoiceID = P.InvoiceID
+        INNER JOIN BaseSubscribers B ON B.SubscriberID = I.SubscriberID
+        WHERE P.PaymentDate < @from
+          AND (@CollectorID = 0 OR P.CollectorID = @CollectorID)
+    ) X
+    GROUP BY X.SubscriberID
+),
+Movements AS
+(
+    SELECT
+        B.SubscriberID,
+        B.CustomerName,
+        B.MeterNumber,
+        B.PhoneNumber,
+        B.Address,
+        I.InvoiceDate AS MovementDate,
+        1 AS SortOrder,
+        I.InvoiceID AS RefSort,
+        N'فاتورة' AS MovementKind,
+        N'INV-' + CAST(I.InvoiceID AS NVARCHAR(50)) AS RefNo,
+        N'فاتورة استهلاك' +
+            CASE WHEN R.ReadingID IS NULL THEN N''
+                 ELSE N' - الاستهلاك: ' + CONVERT(NVARCHAR(50), CAST(ISNULL(R.Consumption,0) AS DECIMAL(18,2)))
+            END AS Description,
+        CAST(ISNULL(I.TotalAmount,0) AS DECIMAL(18,2)) AS Debit,
+        CAST(0 AS DECIMAL(18,2)) AS Credit,
+        ISNULL(C.Name, N'') AS CollectorName
+    FROM Invoices I
+    INNER JOIN BaseSubscribers B ON B.SubscriberID = I.SubscriberID
+    LEFT JOIN Readings R ON R.ReadingID = I.ReadingID
+    OUTER APPLY
+    (
+        SELECT TOP 1 p.CollectorID, p.PaymentDate, p.PaymentID
+        FROM Payments p
+        WHERE p.InvoiceID = I.InvoiceID
+          AND p.PaymentDate >= @from AND p.PaymentDate < @toEnd
+        ORDER BY p.PaymentDate DESC, p.PaymentID DESC
+    ) px
+    LEFT JOIN Collectors C ON C.CollectorID = px.CollectorID
+    WHERE I.InvoiceDate >= @from AND I.InvoiceDate < @toEnd
+" + collectorInvoiceFilter + @"
+
+    UNION ALL
+
+    SELECT
+        B.SubscriberID,
+        B.CustomerName,
+        B.MeterNumber,
+        B.PhoneNumber,
+        B.Address,
+        P.PaymentDate AS MovementDate,
+        2 AS SortOrder,
+        P.PaymentID AS RefSort,
+        N'سداد' AS MovementKind,
+        N'PAY-' + CAST(P.PaymentID AS NVARCHAR(50)) AS RefNo,
+        N'سداد على فاتورة رقم ' + CAST(I.InvoiceID AS NVARCHAR(50)) AS Description,
+        CAST(0 AS DECIMAL(18,2)) AS Debit,
+        " + paymentAmountExpr + @" AS Credit,
+        ISNULL(C.Name, N'') AS CollectorName
+    FROM Payments P
+    INNER JOIN Invoices I ON I.InvoiceID = P.InvoiceID
+    INNER JOIN BaseSubscribers B ON B.SubscriberID = I.SubscriberID
+    LEFT JOIN Collectors C ON C.CollectorID = P.CollectorID
+    WHERE P.PaymentDate >= @from AND P.PaymentDate < @toEnd
+      AND (@CollectorID = 0 OR P.CollectorID = @CollectorID)
+)
 SELECT
-    S.SubscriberID,
-    S.Name        AS [اسم المشترك],
-    ISNULL(M.MeterNumber, N'') AS [رقم العداد],
-    ISNULL(S.PhoneNumber, N'') AS [الهاتف],
-    ISNULL(S.Address, N'')     AS [العنوان],
+    M.SubscriberID,
+    M.MovementDate AS [التاريخ],
+    M.MovementKind AS [نوع الحركة],
+    M.RefNo AS [رقم المرجع],
+    M.CustomerName AS [اسم العميل],
+    M.MeterNumber AS [رقم العداد],
+    M.PhoneNumber AS [الهاتف],
+    M.Address AS [العنوان],
+    M.Description AS [البيان],
+    M.Debit AS [مدين],
+    M.Credit AS [دائن],
+    CAST(ISNULL(O.OpeningBalance,0) +
+        SUM(M.Debit - M.Credit) OVER
+        (
+            PARTITION BY M.SubscriberID
+            ORDER BY M.MovementDate, M.SortOrder, M.RefSort
+            ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+        ) AS DECIMAL(18,2)) AS [الرصيد],
+    M.CollectorName AS [المحصل],
+    M.MovementDate AS SortDate,
+    M.SortOrder,
+    M.RefSort
+FROM Movements M
+LEFT JOIN Opening O ON O.SubscriberID = M.SubscriberID
+ORDER BY M.CustomerName, M.MovementDate, M.SortOrder, M.RefSort;";
+        }
 
-    CAST(ISNULL(R.PreviousReading,0) AS DECIMAL(18,2)) AS [القراءة السابقة],
-    CAST(ISNULL(R.CurrentReading,0)  AS DECIMAL(18,2)) AS [القراءة الحالية],
-    CAST(ISNULL(R.Consumption,0)     AS DECIMAL(18,2)) AS [الاستهلاك],
-
-    CAST(ISNULL(I.TotalAmount,0)     AS DECIMAL(18,2)) AS [إجمالي الفاتورة],
-    ISNULL(I.Status, N'')            AS [حالة الفاتورة],
-    I.InvoiceDate AS [تاريخ الفاتورة],
-    I.InvoiceID   AS [رقم الفاتورة],
-
-    ISNULL(C.Name, N'') AS [المحصل]
-FROM Subscribers S
-
-OUTER APPLY (
-    SELECT TOP 1 sm.MeterID
-    FROM SubscriberMeters sm
-    WHERE sm.SubscriberID = S.SubscriberID
-    ORDER BY sm.IsPrimary DESC, sm.SubscriberMeterID DESC
-) smx
-LEFT JOIN Meters M ON M.MeterID = smx.MeterID
-
-OUTER APPLY (
-    SELECT TOP 1 *
-    FROM Invoices i
-    WHERE i.SubscriberID = S.SubscriberID
-      AND i.InvoiceDate >= @from AND i.InvoiceDate <= @to
-    ORDER BY i.InvoiceDate DESC, i.InvoiceID DESC
-) I
-
-LEFT JOIN Readings R ON R.ReadingID = I.ReadingID
-" + collectorApply + @"
-WHERE S.IsActive = 1
-  AND I.InvoiceID IS NOT NULL
-" + baseSearchClause + @"
-" + (filterMode == "حسب العداد" ? meterClause : "") + @"
-" + (filterMode == "حسب المحصل" ? collectorExistsClause : "") + @"
-ORDER BY S.Name;";
-            }
-            else
+        private string GetFirstExistingColumn(SqlConnection con, string tableName, IEnumerable<string> candidates)
+        {
+            var existing = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            using (var cmd = new SqlCommand(@"
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = @tableName;", con))
             {
-                sql = @"
-SELECT
-    S.SubscriberID,
-    S.Name        AS [اسم المشترك],
-    ISNULL(M.MeterNumber, N'') AS [رقم العداد],
-    ISNULL(S.PhoneNumber, N'') AS [الهاتف],
-    ISNULL(S.Address, N'')     AS [العنوان],
-
-    CAST(ISNULL(R.PreviousReading,0) AS DECIMAL(18,2)) AS [القراءة السابقة],
-    CAST(ISNULL(R.CurrentReading,0)  AS DECIMAL(18,2)) AS [القراءة الحالية],
-    CAST(ISNULL(R.Consumption,0)     AS DECIMAL(18,2)) AS [الاستهلاك],
-
-    CAST(ISNULL(I.TotalAmount,0)     AS DECIMAL(18,2)) AS [إجمالي الفاتورة],
-    ISNULL(I.Status, N'')            AS [حالة الفاتورة],
-    I.InvoiceDate AS [تاريخ الفاتورة],
-    I.InvoiceID   AS [رقم الفاتورة],
-
-    ISNULL(C.Name, N'') AS [المحصل]
-FROM Invoices I
-INNER JOIN Subscribers S ON S.SubscriberID = I.SubscriberID
-
-OUTER APPLY (
-    SELECT TOP 1 sm.MeterID
-    FROM SubscriberMeters sm
-    WHERE sm.SubscriberID = S.SubscriberID
-    ORDER BY sm.IsPrimary DESC, sm.SubscriberMeterID DESC
-) smx
-LEFT JOIN Meters M ON M.MeterID = smx.MeterID
-
-LEFT JOIN Readings R ON R.ReadingID = I.ReadingID
-" + collectorApply + @"
-WHERE S.IsActive = 1
-  AND I.InvoiceDate >= @from AND I.InvoiceDate <= @to
-" + baseSearchClause + @"
-" + (filterMode == "حسب العداد" ? meterClause : "") + @"
-" + (filterMode == "حسب المحصل" ? collectorExistsClause : "") + @"
-ORDER BY I.InvoiceDate DESC, S.Name;";
+                cmd.Parameters.AddWithValue("@tableName", tableName);
+                using (var rd = cmd.ExecuteReader())
+                {
+                    while (rd.Read())
+                        existing.Add(rd.GetString(0));
+                }
             }
 
-            var dt = new DataTable();
-            using (var con = Db.GetConnection())
-            using (var da = new SqlDataAdapter(sql, con))
+            foreach (string c in candidates)
             {
-                da.SelectCommand.Parameters.AddWithValue("@from", from);
-                da.SelectCommand.Parameters.AddWithValue("@to", to);
-
-                da.SelectCommand.Parameters.AddWithValue("@q", q);
-                da.SelectCommand.Parameters.AddWithValue("@likeq", likeq);
-
-                da.SelectCommand.Parameters.AddWithValue("@CollectorID", collectorId);
-
-                da.SelectCommand.Parameters.AddWithValue("@MeterKey", meterKey);
-                da.SelectCommand.Parameters.AddWithValue("@likeMeter", likeMeter);
-
-                da.Fill(dt);
+                if (existing.Contains(c))
+                    return c;
             }
 
-            dgv.DataSource = dt;
+            return null;
+        }
 
-            if (dgv.Columns.Contains("SubscriberID"))
-                dgv.Columns["SubscriberID"].Visible = false;
+        private string Bracket(string identifier)
+        {
+            return "[" + (identifier ?? "").Replace("]", "]] ").TrimEnd() + "]";
+        }
 
-            // ✅ Apply user control columns + sort
-            var uiOpt = reportOptions.GetOptions();
-            ApplyUserControlColumnsToGrid(uiOpt);
-            ApplyUserControlSortToGrid(uiOpt);
+        private void FormatGridColumns()
+        {
+            if (dgv.Columns == null || dgv.Columns.Count == 0) return;
 
-            PaintNumberColumns();
-            CalcTotalsFromGrid();
+            dgv.SuspendLayout();
+            try
+            {
+                SetGridColumn("التاريخ", 80, 90, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("نوع الحركة", 75, 80, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("رقم المرجع", 95, 95, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("اسم العميل", 160, 150, DataGridViewContentAlignment.MiddleRight);
+                SetGridColumn("رقم العداد", 100, 95, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("الهاتف", 100, 95, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("العنوان", 140, 120, DataGridViewContentAlignment.MiddleRight);
+                SetGridColumn("البيان", 190, 170, DataGridViewContentAlignment.MiddleRight);
+                SetGridColumn("مدين", 90, 90, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("دائن", 90, 90, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("الرصيد", 95, 95, DataGridViewContentAlignment.MiddleCenter);
+                SetGridColumn("المحصل", 115, 105, DataGridViewContentAlignment.MiddleRight);
+
+                if (dgv.Columns.Contains("التاريخ"))
+                    dgv.Columns["التاريخ"].DefaultCellStyle.Format = "yyyy/MM/dd";
+                if (dgv.Columns.Contains("مدين"))
+                    dgv.Columns["مدين"].DefaultCellStyle.Format = "N2";
+                if (dgv.Columns.Contains("دائن"))
+                    dgv.Columns["دائن"].DefaultCellStyle.Format = "N2";
+                if (dgv.Columns.Contains("الرصيد"))
+                    dgv.Columns["الرصيد"].DefaultCellStyle.Format = "N2";
+            }
+            finally
+            {
+                dgv.ResumeLayout();
+            }
+        }
+
+        private void SetGridColumn(string name, float fillWeight, int minWidth, DataGridViewContentAlignment alignment)
+        {
+            if (!dgv.Columns.Contains(name)) return;
+
+            DataGridViewColumn c = dgv.Columns[name];
+            c.FillWeight = fillWeight;
+            c.MinimumWidth = minWidth;
+            c.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            c.DefaultCellStyle.Alignment = alignment;
         }
 
         private void PaintNumberColumns()
         {
-            if (dgv.Columns.Contains("إجمالي الفاتورة"))
-                dgv.Columns["إجمالي الفاتورة"].DefaultCellStyle.ForeColor = Color.DarkRed;
-
-            if (dgv.Columns.Contains("الاستهلاك"))
-                dgv.Columns["الاستهلاك"].DefaultCellStyle.ForeColor = Color.DarkBlue;
-
-            if (dgv.Columns.Contains("حالة الفاتورة"))
-                dgv.Columns["حالة الفاتورة"].DefaultCellStyle.ForeColor = Color.FromArgb(80, 80, 80);
-
-            if (dgv.Columns.Contains("المحصل"))
-                dgv.Columns["المحصل"].DefaultCellStyle.ForeColor = Color.FromArgb(0, 90, 60);
+            if (dgv.Columns.Contains("مدين"))
+                dgv.Columns["مدين"].DefaultCellStyle.ForeColor = Red;
+            if (dgv.Columns.Contains("دائن"))
+                dgv.Columns["دائن"].DefaultCellStyle.ForeColor = Green;
+            if (dgv.Columns.Contains("الرصيد"))
+                dgv.Columns["الرصيد"].DefaultCellStyle.ForeColor = PrimaryDark;
+            if (dgv.Columns.Contains("نوع الحركة"))
+                dgv.Columns["نوع الحركة"].DefaultCellStyle.Font = new Font("Tahoma", 9F, FontStyle.Bold);
         }
 
         private void CalcTotalsFromGrid()
         {
             int count = 0;
-            decimal totalCons = 0m;
-            decimal totalInv = 0m;
+            decimal totalDebit = 0m;
+            decimal totalCredit = 0m;
+            Dictionary<int, decimal> latestBalanceBySubscriber = new Dictionary<int, decimal>();
 
             foreach (DataGridViewRow row in dgv.Rows)
             {
                 if (row.IsNewRow) continue;
                 count++;
 
-                if (dgv.Columns.Contains("الاستهلاك") && dgv.Columns["الاستهلاك"].Visible)
-                {
-                    decimal.TryParse(row.Cells["الاستهلاك"].Value?.ToString(), out decimal c);
-                    totalCons += c;
-                }
-                else if (dgv.Columns.Contains("الاستهلاك"))
-                {
-                    // حتى لو مخفي: احسب من المصدر
-                    decimal.TryParse(row.Cells["الاستهلاك"].Value?.ToString(), out decimal c);
-                    totalCons += c;
-                }
+                decimal d;
+                if (dgv.Columns.Contains("مدين") && decimal.TryParse(row.Cells["مدين"].Value?.ToString(), out d))
+                    totalDebit += d;
 
-                if (dgv.Columns.Contains("إجمالي الفاتورة"))
+                decimal c;
+                if (dgv.Columns.Contains("دائن") && decimal.TryParse(row.Cells["دائن"].Value?.ToString(), out c))
+                    totalCredit += c;
+
+                int subscriberId;
+                decimal balance;
+                if (dgv.Columns.Contains("SubscriberID") && dgv.Columns.Contains("الرصيد") &&
+                    int.TryParse(row.Cells["SubscriberID"].Value?.ToString(), out subscriberId) &&
+                    decimal.TryParse(row.Cells["الرصيد"].Value?.ToString(), out balance))
                 {
-                    decimal.TryParse(row.Cells["إجمالي الفاتورة"].Value?.ToString(), out decimal t);
-                    totalInv += t;
+                    latestBalanceBySubscriber[subscriberId] = balance;
                 }
             }
 
-            lblCount.Text = $"عدد السجلات: {count:N0}";
-            lblTotalConsumption.Text = $"إجمالي الاستهلاك: {totalCons:N2}";
-            lblTotalInvoices.Text = $"إجمالي الفواتير: {totalInv:N2}";
+            decimal finalBalance = latestBalanceBySubscriber.Values.Sum();
+
+            lblCount.Text = $"عدد الحركات: {count:N0}";
+            lblTotalConsumption.Text = $"مدين: {totalDebit:N2}  |  دائن: {totalCredit:N2}";
+            lblTotalInvoices.Text = $"الرصيد النهائي: {finalBalance:N2}";
         }
+
         private void SetMeterPlaceholder(bool enable)
         {
             if (!txtMeterFilter.Visible) return;
@@ -496,130 +710,467 @@ ORDER BY I.InvoiceDate DESC, S.Name;";
                 txtMeterFilter.ForeColor = Color.Black;
             }
         }
+
         private void InitPrinting()
         {
             printDoc = new PrintDocument();
+            printDoc.DocumentName = "كشف حساب العملاء";
+            printDoc.DefaultPageSettings.Landscape = true;
+            printDoc.DefaultPageSettings.Margins = new Margins(35, 35, 35, 45);
             printDoc.PrintPage += PrintDoc_PrintPage;
         }
+
+        private void PrintGrid()
+        {
+            if (dgv.DataSource == null || dgv.Rows.Count == 0)
+            {
+                MessageBox.Show("لا توجد بيانات للطباعة.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (PrintPreviewDialog preview = new PrintPreviewDialog())
+            {
+                _printRowIndex = 0;
+                _pageNumber = 1;
+                _colWidths = null;
+                _printedTotals = false;
+
+                printDoc.DefaultPageSettings.Landscape = true;
+                printDoc.DefaultPageSettings.Margins = new Margins(35, 35, 35, 45);
+
+                preview.Document = printDoc;
+                preview.WindowState = FormWindowState.Maximized;
+                preview.Text = "معاينة طباعة كشف حساب العملاء";
+                preview.ShowDialog(this);
+            }
+        }
+
         private void PrintDoc_PrintPage(object sender, PrintPageEventArgs e)
         {
-            var g = e.Graphics;
-            var margin = e.MarginBounds;
-            int y = margin.Top;
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
 
-            string title = $"تقرير القراءات والفواتير - {ddlReportType.Text} | الفترة: {dtFrom.Value:yyyy/MM/dd} إلى {dtTo.Value:yyyy/MM/dd}";
-            var f = GetFilterTextForHeader();
-            if (!string.IsNullOrWhiteSpace(f)) title += " | " + f;
+            int x = e.MarginBounds.Left;
+            int width = e.MarginBounds.Width;
 
-            using (var fTitle = new Font("Segoe UI", 12, FontStyle.Bold))
+            int y = PrintHeaderHelper.DrawCompanyHeader(
+                e,
+                "كشف حساب العملاء",
+                dtFrom.Value.Date,
+                dtTo.Value.Date
+            );
+
+            y += 8;
+
+            using (Font headerFont = new Font("Tahoma", 8.3F, FontStyle.Bold))
+            using (Font cellFont = new Font("Tahoma", 7.8F, FontStyle.Regular))
+            using (Font totalFont = new Font("Tahoma", 8.5F, FontStyle.Bold))
+            using (Font summaryFont = new Font("Tahoma", 8.5F, FontStyle.Bold))
             {
-                g.DrawString(title, fTitle, Brushes.Black, margin.Left, y);
-                y += 30;
-            }
+                DrawPrintSummaryBox(e.Graphics, x, y, width, summaryFont);
+                y += 42;
 
-            var visibleCols = GetVisibleColumns();
-            if (_colWidths == null || _colWidths.Length != visibleCols.Length)
-                _colWidths = CalcColumnWidths(margin.Width, visibleCols);
+                DataGridViewColumn[] visibleCols = GetVisibleColumns();
+                if (_colWidths == null || _colWidths.Length != visibleCols.Length)
+                    _colWidths = CalcColumnWidths(width, visibleCols);
 
-            int x = margin.Left;
-            int headerHeight = 28;
+                int rowHeight = 27;
+                int totalRowHeight = 30;
+                int footerSpace = 35;
+                int bottomLimit = e.MarginBounds.Bottom - footerSpace;
 
-            using (var headerBrush = new SolidBrush(Color.FromArgb(0, 87, 183)))
-                g.FillRectangle(headerBrush, new Rectangle(margin.Left, y, margin.Width, headerHeight));
+                int tableWidth = _colWidths.Sum();
+                int startX = x + Math.Max(0, (width - tableWidth) / 2);
 
-            using (var fHeader = new Font("Segoe UI", 10, FontStyle.Bold))
-            using (var bHeaderText = new SolidBrush(Color.White))
-            using (var pGrid = new Pen(Color.LightGray))
-            {
-                for (int c = 0; c < visibleCols.Length; c++)
-                {
-                    int w = _colWidths[c];
-                    var rect = new Rectangle(x, y, w, headerHeight);
-                    g.DrawRectangle(pGrid, rect);
-                    g.DrawString(visibleCols[c].HeaderText, fHeader, bHeaderText, rect, CenterFormat());
-                    x += w;
-                }
-            }
+                string[] headers = visibleCols.Select(c => c.HeaderText).ToArray();
+                DrawPrintRowRtl(e.Graphics, headers, _colWidths, startX, y, rowHeight, headerFont, true, -1, visibleCols);
+                y += rowHeight;
 
-            y += headerHeight;
-
-            int rowHeight = 26;
-            using (var fRow = new Font("Segoe UI", 9, FontStyle.Regular))
-            using (var pGrid = new Pen(Color.LightGray))
-            {
                 while (_printRowIndex < dgv.Rows.Count)
                 {
-                    var row = dgv.Rows[_printRowIndex];
-                    if (row.IsNewRow) { _printRowIndex++; continue; }
-
-                    if (y + rowHeight > margin.Bottom)
+                    DataGridViewRow row = dgv.Rows[_printRowIndex];
+                    if (row.IsNewRow)
                     {
-                        e.HasMorePages = true;
+                        _printRowIndex++;
+                        continue;
+                    }
+
+                    if (y + rowHeight > bottomLimit)
+                    {
+                        PrintHeaderHelper.DrawCompanyFooter(e, _pageNumber);
                         _pageNumber++;
+                        e.HasMorePages = true;
                         return;
                     }
 
-                    x = margin.Left;
-                    for (int c = 0; c < visibleCols.Length; c++)
-                    {
-                        int w = _colWidths[c];
-                        var rect = new Rectangle(x, y, w, rowHeight);
-                        g.DrawRectangle(pGrid, rect);
+                    string[] cells = new string[visibleCols.Length];
+                    for (int i = 0; i < visibleCols.Length; i++)
+                        cells[i] = FormatPrintValue(row.Cells[visibleCols[i].Name].Value, visibleCols[i].Name);
 
-                        var val = row.Cells[visibleCols[c].Name].Value?.ToString() ?? "";
-                        g.DrawString(val, fRow, Brushes.Black, rect, CenterFormat());
-                        x += w;
-                    }
+                    DrawPrintRowRtl(e.Graphics, cells, _colWidths, startX, y, rowHeight, cellFont, false, _printRowIndex, visibleCols);
 
                     y += rowHeight;
                     _printRowIndex++;
                 }
-            }
 
-            if (!_printedTotals)
-            {
-                int need = 70;
-                if (y + need > margin.Bottom)
+                if (!_printedTotals)
                 {
-                    e.HasMorePages = true;
-                    _pageNumber++;
-                    return;
+                    if (y + totalRowHeight > bottomLimit)
+                    {
+                        PrintHeaderHelper.DrawCompanyFooter(e, _pageNumber);
+                        _pageNumber++;
+                        e.HasMorePages = true;
+                        return;
+                    }
+
+                    DrawTotalsLine(e.Graphics, startX, y, tableWidth, totalRowHeight, totalFont);
+                    _printedTotals = true;
                 }
 
-                y += 10;
-                using (var pen = new Pen(Color.Gray))
-                    g.DrawLine(pen, margin.Left, y, margin.Right, y);
-                y += 10;
-
-                using (var fTotTitle = new Font("Segoe UI", 11, FontStyle.Bold))
-                    g.DrawString("الإجماليات:", fTotTitle, Brushes.Black, margin.Left, y);
-
-                y += 22;
-                using (var fTot = new Font("Segoe UI", 10, FontStyle.Regular))
-                {
-                    g.DrawString(lblCount.Text, fTot, Brushes.Black, margin.Left, y); y += 18;
-                    g.DrawString(lblTotalConsumption.Text, fTot, Brushes.Black, margin.Left, y); y += 18;
-                    g.DrawString(lblTotalInvoices.Text, fTot, Brushes.Black, margin.Left, y); y += 18;
-                }
-
-                _printedTotals = true;
+                PrintHeaderHelper.DrawCompanyFooter(e, _pageNumber);
             }
-
-            using (var fFooter = new Font("Segoe UI", 9, FontStyle.Italic))
-                g.DrawString("صفحة: " + _pageNumber, fFooter, Brushes.Gray, margin.Left, margin.Bottom + 10);
 
             e.HasMorePages = false;
-
             _printRowIndex = 0;
             _colWidths = null;
             _printedTotals = false;
         }
-        // ==========================
-        // ✅ Presets (Save / Load) form + usercontrol
-        // ==========================
+
+        private string FormatPrintValue(object value, string columnName)
+        {
+            if (value == null || value == DBNull.Value) return "";
+
+            if (columnName == "التاريخ")
+            {
+                DateTime dt;
+                if (DateTime.TryParse(value.ToString(), out dt))
+                    return dt.ToString("yyyy/MM/dd");
+            }
+
+            if (columnName == "مدين" || columnName == "دائن" || columnName == "الرصيد")
+            {
+                decimal d;
+                if (decimal.TryParse(value.ToString(), out d))
+                    return d.ToString("N2");
+            }
+
+            return value.ToString();
+        }
+
+        private void DrawPrintSummaryBox(Graphics g, int x, int y, int width, Font font)
+        {
+            int boxHeight = 32;
+            string filter = GetFilterTextForHeader();
+            string summary = lblCount.Text + "    |    " + lblTotalConsumption.Text + "    |    " + lblTotalInvoices.Text;
+            if (!string.IsNullOrWhiteSpace(filter))
+                summary += "    |    " + filter;
+
+            Rectangle rect = new Rectangle(x, y, width, boxHeight);
+            using (SolidBrush backBrush = new SolidBrush(Color.FromArgb(248, 250, 252)))
+            using (Pen borderPen = new Pen(Color.FromArgb(160, 160, 160)))
+            {
+                g.FillRectangle(backBrush, rect);
+                g.DrawRectangle(borderPen, rect);
+            }
+
+            g.DrawString(summary, font, Brushes.Black,
+                new RectangleF(rect.X + 6, rect.Y + 2, rect.Width - 12, rect.Height - 4),
+                CreateArabicCenterFormat());
+        }
+
+        private void DrawPrintRowRtl(
+            Graphics g,
+            string[] cells,
+            int[] widths,
+            int x,
+            int y,
+            int height,
+            Font font,
+            bool isHeader,
+            int rowIndex,
+            DataGridViewColumn[] cols)
+        {
+            Color rowBack = rowIndex % 2 == 0 ? Color.White : Color.FromArgb(248, 250, 252);
+            Color backColor = isHeader ? PrimaryDark : rowBack;
+            Color foreColor = isHeader ? Color.White : Color.Black;
+
+            using (SolidBrush backBrush = new SolidBrush(backColor))
+            using (SolidBrush textBrush = new SolidBrush(foreColor))
+            using (Pen borderPen = new Pen(Color.FromArgb(150, 150, 150)))
+            {
+                int right = x + widths.Sum();
+
+                for (int i = 0; i < cells.Length; i++)
+                {
+                    Rectangle rect = new Rectangle(right - widths[i], y, widths[i], height);
+                    g.FillRectangle(backBrush, rect);
+                    g.DrawRectangle(borderPen, rect);
+
+                    string text = ShortPrintText(cells[i], GetMaxPrintLength(cols[i].Name));
+                    StringFormat format = CreateArabicCenterFormat();
+                    if (!isHeader && IsRightAlignedPrintColumn(cols[i].Name))
+                        format = CreateArabicRightFormat();
+
+                    Brush brush = textBrush;
+                    using (SolidBrush debitBrush = new SolidBrush(Red))
+                    using (SolidBrush creditBrush = new SolidBrush(Green))
+                    using (SolidBrush balanceBrush = new SolidBrush(PrimaryDark))
+                    {
+                        if (!isHeader && cols[i].Name == "مدين") brush = debitBrush;
+                        if (!isHeader && cols[i].Name == "دائن") brush = creditBrush;
+                        if (!isHeader && cols[i].Name == "الرصيد") brush = balanceBrush;
+
+                        RectangleF textRect = new RectangleF(rect.X + 4, rect.Y + 2, rect.Width - 8, rect.Height - 4);
+                        g.DrawString(text, font, brush, textRect, format);
+                    }
+
+                    right -= widths[i];
+                }
+            }
+        }
+
+        private bool IsRightAlignedPrintColumn(string name)
+        {
+            return name == "اسم العميل" || name == "البيان" || name == "العنوان" || name == "المحصل";
+        }
+
+        private int GetMaxPrintLength(string name)
+        {
+            if (name == "البيان") return 45;
+            if (name == "اسم العميل") return 32;
+            if (name == "العنوان") return 30;
+            return 24;
+        }
+
+        private void DrawTotalsLine(Graphics g, int x, int y, int width, int height, Font font)
+        {
+            Rectangle rect = new Rectangle(x, y, width, height);
+            using (SolidBrush backBrush = new SolidBrush(Color.FromArgb(221, 235, 247)))
+            using (Pen borderPen = new Pen(Color.FromArgb(100, 100, 100)))
+            {
+                g.FillRectangle(backBrush, rect);
+                g.DrawRectangle(borderPen, rect);
+            }
+
+            string totals = "الإجمالي: " + lblCount.Text + "    |    " + lblTotalConsumption.Text + "    |    " + lblTotalInvoices.Text;
+            g.DrawString(totals, font, Brushes.Black,
+                new RectangleF(rect.X + 6, rect.Y + 2, rect.Width - 12, rect.Height - 4),
+                CreateArabicCenterFormat());
+        }
+
+        private StringFormat CreateArabicCenterFormat()
+        {
+            return new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center,
+                FormatFlags = StringFormatFlags.DirectionRightToLeft,
+                Trimming = StringTrimming.EllipsisCharacter
+            };
+        }
+
+        private StringFormat CreateArabicRightFormat()
+        {
+            return new StringFormat
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Center,
+                FormatFlags = StringFormatFlags.DirectionRightToLeft,
+                Trimming = StringTrimming.EllipsisCharacter
+            };
+        }
+
+        private string ShortPrintText(string text, int maxLength)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+            text = text.Replace("\r", " ").Replace("\n", " ").Trim();
+            if (text.Length <= maxLength) return text;
+            return text.Substring(0, maxLength) + "...";
+        }
+
+        private DataGridViewColumn[] GetVisibleColumns()
+        {
+            var list = new List<DataGridViewColumn>();
+            foreach (DataGridViewColumn c in dgv.Columns)
+            {
+                if (c.Visible && !IsTechnicalColumn(c.Name))
+                    list.Add(c);
+            }
+            return list.ToArray();
+        }
+
+        private int[] CalcColumnWidths(int totalWidth, DataGridViewColumn[] cols)
+        {
+            float totalWeight = 0;
+            foreach (var c in cols)
+                totalWeight += (c.FillWeight > 0 ? c.FillWeight : 100);
+
+            int[] widths = new int[cols.Length];
+            int used = 0;
+
+            for (int i = 0; i < cols.Length; i++)
+            {
+                float w = (cols[i].FillWeight > 0 ? cols[i].FillWeight : 100);
+                widths[i] = (int)Math.Floor(totalWidth * (w / totalWeight));
+                if (widths[i] < 45) widths[i] = 45;
+                used += widths[i];
+            }
+
+            int diff = totalWidth - used;
+            if (diff != 0 && widths.Length > 0)
+                widths[widths.Length - 1] += diff;
+
+            return widths;
+        }
+
+        private void UpdateFilterVisibility()
+        {
+            string mode = ddlFilterMode.Text;
+            bool byCollector = (mode == "حسب المحصل");
+            bool byMeter = (mode == "حسب العداد");
+
+            ddlCollectors.Visible = byCollector;
+            txtMeterFilter.Visible = byMeter;
+
+            if (byCollector)
+                ddlCollectors.BringToFront();
+
+            if (byMeter)
+            {
+                txtMeterFilter.BringToFront();
+                SetMeterPlaceholder(true);
+            }
+            else
+            {
+                txtMeterFilter.Text = "";
+                txtMeterFilter.ForeColor = Color.Black;
+            }
+        }
+
+        private void ApplyUserControlSortToGrid(ReportOptionsPanel.ReportOptions opt)
+        {
+            if (dgv.DataSource == null || dgv.Columns.Count == 0) return;
+            if (opt == null) return;
+
+            string key = opt.SortBy ?? "التاريخ";
+            string realCol;
+            if (!SortMap.TryGetValue(key, out realCol)) return;
+            if (!dgv.Columns.Contains(realCol)) return;
+
+            try
+            {
+                dgv.Columns[realCol].SortMode = DataGridViewColumnSortMode.Programmatic;
+                dgv.Sort(dgv.Columns[realCol],
+                    opt.SortDesc ? System.ComponentModel.ListSortDirection.Descending : System.ComponentModel.ListSortDirection.Ascending);
+            }
+            catch
+            {
+                DataView dv = null;
+                if (dgv.DataSource is DataTable)
+                    dv = ((DataTable)dgv.DataSource).DefaultView;
+                else if (dgv.DataSource is DataView)
+                    dv = (DataView)dgv.DataSource;
+
+                if (dv != null)
+                {
+                    try
+                    {
+                        dv.Sort = "[" + realCol.Replace("]", "]] ").TrimEnd() + "] " + (opt.SortDesc ? "DESC" : "ASC");
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        private void ExportToExcelHtml()
+        {
+            if (dgv.DataSource == null || dgv.Rows.Count == 0)
+            {
+                MessageBox.Show("لا توجد بيانات للتصدير.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Title = "تصدير كشف حساب العملاء";
+                sfd.Filter = "Excel 97-2003 (*.xls)|*.xls";
+                sfd.FileName = "كشف_حساب_العملاء_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".xls";
+                if (sfd.ShowDialog(this) != DialogResult.OK) return;
+
+                try
+                {
+                    string html = BuildExcelHtml();
+                    File.WriteAllText(sfd.FileName, html, Encoding.UTF8);
+                    MessageBox.Show("تم التصدير بنجاح ✅", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("فشل التصدير: " + ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private string BuildExcelHtml()
+        {
+            CompanyPrintInfoData company = CompanyPrintInfo.Get();
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8' />");
+            sb.AppendLine("<style>body{font-family:Tahoma;direction:rtl;} table{border-collapse:collapse;width:100%;} th{background:#004d99;color:white;font-weight:bold;} td,th{border:1px solid #999;padding:6px;text-align:center;} .r{text-align:right;} .debit{color:#dc2626;font-weight:bold;} .credit{color:#00994c;font-weight:bold;} .balance{color:#004d99;font-weight:bold;}</style>");
+            sb.AppendLine("</head><body>");
+            sb.AppendLine("<h2>" + Html(company.CompanyName) + "</h2>");
+            sb.AppendLine("<h3>كشف حساب العملاء</h3>");
+            sb.AppendLine("<p>" + Html(company.Address) + " - " + Html(company.Phone) + "</p>");
+            sb.AppendLine("<p>من تاريخ: " + Html(dtFrom.Value.ToString("yyyy-MM-dd")) + " - إلى تاريخ: " + Html(dtTo.Value.ToString("yyyy-MM-dd")) + "</p>");
+            sb.AppendLine("<p>" + Html(lblCount.Text) + " | " + Html(lblTotalConsumption.Text) + " | " + Html(lblTotalInvoices.Text) + "</p>");
+
+            DataGridViewColumn[] cols = GetVisibleColumns();
+            sb.AppendLine("<table><tr>");
+            foreach (DataGridViewColumn c in cols)
+                sb.AppendLine("<th>" + Html(c.HeaderText) + "</th>");
+            sb.AppendLine("</tr>");
+
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if (row.IsNewRow) continue;
+                sb.AppendLine("<tr>");
+                foreach (DataGridViewColumn c in cols)
+                {
+                    string css = "";
+                    if (c.Name == "اسم العميل" || c.Name == "البيان" || c.Name == "العنوان" || c.Name == "المحصل") css = " class='r'";
+                    if (c.Name == "مدين") css = " class='debit'";
+                    if (c.Name == "دائن") css = " class='credit'";
+                    if (c.Name == "الرصيد") css = " class='balance'";
+                    sb.AppendLine("<td" + css + ">" + Html(FormatPrintValue(row.Cells[c.Name].Value, c.Name)) + "</td>");
+                }
+                sb.AppendLine("</tr>");
+            }
+            sb.AppendLine("</table></body></html>");
+            return sb.ToString();
+        }
+
+        private string Html(string s)
+        {
+            if (s == null) return "";
+            return System.Net.WebUtility.HtmlEncode(s);
+        }
+
+        private string GetFilterTextForHeader()
+        {
+            if (ddlFilterMode.Text == "حسب المحصل")
+                return "حسب المحصل: " + (ddlCollectors.SelectedItem is ComboItem ci ? ci.Text : "");
+            if (ddlFilterMode.Text == "حسب العداد")
+            {
+                string mk = (txtMeterFilter.Visible && txtMeterFilter.ForeColor != Color.Gray) ? (txtMeterFilter.Text ?? "").Trim() : "";
+                return "حسب العداد: " + mk;
+            }
+            if (!string.IsNullOrWhiteSpace(txtSearch.Text))
+                return "العميل/البحث: " + txtSearch.Text.Trim();
+            return "";
+        }
+
         private void SavePreset()
         {
-            string name = PromptDialog.Show("حفظ قالب", "اسم القالب:", "قالب 1");
+            string name = PromptDialog.Show("حفظ قالب", "اسم القالب:", "كشف حساب العملاء");
             name = (name ?? "").Trim();
             if (name.Length == 0) return;
 
@@ -640,7 +1191,7 @@ VALUES (@n, @k, @j);", con))
 
             MessageBox.Show("تم حفظ القالب ✅");
         }
-       
+
         private void LoadPreset()
         {
             DataTable dt = new DataTable();
@@ -665,13 +1216,9 @@ ORDER BY CreatedAt DESC;", con))
             foreach (DataRow r in dt.Rows)
                 sb.AppendLine($"{r["PresetID"]}: {r["PresetName"]}");
 
-            string pick = PromptDialog.Show(
-                "تحميل قالب",
-                "اختر رقم القالب (PresetID):\n\n" + sb.ToString(),
-                dt.Rows[0]["PresetID"].ToString()
-            );
-
-            if (!int.TryParse((pick ?? "").Trim(), out int presetId)) return;
+            string pick = PromptDialog.Show("تحميل قالب", "اختر رقم القالب (PresetID):\n\n" + sb.ToString(), dt.Rows[0]["PresetID"].ToString());
+            int presetId;
+            if (!int.TryParse((pick ?? "").Trim(), out presetId)) return;
 
             string json = null;
             using (var con = Db.GetConnection())
@@ -694,11 +1241,10 @@ WHERE PresetID=@id AND FormKey=@k;", con))
 
             var preset = JsonConvert.DeserializeObject<BillingReportPreset>(json);
             ApplyPresetToUi(preset);
-
             MessageBox.Show("تم تحميل القالب ✅");
-
             LoadReport();
         }
+
         private BillingReportPreset ReadPresetFromUi()
         {
             int collectorId = 0;
@@ -739,12 +1285,13 @@ WHERE PresetID=@id AND FormKey=@k;", con))
 
             UpdateFilterVisibility();
 
-            // Collector
             if (ddlCollectors.Visible)
             {
                 for (int i = 0; i < ddlCollectors.Items.Count; i++)
                 {
-                    if (ddlCollectors.Items[i] is ComboItem ci && int.TryParse(ci.Value, out int id) && id == preset.CollectorId)
+                    ComboItem item = ddlCollectors.Items[i] as ComboItem;
+                    int id;
+                    if (item != null && int.TryParse(item.Value, out id) && id == preset.CollectorId)
                     {
                         ddlCollectors.SelectedIndex = i;
                         break;
@@ -752,7 +1299,6 @@ WHERE PresetID=@id AND FormKey=@k;", con))
                 }
             }
 
-            // MeterKey
             if (txtMeterFilter.Visible)
             {
                 txtMeterFilter.ForeColor = Color.Black;
@@ -760,7 +1306,6 @@ WHERE PresetID=@id AND FormKey=@k;", con))
                 SetMeterPlaceholder(true);
             }
 
-            // UserControl
             if (preset.Ui != null)
                 reportOptions.ApplyOptions(preset.Ui);
         }
@@ -774,273 +1319,15 @@ WHERE PresetID=@id AND FormKey=@k;", con))
             public string FilterMode { get; set; } = "بدون";
             public int CollectorId { get; set; } = 0;
             public string MeterKey { get; set; } = "";
-
             public ReportOptionsPanel.ReportOptions Ui { get; set; } = new ReportOptionsPanel.ReportOptions();
-        }
-
-        private StringFormat CenterFormat()
-        {
-            return new StringFormat
-            {
-                Alignment = StringAlignment.Center,
-                LineAlignment = StringAlignment.Center,
-                Trimming = StringTrimming.EllipsisCharacter
-            };
-        }
-
-        private DataGridViewColumn[] GetVisibleColumns()
-        {
-            var list = new List<DataGridViewColumn>();
-            foreach (DataGridViewColumn c in dgv.Columns)
-                if (c.Visible) list.Add(c);
-            return list.ToArray();
-        }
-        private void UpdateFilterVisibility()
-        {
-            string mode = ddlFilterMode.Text;
-
-            ddlCollectors.Visible = (mode == "حسب المحصل");
-            txtMeterFilter.Visible = (mode == "حسب العداد");
-
-            if (!txtMeterFilter.Visible)
-            {
-                txtMeterFilter.Text = "";
-                txtMeterFilter.ForeColor = Color.Black;
-            }
-            else
-            {
-                SetMeterPlaceholder(true);
-            }
-        }
-
-        private int[] CalcColumnWidths(int totalWidth, DataGridViewColumn[] cols)
-        {
-            float totalWeight = 0;
-            foreach (var c in cols)
-                totalWeight += (c.FillWeight > 0 ? c.FillWeight : 100);
-
-            int[] widths = new int[cols.Length];
-            int used = 0;
-
-            for (int i = 0; i < cols.Length; i++)
-            {
-                float w = (cols[i].FillWeight > 0 ? cols[i].FillWeight : 100);
-                widths[i] = (int)Math.Floor(totalWidth * (w / totalWeight));
-                used += widths[i];
-            }
-
-            int diff = totalWidth - used;
-            if (diff != 0 && widths.Length > 0)
-                widths[0] += diff;
-
-            return widths;
-        }
-        private void ApplyUserControlSortToGrid(ReportOptionsPanel.ReportOptions opt)
-        {
-            if (dgv.DataSource == null || dgv.Columns.Count == 0) return;
-            if (opt == null) return;
-
-            var key = opt.SortBy ?? "التاريخ";
-            if (!SortMap.TryGetValue(key, out var realCol)) return;
-            if (!dgv.Columns.Contains(realCol)) return;
-
-            try
-            {
-                dgv.Columns[realCol].SortMode = DataGridViewColumnSortMode.Programmatic;
-                dgv.Sort(dgv.Columns[realCol],
-                    opt.SortDesc ? System.ComponentModel.ListSortDirection.Descending : System.ComponentModel.ListSortDirection.Ascending);
-            }
-            catch
-            {
-                if (dgv.DataSource is DataTable dt)
-                {
-                    try
-                    {
-                        dt.DefaultView.Sort = $"[{realCol}] {(opt.SortDesc ? "DESC" : "ASC")}";
-                        dgv.DataSource = dt.DefaultView.ToTable();
-                    }
-                    catch { }
-                }
-            }
-        }
-
-        // ==========================
-        // ✅ Export CSV
-        // ==========================
-        private void ExportToExcelCsv()
-        {
-            if (dgv.DataSource == null || dgv.Rows.Count == 0)
-            {
-                MessageBox.Show("لا توجد بيانات للتصدير.");
-                return;
-            }
-
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "Excel CSV (*.csv)|*.csv";
-                sfd.FileName = $"SubscribersReport_{DateTime.Now:yyyyMMdd_HHmm}.csv";
-                if (sfd.ShowDialog() != DialogResult.OK) return;
-
-                try
-                {
-                    var sb = new StringBuilder();
-
-                    sb.AppendLine(EscapeCsv($"تقرير القراءات والفواتير - {ddlReportType.Text}"));
-                    sb.AppendLine(EscapeCsv($"الفترة: {dtFrom.Value:yyyy/MM/dd} إلى {dtTo.Value:yyyy/MM/dd}"));
-                    var f = GetFilterTextForHeader();
-                    if (!string.IsNullOrWhiteSpace(f)) sb.AppendLine(EscapeCsv("الفلترة: " + f));
-                    sb.AppendLine();
-
-                    // header
-                    for (int i = 0; i < dgv.Columns.Count; i++)
-                    {
-                        if (!dgv.Columns[i].Visible) continue;
-                        sb.Append(EscapeCsv(dgv.Columns[i].HeaderText));
-                        sb.Append(",");
-                    }
-                    sb.AppendLine();
-
-                    // rows
-                    foreach (DataGridViewRow row in dgv.Rows)
-                    {
-                        if (row.IsNewRow) continue;
-
-                        for (int i = 0; i < dgv.Columns.Count; i++)
-                        {
-                            if (!dgv.Columns[i].Visible) continue;
-                            sb.Append(EscapeCsv(row.Cells[i].Value?.ToString() ?? ""));
-                            sb.Append(",");
-                        }
-                        sb.AppendLine();
-                    }
-
-                    // totals
-                    sb.AppendLine();
-                    sb.AppendLine(EscapeCsv("الإجماليات:"));
-                    sb.AppendLine(EscapeCsv(lblCount.Text));
-                    sb.AppendLine(EscapeCsv(lblTotalConsumption.Text));
-                    sb.AppendLine(EscapeCsv(lblTotalInvoices.Text));
-
-                    File.WriteAllText(sfd.FileName, sb.ToString(), new UTF8Encoding(true));
-                    MessageBox.Show("تم التصدير بنجاح ✅");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("فشل التصدير: " + ex.Message);
-                }
-            }
-        }
-
-        private string GetFilterTextForHeader()
-        {
-            if (ddlFilterMode.Text == "حسب المحصل")
-                return "حسب المحصل: " + (ddlCollectors.SelectedItem is ComboItem ci ? ci.Text : "");
-            if (ddlFilterMode.Text == "حسب العداد")
-            {
-                string mk = (txtMeterFilter.Visible && txtMeterFilter.ForeColor != Color.Gray) ? (txtMeterFilter.Text ?? "").Trim() : "";
-                return "حسب العداد: " + mk;
-            }
-            return "";
-        }
-
-        private string EscapeCsv(string s)
-        {
-            if (s == null) return "";
-            if (s.Contains(",") || s.Contains("\"") || s.Contains("\n"))
-                return "\"" + s.Replace("\"", "\"\"") + "\"";
-            return s;
-        }
-
-        // ==========================
-        // ✅ Printing
-        // ==========================
-        //private void InitPrinting()
-        //{
-        //    printDoc = new PrintDocument();
-        //    printDoc.PrintPage += PrintDoc_PrintPage;
-        //}
-
-        private void PrintGrid()
-        {
-            if (dgv.DataSource == null || dgv.Rows.Count == 0)
-            {
-                MessageBox.Show("لا توجد بيانات للطباعة.");
-                return;
-            }
-
-            using (PrintPreviewDialog preview = new PrintPreviewDialog())
-            {
-                _printRowIndex = 0;
-                _pageNumber = 1;
-                _colWidths = null;
-                _printedTotals = false;
-
-                preview.Document = printDoc;
-                preview.Width = 1100;
-                preview.Height = 800;
-                preview.ShowDialog();
-            }
-        }
-
-
-
-       
-
-        private Button MakePrimaryButton(string text, int width)
-        {
-            var b = new Button
-            {
-                Text = text,
-                Height = 34,
-                Width = width,
-                BackColor = Color.FromArgb(0, 106, 204),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Cursor = Cursors.Hand,
-                Margin = new Padding(10, 0, 0, 0)
-            };
-            b.FlatAppearance.BorderSize = 0;
-            return b;
-        }
-
-        private Button MakeLightButton(string text, int width)
-        {
-            var b = new Button
-            {
-                Text = text,
-                Height = 34,
-                Width = width,
-                BackColor = Color.White,
-                ForeColor = Color.FromArgb(0, 106, 204),
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Cursor = Cursors.Hand,
-                Margin = new Padding(10, 0, 0, 0)
-            };
-            b.FlatAppearance.BorderColor = Color.FromArgb(0, 106, 204);
-            b.FlatAppearance.BorderSize = 1;
-            return b;
-        }
-
-        private Label MakeTotalLabel(string text)
-        {
-            return new Label
-            {
-                Text = text,
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                ForeColor = Color.DarkBlue
-            };
         }
 
         private class ComboItem
         {
-            public string Text { get; }
-            public string Value { get; }
+            public string Text { get; private set; }
+            public string Value { get; private set; }
             public ComboItem(string text, string value) { Text = text; Value = value; }
-            public override string ToString() => Text;
+            public override string ToString() { return Text; }
         }
 
         private static class PromptDialog
@@ -1085,10 +1372,9 @@ WHERE PresetID=@id AND FormKey=@k;", con))
                 }
             }
         }
-            // ✨ بقية كودك انسخه كما هو بدون تغيير (الدوال الطويلة)
-            // فقط احذف BuildLayout() و HookEvents() القديمتين لأنهم صاروا Designer + WireEvents.
-        }
+    }
 }
+
 
 /*using System;
 using System.Data;

@@ -1,4 +1,44 @@
-﻿using System.Windows.Forms;
+﻿using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace water3.Forms
+{
+    partial class ReadingEntryForm
+    {
+        private IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && components != null)
+                components.Dispose();
+
+            base.Dispose(disposing);
+        }
+
+        private void InitializeComponent()
+        {
+            this.components = new Container();
+            this.SuspendLayout();
+
+            this.AutoScaleDimensions = new SizeF(7F, 16F);
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.ClientSize = new Size(1200, 680);
+            this.Font = new Font("Tahoma", 10F);
+            this.MinimumSize = new Size(900, 520);
+            this.Name = "ReadingEntryForm";
+            this.RightToLeft = RightToLeft.Yes;
+            this.RightToLeftLayout = true;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "كشف متابعة تسجيل القراءات الجديدة";
+
+            this.ResumeLayout(false);
+        }
+    }
+}
+
+
+/*using System.Windows.Forms;
 using System.Drawing;
 
 namespace water3.Forms
@@ -600,4 +640,4 @@ namespace water3.Forms
             this.ResumeLayout(false);
         }
     }
-}
+}*/
